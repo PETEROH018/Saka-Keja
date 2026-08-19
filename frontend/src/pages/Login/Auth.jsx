@@ -15,7 +15,6 @@ export default function AuthPage() {
     password: "",
     accountType: "student",
   });
-  const { request, loading, error } = useFetch();
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -132,15 +131,13 @@ export default function AuthPage() {
               {/* Login button */}
               <button
                 type="submit"
-                disabled={loading}
                 className="w-full rounded-xl bg-blue-600 py-3.5
                   font-semibold text-white
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                {loading ? "Logging in..." : "Log in"}
+                Login
               </button>
-              {error && <p className="text-sm text-red-600">{error}</p>}
             </form>
 
             <div className="my-7 flex items-center gap-4">
@@ -259,15 +256,13 @@ export default function AuthPage() {
               {/* Signup button */}
               <button
                 type="submit"
-                disabled={loading}
                 className="w-full rounded-xl bg-blue-600 py-3.5
                   font-semibold text-white
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                {loading ? "Signing up..." : "Sign up"}
+                Sign up
               </button>
-              {error && <p className="text-sm text-red-600">{error}</p>}
             </form>
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-gray-200" />
