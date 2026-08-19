@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Saka Keja — Log in</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+
+      <!-- LEFT PANEL -->
+      <div class="col-lg-5 brand-panel">
+
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-4">
+
+            <svg class="key-mark" viewBox="0 0 34 34" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="7"
+                stroke="#c9a74d"
+                stroke-width="2.5"
+              />
+
+              <path
+                d="M17 17L28 28M28 28V21M28 28H21"
+                stroke="#c9a74d"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span class="eyebrow" style="color:#e7c365;">
+              Saka Keja
+            </span>
+
+          </div>
+
+          <div class="brand-name">
+            Karibu<br>tena.
+          </div>
+
+          <div class="brand-tagline">
+            "Saka keja" — go find your house.
+          </div>
+
+          <p class="brand-copy">
+            Log in to pick up where you left off:
+            saved listings, roommate chats, and viewings near campus.
+          </p>
+        </div>
+
+        <div class="brand-foot">
+          Nairobi · Eldoret · Kisumu · Nakuru
+        </div>
+
+      </div>
+
+
+      <!-- RIGHT PANEL -->
+      <div class="col-lg-7 form-panel">
+
+        <div class="form-wrap">
+
+          <span class="eyebrow" style="color:var(--primary);">
+            Log in
+          </span>
+
+          <h1 class="form-title">
+            Find your keja.
+          </h1>
+
+          <p class="form-sub">
+            New here?
+            <a href="#" class="link-quiet">Create a free account</a>
+          </p>
+
+
+          <!-- ERROR MESSAGE -->
+          <div class="banner-error" id="loginBanner" role="alert">
+            <strong>We couldn't log you in.</strong>
+            Check your email/phone and password, then try again.
+          </div>
+
+
+          <form id="loginForm" novalidate>
+
+            <!-- ACCOUNT TYPE -->
+            <div class="role-toggle" role="radiogroup" aria-label="Account type">
+
+              <input
+                type="radio"
+                name="role"
+                id="role-student"
+                checked
+              >
+
+              <label for="role-student">
+                Student
+              </label>
+
+              <input
+                type="radio"
+                name="role"
+                id="role-landlord"
+              >
+
+              <label for="role-landlord">
+                Landlord
+              </label>
+
+            </div>
+
+
+            <!-- EMAIL / PHONE -->
+            <div class="mb-3">
+
+              <label
+                for="identifier"
+                class="form-label"
+                id="identifierLabel"
+              >
+                School email or phone
+              </label>
+
+              <div class="input-group" id="identifierGroup">
+
+                <span class="input-group-text id-prefix">
+                  ✉
+                </span>
+
+                <input
+                  type="text"
+                  class="form-control id-input"
+                  id="identifier"
+                  placeholder="you@students.university.ac.ke"
+                  autocomplete="username"
+                  required
+                >
+
+              </div>
+
+              <div class="field-error" id="identifierError">
+                Enter your school email or phone number.
+              </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+            <div class="mb-2">
+
+              <label
+                for="password"
+                class="form-label"
+                id="passwordLabel"
+              >
+                Password
+              </label>
+
+              <div class="input-group" id="passwordGroup">
+
+                <input
+                  type="password"
+                  class="form-control pw-input"
+                  id="password"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  required
+                >
+
+                <button
+                  type="button"
+                  class="btn toggle-eye"
+                  id="togglePw"
+                  aria-label="Show password"
+                >
+                  👁
+                </button>
+
+              </div>
+
+              <div class="field-error" id="passwordError">
+                Enter your password.
+              </div>
+
+            </div>
+
+
+            <!-- REMEMBER ME -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+
+              <div class="form-check">
+
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="remember"
+                >
+
+                <label
+                  class="form-check-label"
+                  for="remember"
+                >
+                  Keep me logged in
+                </label>
+
+              </div>
+
+              <a href="#" class="link-quiet">
+                Forgot password?
+              </a>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+            <button
+              type="submit"
+              class="btn btn-keja w-100"
+            >
+              Log in
+            </button>
+
+
+            <!-- SIGN UP -->
+            <p class="signup-line">
+              Are you a hostel or apartment owner?
+              <a href="#" class="link-quiet">
+                List your keja
+              </a>
+            </p>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
+```
