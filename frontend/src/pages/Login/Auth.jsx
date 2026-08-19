@@ -28,7 +28,7 @@ export default function AuthPage() {
   async function handleSubmit(event, formType) {
     event.preventDefault();
     const formData = isSignup ? signUpFormData : loginFormData;
-    useFetch("endpoint", 
+    const {data} =useFetch("endpoint", 
     {
     method: 'POST',
     headers: {
@@ -37,6 +37,8 @@ export default function AuthPage() {
     body: JSON.stringify({ ...formData})
   }
     )
+
+
   }
     
 
