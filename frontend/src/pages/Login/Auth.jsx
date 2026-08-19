@@ -1,16 +1,44 @@
 import { useState } from "react";
+import useFetch from "../../hooks/useFetch";
 
 export default function AuthPage() {
   const [isSignup, setIsSignup] = useState(false);
-  const [accountType, setAccountType] = useState("student")
+  const [loginFormData, setLoginFormData] = useState({
+    userName: "",
+    password: "",
+  });
 
-  function handleChange(e) {
-    setAccountType(e.target.value)
+  const [signUpFormData, setSignUpFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    accountType: "student",
+  });
+
+  function handleLoginChange(event) {
+    const { name, value } = event.target;
+    setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  function handleSignUpChange(event) {
+    const { name, value } = event.target;
+    setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
+  }
+
+  async function handleSubmit(event, formType) {
+    event.preventDefault();
+    const formData = isSignup ? signUpFormData : loginFormData;
+    useFetch("endpoint", 
+    {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ...formData})
+  }
+    )
+  }
     
-  }
 
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
@@ -38,22 +66,22 @@ export default function AuthPage() {
             FORM
             ===================
              */}
-            <form className="mt-8 space-y-5">
+            <form className="mt-8 space-y-5" onSubmit={(event) => handleSubmit(event, "login")}>
 
-              {/* Email */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Email Address
+                  Username
                 </label>
 
                 <input
-                  type="email"
-                  placeholder="you@example.com"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3
-                    outline-none transition
-                    focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  type="text"
+                  name="userName"
+                  placeholder="Your username"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  onChange={handleLoginChange}
+                  value={loginFormData.userName}
                 />
-              </div>
+              </div>            
 
               {/* Password */}
               <div>
@@ -73,10 +101,13 @@ export default function AuthPage() {
 
                 <input
                   type="password"
+                  name="password"
                   placeholder="Enter your password"
                   className="w-full rounded-xl border border-gray-200 px-4 py-3
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    onChange={handleLoginChange}
+                    value={loginFormData.password}
                 />
               </div>
 
@@ -88,7 +119,7 @@ export default function AuthPage() {
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                Sign In
+                Log in
               </button>
             </form>
 
@@ -132,7 +163,7 @@ export default function AuthPage() {
             FORM
             ===================
              */}
-            <form className="mt-8 space-y-4">
+            <form className="mt-8 space-y-4" onSubmit={(event) => handleSubmit(event, "signup")}>
 
               {/* Name */}
               <div>
@@ -142,10 +173,13 @@ export default function AuthPage() {
 
                 <input
                   type="text"
+                  name="name"
                   placeholder="John Doe"
                   className="w-full rounded-xl border border-gray-200 px-4 py-3
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    onChange={handleSignUpChange}
+                    value={signUpFormData.name}
                 />
               </div>
 
@@ -157,10 +191,13 @@ export default function AuthPage() {
 
                 <input
                   type="email"
+                  name="email"
                   placeholder="you@example.com"
                   className="w-full rounded-xl border border-gray-200 px-4 py-3
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    onChange={handleSignUpChange}
+                    value={signUpFormData.email}
                 />
               </div>
 
@@ -172,10 +209,13 @@ export default function AuthPage() {
 
                 <input
                   type="password"
+                  name="password"
                   placeholder="Create a password"
                   className="w-full rounded-xl border border-gray-200 px-4 py-3
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    onChange={handleSignUpChange}
+                    value={signUpFormData.password}
                 />
               </div>
 
@@ -186,7 +226,9 @@ export default function AuthPage() {
                     bg-white px-4 py-3 text-gray-700
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    onChange={(e)=> {handleChange(e)}}
+                    name="accountType"
+                    value={signUpFormData.accountType}
+                    onChange={handleSignUpChange}
                 >
                   <option value="">Select account type</option>
                   <option value="student">Student</option>
@@ -202,7 +244,7 @@ export default function AuthPage() {
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                Create Account
+                Sign up
               </button>
             </form>
             <div className="my-7 flex items-center gap-4">
