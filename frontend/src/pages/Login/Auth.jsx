@@ -1,7 +1,9 @@
 import { useState } from "react";
 import useFetch from "../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
+  const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
   const [loginFormData, setLoginFormData] = useState({
     userName: "",
@@ -37,8 +39,14 @@ export default function AuthPage() {
     body: JSON.stringify({ ...formData})
   }
     )
-
-
+  
+  if (data.user_type === "admin") {
+    navigate("/admin-dash")
+  }
+  else if (data.user_type === "student") {
+    navigate("/home")
+  }
+  // Add error later
   }
     
 

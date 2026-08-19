@@ -1,30 +1,34 @@
 
 import { useCallback, useState } from "react";
 
-export default function useFetch(endpoint, options) {
+export default function useFetch() {
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState(null)
-  const controller = new AbortController()
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
 
-  try {
-      const response = fetch(endpoint,{signal: controller.signal, ...options})
-      .then(r => {
-        if (!response.ok) {
-        throw new Error(data?.message || "Something went wrong. Please try again.");
+  const request = useCallback(async (endpoint, options = {}) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(endpoint, options);
+      const contentType = response.headers.get("content-type") || "";
+      const responseData = contentType.includes("application/json")
+        ? await response.json()
+        : await response.text();
+
+      if (!response.ok) {
+        throw new Error(responseData?.message || "Something went wrong. Please try again.");
       }
-      return r
-      })
-      .then(data => {
-        setData(data.json())
-      })
 
+      setData(responseData);
+      return responseData;
     } catch (err) {
       setError(err.message);
-      throw requestError;
+      throw err;
     } finally {
-        setLoading(false)
-    } 
+      setLoading(false);
+    }
+  }, []);
 
-    return {data, loading, error}
+  return { data, loading, error, request };
 }
