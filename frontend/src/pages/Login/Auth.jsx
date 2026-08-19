@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useFetch from "../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
@@ -16,6 +15,7 @@ export default function AuthPage() {
     password: "",
     accountType: "student",
   });
+  const { request, loading, error } = useFetch();
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -29,24 +29,32 @@ export default function AuthPage() {
 
   async function handleSubmit(event, formType) {
     event.preventDefault();
-    const formData = isSignup ? signUpFormData : loginFormData;
-    const {data} =useFetch("endpoint", 
+    const isLogin = formType === "login";
+    const formData = isLogin ? loginFormData : signUpFormData;
+
+    try {
+      const res = await fetch(
+        isLogin ? "login endpoint" : "sign up endpoint",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      )
+      if (!res.ok) {
+        throw new Error(r.message || "Something went wrong. Please try again.");
+      }
+      data = res.json()
+
+      if (data.user_type === "admin") {
+        navigate("/admin-dash");
+      } else if (data.user_type === "student") {
+        navigate("/home");
+      }
+    } catch (err)
     {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ ...formData})
-  }
-    )
-  
-  if (data.user_type === "admin") {
-    navigate("/admin-dash")
-  }
-  else if (data.user_type === "student") {
-    navigate("/home")
-  }
-  // Add error later
+      console.error(err)
+    }
   }
     
 
@@ -124,13 +132,15 @@ export default function AuthPage() {
               {/* Login button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full rounded-xl bg-blue-600 py-3.5
                   font-semibold text-white
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                Log in
+                {loading ? "Logging in..." : "Log in"}
               </button>
+              {error && <p className="text-sm text-red-600">{error}</p>}
             </form>
 
             <div className="my-7 flex items-center gap-4">
@@ -249,13 +259,15 @@ export default function AuthPage() {
               {/* Signup button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full rounded-xl bg-blue-600 py-3.5
                   font-semibold text-white
                   transition hover:bg-blue-700
                   active:scale-[0.98]"
               >
-                Sign up
+                {loading ? "Signing up..." : "Sign up"}
               </button>
+              {error && <p className="text-sm text-red-600">{error}</p>}
             </form>
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-gray-200" />
