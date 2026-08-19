@@ -1,0 +1,50 @@
+# --- backend/ (Python / Flask) ---
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.py[cod]
+backend/venv/
+backend/.venv/
+backend/env/
+backend/ENV/
+backend/*.egg-info/
+backend/.eggs/
+backend/instance/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.coverage
+backend/htmlcov/
+backend/*.log
+backend/*.db
+backend/*.sqlite3
+backend/.flaskenv
+
+# --- frontend/ (Node / React) ---
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.npm
+frontend/.eslintcache
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/coverage/
+
+# --- Environment variables (both) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Misc ---
+*.bak
+*.swp
