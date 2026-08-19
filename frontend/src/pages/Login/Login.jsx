@@ -2,10 +2,19 @@ import { useState } from "react";
 
 export default function AuthPage() {
   const [isSignup, setIsSignup] = useState(false);
+  const [accountType, setAccountType] = useState("student")
+
+  function handleChange(e) {
+    setAccountType(e.target.value)
+  }
+
+  function handleSubmit(e) {
+    
+  }
 
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
-      <div className="relative w-full max-w-5xl h-[600px] overflow-hidden rounded-3xl bg-white shadow-2xl">
+      <div className="relative  w-full max-w-5xl min-h-screen overflow-hidden rounded-3xl bg-white shadow-2xl">
 
         {/* =========================
             LOGIN FORM
@@ -25,7 +34,10 @@ export default function AuthPage() {
             <p className="mt-3 text-gray-500">
               Sign in to continue finding your perfect home.
             </p>
-
+            {/* ===============
+            FORM
+            ===================
+             */}
             <form className="mt-8 space-y-5">
 
               {/* Email */}
@@ -51,6 +63,7 @@ export default function AuthPage() {
                   </label>
 
                   <button
+                  onClick={()=>{alert("Sorry, we don't have password recovery at this moment")}}
                     type="button"
                     className="text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
@@ -115,7 +128,10 @@ export default function AuthPage() {
             <p className="mt-3 text-gray-500">
               Create an account and start your search today.
             </p>
-
+            {/* ===============
+            FORM
+            ===================
+             */}
             <form className="mt-8 space-y-4">
 
               {/* Name */}
@@ -165,15 +181,12 @@ export default function AuthPage() {
 
               {/* Account type */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  I am a...
-                </label>
-
                 <select
                   className="w-full rounded-xl border border-gray-200
                     bg-white px-4 py-3 text-gray-700
                     outline-none transition
                     focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    onChange={(e)=> {handleChange(e)}}
                 >
                   <option value="">Select account type</option>
                   <option value="student">Student</option>
@@ -192,6 +205,21 @@ export default function AuthPage() {
                 Create Account
               </button>
             </form>
+            <div className="my-7 flex items-center gap-4">
+              <div className="h-px flex-1 bg-gray-200" />
+              <span className="text-sm text-gray-400">OR</span>
+              <div className="h-px flex-1 bg-gray-200" />
+            </div>
+
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-3
+                rounded-xl border border-gray-200 py-3
+                font-medium text-gray-700
+                transition hover:bg-gray-50"
+            >
+              Continue with Google
+            </button>
           </div>
         </div>
 
