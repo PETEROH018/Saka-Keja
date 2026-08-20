@@ -193,9 +193,10 @@ const sortedProperties = getSortedProperties(properties);
         </header>
 
         <div className="cards-grid">
-          {properties.length > 0 ? (
-            properties.map((item) => (
+          {sortedProperties.length > 0 ? (
+            sortedProperties.map((item) => (
               <article key={item.id} className="property-card">
+                {/* Card Image and Badges */}
                 <div className="card-image-wrapper">
                   <img src={item.image} alt={item.title} />
                   <span className="match-badge">✪ {item.matchScore} Match</span>
