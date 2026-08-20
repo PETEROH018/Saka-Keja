@@ -131,9 +131,24 @@ export default function Navbar({ showSearch = false }) {
       {isMenuOpen && (
         <div className="border-t border-gray-200 px-4 py-4 md:hidden">
           <div className="flex flex-col gap-4">
-            <NavLink to="/home" onClick={closeMenu}>Discover</NavLink>
-            <NavLink to="/favorites" onClick={closeMenu}>Favorites</NavLink>
-            <NavLink to="/messages" onClick={closeMenu}>Messages</NavLink>
+            <NavLink to="/home" onClick={closeMenu} className={({ isActive }) =>
+              `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
+                ? "bg-violet-50 text-violet-700"
+                : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
+              }`
+            } >Discover</NavLink>
+            <NavLink to="/favorites" onClick={closeMenu} className={({ isActive }) =>
+              `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
+                ? "bg-violet-50 text-violet-700"
+                : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
+              }`
+            }>Favorites</NavLink>
+            <NavLink to="/messages" onClick={closeMenu} className={({ isActive }) =>
+              `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
+                ? "bg-violet-50 text-violet-700"
+                : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
+              }`
+            }>Messages</NavLink>
 
             <button
               type="button"
