@@ -100,6 +100,7 @@ export default function WhySakaKeja() {
   };
 
   return (
+    <main className="bg-surface text-on-surface font-sans min-h-screen">
     <section className="max-w-5xl mx-auto px-6 py-16 text-center">
 
       {/* HEADER */}
@@ -198,5 +199,6 @@ export default function WhySakaKeja() {
       </div>
 
     </section>
+    </main>
   );
 }
