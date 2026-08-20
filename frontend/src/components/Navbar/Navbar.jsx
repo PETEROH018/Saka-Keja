@@ -13,6 +13,15 @@ export default function Navbar() {
         <NavLink to="/favorites">Favorites</NavLink>
         <NavLink to="/messages">Messages</NavLink>
       </div>
+
+      <div>
+        <button type="button">Find a Home</button>
+
+        {/* Temporary profile placeholder until user data is connected */}
+        <div aria-label="User profile">
+          <span>U</span>
+        </div>
+      </div>
     </nav>
   )
 }
