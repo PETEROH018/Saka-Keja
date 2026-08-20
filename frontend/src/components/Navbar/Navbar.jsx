@@ -5,6 +5,14 @@ import { Menu } from "lucide-react"
 
 export default function Navbar({ showSearch = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+
+    if (!searchQuery.trim()) return
+
+    console.log("Search submitted:", searchQuery)
+  }
 
   return (
     <nav className="w-full border-b border-gray-200 bg-white">
@@ -15,7 +23,10 @@ export default function Navbar({ showSearch = false }) {
           </span>
 
           {showSearch && (
-            <div className="relative hidden md:block">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="relative hidden md:block"
+            >
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
                 ⌕
               </span>
@@ -24,9 +35,11 @@ export default function Navbar({ showSearch = false }) {
                 type="search"
                 placeholder="Search location..."
                 aria-label="Search location"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-10 w-72 rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-violet-600"
               />
-            </div>
+            </ form>
           )}
         </div>
 
@@ -97,14 +110,17 @@ export default function Navbar({ showSearch = false }) {
       </div>
 
       {showSearch && (
-        <div className="px-4 pb-3 md:hidden">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="px-4 pb-3 md:hidden"
+        >
           <input
             type="search"
             placeholder="Search location..."
             aria-label="Search location"
             className="h-10 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-violet-600"
           />
-        </div>
+        </form>
       )}
 
       {isMenuOpen && (
