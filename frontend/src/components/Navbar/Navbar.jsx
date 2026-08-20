@@ -66,11 +66,19 @@ export default function Navbar({ showSearch = false }) {
       </div>
 
       <div className="flex items-center gap-4">
-        <button type="button">Find a Home</button>
+        <button
+          type="button"
+          className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+        >
+          Find a Home
+        </button>
 
-        {/* Temporary profile placeholder until user data is connected */}
-        <div aria-label="User profile">
-          <span>U</span>
+        {/* Temporary placeholder until profile data is connected */}
+        <div
+          aria-label="User profile"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+        >
+          U
         </div>
       </div>
     </nav>
