@@ -1,10 +1,10 @@
-import UnitsGrid from "../../components/UnitsGrid/UnitsGrid"
+import UnitsGrid from "../../components/UnitssGrid/UnitsGrid"
 
 
 export default function Home() {
     return (
         <>
-        Home
+        <UnitsGrid/>
         </>
     )
 }
