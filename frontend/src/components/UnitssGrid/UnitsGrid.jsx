@@ -1,9 +1,7 @@
 import UnitCard from "../UnitCard/UnitCard";
-import useFetch from "../../hooks/useFetch";
 
-export default function UnitsGrid() {
-    const { data: units, loading, error } = useFetch("http://localhost:3000/apartments");
-
+export default function UnitsGrid({units, loading, error}) {
+    
     if (loading) return <p>Loading units...</p>;
     if (error) return <p role="alert">Unable to load units: {error}</p>;
 
