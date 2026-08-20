@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom"
 
 export default function Navbar({ showSearch = false }) {
   return (
-    <nav className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6">
+    <nav className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-8">
       <div className="flex items-center gap-6">
         <div>
           <span className="text-xl font-bold text-violet-800">
@@ -21,7 +21,7 @@ export default function Navbar({ showSearch = false }) {
               type="search"
               placeholder="Search location..."
               aria-label="Search location"
-              className="h-10 w-64 rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-violet-600"
+              className="h-10 w-72 rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-violet-600"
             />
           </div>
         )}
