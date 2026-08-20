@@ -184,10 +184,10 @@ const sortedProperties = getSortedProperties(properties);
           </div>
           <div className="sort-box">
             <span>Sort by:</span>
-            <select>
-              <option>Best Match</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="Best Match">Best Match</option>
+              <option value="Price: Low to High">Price: Low to High</option>
+              <option value="Price: High to Low">Price: High to Low</option>
             </select>
           </div>
         </header>
