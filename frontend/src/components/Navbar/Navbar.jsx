@@ -2,7 +2,9 @@
 export default function Navbar() {
   return (
     <nav>
-      Navbar
+      <div>
+        <span>Saka Keja</span>
+      </div>
     </nav>
   )
 }
