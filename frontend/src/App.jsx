@@ -2,7 +2,7 @@ import './App.css'
 import Login from './pages/Login/Auth'
 import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
-import SearchResults from './SearchResults'
+import SearchResults from './pages/SearchResults/SearchResults'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
