@@ -18,11 +18,6 @@ function App() {
       
     </Routes>    
     </BrowserRouter>
-    
-  <div className="bg-surface text-on-surface font-sans min-h-screen">
-      <WhySakaKeja />
-    </div>
-
     </>
   )
 }

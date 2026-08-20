@@ -91,8 +91,10 @@ function FeatureCard({ title, description, icon }) {
 }
 
 export default function WhySakaKeja() {
+  const navigate = useNavigate();
+
   const handleGetStarted = () => {
-    console.log("Get Started clicked");
+    navigate("/home");
   };
 
   return (
