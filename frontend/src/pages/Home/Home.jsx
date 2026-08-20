@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function Home() {
     const [endpoint, setEndpoint] = useState("http://localhost:3000/featured");
 
-    // After search, the endpoint will be changed triggering another fetch
+    // After search, the endpoint will be changed triggering another fetch (http://localhost:3000/apartments)
 
     const { data: units, loading, error } = useFetch(endpoint);
 
