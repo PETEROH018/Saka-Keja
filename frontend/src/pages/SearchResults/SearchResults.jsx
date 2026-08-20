@@ -15,3 +15,17 @@ const sampleProperties = [
     bath: 'Private Bath',
     image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80'
   },
+{
+    id: 2,
+    title: 'Greenway Hostels',
+    price: '9,500',
+    matchScore: '88%',
+    verified: false,
+    location: 'Kahawa Sukari',
+    walkTime: '8 min walk',
+    fitNote: 'Good Fit: Extremely close to campus. Note: Water is shared, not private.',
+    beds: 'Bedsitter',
+    bath: 'Paid Wi-Fi',
+    image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80'
+  }
+];
