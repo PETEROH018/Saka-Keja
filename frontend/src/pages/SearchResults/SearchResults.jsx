@@ -43,6 +43,7 @@ export default function SearchResults() {
   const [amenities, setAmenities] = useState(['Wi-Fi Included', 'Water Reliable']);
   const [currentPage, setCurrentPage] = useState(1);
   const [properties, setProperties] = useState(initialProperties);
+  const [sortBy, setSortBy] = useState('Best Match');
 
   // Toggle Checkboxes
   const handleTypeChange = (type) => {
@@ -66,6 +67,24 @@ export default function SearchResults() {
     setAmenities([]);
     setProperties(initialProperties);
   };
+
+  // Sorting Functionality
+const getSortedProperties = (items) => {
+  const sorted = [...items];
+  if (sortBy === 'Price: Low to High') {
+    return sorted.sort((a, b) => a.price - b.price);
+  }
+  if (sortBy === 'Price: High to Low') {
+    return sorted.sort((a, b) => b.price - a.price);
+  }
+  if (sortBy === 'Best Match') {
+    return sorted.sort((a, b) => parseInt(b.matchScore) - parseInt(a.matchScore));
+  }
+  return sorted;
+};
+
+// Calculate sorted items to render
+const sortedProperties = getSortedProperties(properties);
 
   // Apply Filters Functionality
   const handleApplyFilters = () => {
