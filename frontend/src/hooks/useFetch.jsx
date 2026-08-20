@@ -1,30 +1,43 @@
 
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useFetch(endpoint, options) {
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState(null)
-  const controller = new AbortController()
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
 
-  try {
-      fetch(endpoint,{signal: controller.signal, ...options})
-      .then(r => {
-        if (!r.ok) {
-        throw new Error(r.message || "Something went wrong. Please try again.");
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadData() {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(endpoint, {
+          signal: controller.signal,
+          ...options,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        setData(await response.json());
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
-      return r
-      })
-      .then(data => {
-        setData(data.json())
-      })
+    }
 
-    } catch (err) {
-      setError(err.message);
-      throw requestError;
-    } finally {
-        setLoading(false)
-    } 
+    loadData();
 
-    return {data, loading, error}
+    return () => controller.abort();
+  }, [endpoint, options]);
+
+  return { data, loading, error };
 }
