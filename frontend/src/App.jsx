@@ -14,7 +14,6 @@ function App() {
       <Route path='/admin-dash' element={<AdminDashboard/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/' element={<Login/>}/>
-      
     </Routes>    
     </BrowserRouter>
     </>
