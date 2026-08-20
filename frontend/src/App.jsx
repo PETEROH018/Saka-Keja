@@ -3,7 +3,6 @@ import Login from './pages/Login/Auth'
 import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import WhySakaKeja from "./components/WhySakaKeja";
 
 function App() {
 

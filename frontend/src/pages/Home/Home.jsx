@@ -8,6 +8,6 @@ export default function Home() {
       </h1>
 
       <WhySakaKeja />
-    </main>
+      </main>
   );
 }
