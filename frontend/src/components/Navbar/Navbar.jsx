@@ -1,6 +1,7 @@
 // Reusable navigation bar 
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
+import { Menu } from "lucide-react"
 
 export default function Navbar({ showSearch = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -91,7 +92,7 @@ export default function Navbar({ showSearch = false }) {
           aria-expanded={isMenuOpen}
           className="text-2xl text-gray-700 md:hidden"
         >
-          ☰
+          <Menu size={24} />
         </button>
       </div>
 
