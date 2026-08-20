@@ -13,6 +13,9 @@ export default function Navbar({ showSearch = false }) {
 
     console.log("Search submitted:", searchQuery)
   }
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+  }
 
   return (
     <nav className="w-full border-b border-gray-200 bg-white">
@@ -126,12 +129,13 @@ export default function Navbar({ showSearch = false }) {
       {isMenuOpen && (
         <div className="border-t border-gray-200 px-4 py-4 md:hidden">
           <div className="flex flex-col gap-4">
-            <NavLink to="/home">Discover</NavLink>
-            <NavLink to="/favorites">Favorites</NavLink>
-            <NavLink to="/messages">Messages</NavLink>
+            <NavLink to="/home" onClick={closeMenu}>Discover</NavLink>
+            <NavLink to="/favorites" onClick={closeMenu}>Favorites</NavLink>
+            <NavLink to="/messages" onClick={closeMenu}>Messages</NavLink>
 
             <button
               type="button"
+              onClick={closeMenu}
               className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
             >
               Find a Home
@@ -140,11 +144,12 @@ export default function Navbar({ showSearch = false }) {
             <div className="flex items-center gap-3">
               <div
                 aria-label="User profile"
+                onClick={closeMenu}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
               >
                 U
               </div>
-              <span className="text-sm text-gray-700">Profile</span>
+              <span className="text-sm text-gray-700" onClick={closeMenu}>Profile</span>
             </div>
           </div>
         </div>
