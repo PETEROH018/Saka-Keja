@@ -121,6 +121,8 @@ export default function Navbar({ showSearch = false }) {
             type="search"
             placeholder="Search location..."
             aria-label="Search location"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="h-10 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-violet-600"
           />
         </form>
