@@ -132,3 +132,47 @@
     .brand-panel{ min-height:auto; padding:40px 16px 64px; }
     .form-panel{ min-height:auto; padding:40px 16px 64px; }
     }
+
+    .feature-card{
+  background: var(--tw-surface-container-low, #f8f2fa);
+  border: 1px solid #cbc4d2;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.icon-chip{
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: #e1d4fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.cta-card{
+  background: #4f378a;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cta-button{
+  align-self: flex-start;
+  background: #c9a74d;
+  color: #503d00;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.cta-button:hover{
+  opacity: 0.9;
+}
