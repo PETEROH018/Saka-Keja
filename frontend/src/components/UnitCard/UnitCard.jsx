@@ -1,7 +1,6 @@
-import React from 'react';
 import { Wifi, Phone, ShieldCheck, MapPin, Bed, Bath } from 'lucide-react';
 
-export default function PropertyCard() {
+export default function UnitCard(unit) {
   return (
     <div className="max-w-sm rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Image & Badge Container */}
