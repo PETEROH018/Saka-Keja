@@ -8,7 +8,12 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
-            "rent-breakdown": 8000,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
             "furnished": false,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
@@ -35,7 +40,12 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
-            "rent-breakdown": 8000,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
             "furnished": true,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
@@ -62,7 +72,12 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
-            "rent-breakdown": 18000,
+            "monthly-expense-breakdown": {
+                "rent": 18000,
+                "water": 1125,
+                "internet": 2700,
+                "electricity": 900
+            },
             "furnished": true,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
@@ -89,7 +104,12 @@
             "property_type": "single",
             "bedrooms": 0,
             "bathrooms": 1,
-            "rent-breakdown": 5000,
+            "monthly-expense-breakdown": {
+                "rent": 5000,
+                "water": 313,
+                "internet": 750,
+                "electricity": 250
+            },
             "furnished": false,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
@@ -116,7 +136,12 @@
             "property_type": "one bedroom",
             "bedrooms": 1,
             "bathrooms": 1,
-            "rent-breakdown": 13000,
+            "monthly-expense-breakdown": {
+                "rent": 13000,
+                "water": 813,
+                "internet": 1950,
+                "electricity": 650
+            },
             "furnished": false,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
@@ -143,7 +168,12 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
-            "rent-breakdown": 8000,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
             "furnished": true,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
@@ -170,7 +200,12 @@
             "property_type": "single",
             "bedrooms": 0,
             "bathrooms": 1,
-            "rent-breakdown": 5000,
+            "monthly-expense-breakdown": {
+                "rent": 5000,
+                "water": 313,
+                "internet": 750,
+                "electricity": 250
+            },
             "furnished": false,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
@@ -197,7 +232,12 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
-            "rent-breakdown": 18000,
+            "monthly-expense-breakdown": {
+                "rent": 18000,
+                "water": 1125,
+                "internet": 2700,
+                "electricity": 900
+            },
             "furnished": true,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
@@ -224,7 +264,12 @@
             "property_type": "one bedroom",
             "bedrooms": 1,
             "bathrooms": 1,
-            "rent-breakdown": 13000,
+            "monthly-expense-breakdown": {
+                "rent": 13000,
+                "water": 813,
+                "internet": 1950,
+                "electricity": 650
+            },
             "furnished": false,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80",
@@ -251,7 +296,12 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
-            "rent-breakdown": 18000,
+            "monthly-expense-breakdown": {
+                "rent": 18000,
+                "water": 1125,
+                "internet": 2700,
+                "electricity": 900
+            },
             "furnished": true,
             "image_Urls": [
                 "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80",
