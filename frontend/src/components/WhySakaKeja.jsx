@@ -100,7 +100,7 @@ export default function WhySakaKeja() {
   };
 
   return (
-  <section className="w-full max-w-5xl mx-auto px-6 flex flex-col justify-between gap-16 text-center">
+  <section className="w-full max-w-5xl mx-auto px-6 flex flex-col justify-between gap-16 text-center items-center">
 
     {/* HEADER */}
     <div>
@@ -112,7 +112,7 @@ export default function WhySakaKeja() {
         Why Saka Keja?
       </h2>
 
-      <p className="text-on-surface-variant mt-3 max-w-md mx-auto">
+      <p className="text-on-surface-variant mt-3 max-w-md mx-auto text-center">
         We take the stress out of student housing hunting with intelligent
         matching and verified listings.
       </p>
