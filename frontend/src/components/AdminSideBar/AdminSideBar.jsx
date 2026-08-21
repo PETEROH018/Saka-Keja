@@ -12,8 +12,8 @@ export default function AdminSideBar() {
         {to: "/admin-profile", label: "Profile", icon: User},
     ]
 
-    const linkClass = ({ isActive }) =>
-      `admin-sidebar-link flex items-center gap-2 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
+     const linkClass = ({ isActive }) =>
+    `flex items-center gap-2 px-3 py-2 rounded-md font-medium transition-colors ${
       isActive
         ? 'bg-purple-700 text-purple-100'
         : 'text-black hover:bg-purple-400 hover:text-white'
@@ -21,10 +21,10 @@ export default function AdminSideBar() {
 
     return (
         <>
-        <div className="admin-sidebar absolute h-screen w-45 bg-surface-container-low p-2 text-on-surface">
-          <h1 className="flex items-center justify-center p-2 font-extrabold text-primary"><span className="m-1 inline-block"><Home/></span>Saka Keja</h1>
+        <div className="absolute h-screen w-45 bg-gray-200 text-white-100 p-2">
+            <h1 className="text-purple-700 p-2 font-extrabold flex justify-center items-center"><span className="inline-block m-1"><Home/></span>Saka Keja</h1>
             <div className="flex items-center justify-between p-2 mb-7 mt-7 gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-center font-bold text-white">JD</div>
+                <div className="bg-gray-500 w-9 h-9 rounded-full text-center font-bold">JD</div>
                 <div className="flex items-center justify-center">
                 <div className="font-bold">Property owner</div>
                 {/*if the owner is verified <div>Verified owner</div> */}
@@ -37,6 +37,7 @@ export default function AdminSideBar() {
               <NavLink
                 key={link.to}
                 to={link.to}
+                onClick={() => setIsOpen(false)}
                 className={linkClass}              >
                 <Icon className="h-5 w-5" />
                 <span>{link.label}</span>
@@ -44,7 +45,7 @@ export default function AdminSideBar() {
             );
           })}
             </div>
-            <div className="absolute bottom-4 rounded bg-primary p-2 text-white transition-colors hover:bg-primary-container">
+            <div className="bg-purple-700 p-2 rounded text-white absolute bottom-4">
                 + List New Property
             </div>
         </div>
