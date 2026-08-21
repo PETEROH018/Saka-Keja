@@ -86,25 +86,37 @@ export default function ApartmentDetails(){
         <main className="max-w-7xl mx-auto px-4 py-6">
         <section className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
           <div className="md:col-span-2 aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-            <img src={apartment.image_Urls[0]} alt="Living view" className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
+            <img src={apartment.image_Urls[0]} alt="apartment image" className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <p className="text-xl font-semibold text-white">Click to expand</p>
             </div>
           </div>
           <div className="hidden md:grid grid-cols-1 gap-3">
             <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[1]} alt="Kitchen layout" className="w-full h-full object-cover" />
+              <img src={apartment.image_Urls[1]} alt="apartment image" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="text-xl font-semibold text-white">Click to expand</p>
+              </div>
             </div>
             <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[2]} alt="Washroom facility" className="w-full h-full object-cover" />
+              <img src={apartment.image_Urls[2]} alt="apartment image" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="text-xl font-semibold text-white">Click to expand</p>
+              </div>
             </div>
           </div>
           <div className="hidden md:grid grid-cols-1 gap-3">
             <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[3]} alt="Bedroom display" className="w-full h-full object-cover" />
+              <img src={apartment.image_Urls[3]} alt="apartment image" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="text-xl font-semibold text-white">Click to expand</p>
+              </div>
             </div>
             <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative cursor-pointer group" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[4]} alt="Complex perimeter" className="w-full h-full object-cover" />
+              <img src={apartment.image_Urls[4]} alt="apartment image" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="text-xl font-semibold text-white">Click to expand</p>
+              </div>
             </div>
           </div>
         </section>
@@ -250,6 +262,30 @@ export default function ApartmentDetails(){
         </div>
         </div>
         </main>
+        
+        {showAllPhotos && (
+        <div className="fixed inset-0 bg-black/95 z-50 overflow-y-auto p-4 md:p-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-6 pb-6 border-b border-white/10 sticky top-0 bg-black/95 z-10 py-4 mt-1">
+              <h2 className="text-xl font-bold text-white">All Property Photos ({apartment.image_Urls.length})</h2>
+              <button 
+                onClick={() => setShowAllPhotos(false)}
+                className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors font-bold text-sm flex items-center gap-1"
+              >
+                ✕ Close Gallery
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {apartment.image_Urls.map((src, i) => (
+                <div key={i} className="aspect-[3/2] bg-gray-900 rounded-xl overflow-hidden">
+                  <img src={src} alt={`Gallery detail ${i+1}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        )}
         </div>
         }
         </>
