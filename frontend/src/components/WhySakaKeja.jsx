@@ -185,7 +185,7 @@ export default function WhySakaKeja() {
         Ready to find your space?
       </h3>
 
-      <p className="text-sm text-primary-container mb-4">
+      <p className="text-sm text-white mb-4">
         Join thousands of students who've already found their perfect
         home on Saka Keja.
       </p>
