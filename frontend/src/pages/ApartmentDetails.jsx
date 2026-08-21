@@ -28,12 +28,18 @@ const IconRender = ({ type }) => {
         <path strokeLinecap="round" strokeLinejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856a9.75 9.75 0 0113.788 0M1.924 8.674a14.25 14.25 0 0120.152 0M12 18.25h.008v.008H12v-.008z"/>
         </svg>
       );
-    case 'Security Guard':
+    case 'security':
       return (
         <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       );
+    case 'water':
+      return(
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25c-5.25 7.5-7.5 10.5-7.5 13.5a7.5 7.5 0 0015 0c0-3-2.25-6-7.5-13.5z" />
+        </svg>
+      )
     default:
       return null;
   }
@@ -130,6 +136,22 @@ export default function ApartmentDetails(){
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">furnished</span>
                   <span className="text-sm font-bold text-gray-800">{apartment.furnished ? 'YES' : 'NO'}</span>
                 </div>
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"wifi"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">WiFi Included</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment['Wifi included'] ? 'YES' : 'NO'}</span>
+                </div>
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"water"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">Reliable Water</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment['Water reliable'] ? 'YES' : 'NO'}</span>
+                </div>
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"security"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">Security Guard</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment['Security Guard'] ? 'YES' : 'NO'}</span>
+                </div>
+            
             </div>
         </div>
         </div>
