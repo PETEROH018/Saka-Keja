@@ -8,6 +8,7 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -40,6 +41,7 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -72,6 +74,7 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
@@ -104,6 +107,7 @@
             "property_type": "single",
             "bedrooms": 0,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 5000,
                 "water": 313,
@@ -136,6 +140,7 @@
             "property_type": "one bedroom",
             "bedrooms": 1,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 13000,
                 "water": 813,
@@ -168,6 +173,7 @@
             "property_type": "bedsitter",
             "bedrooms": 0,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -200,6 +206,7 @@
             "property_type": "single",
             "bedrooms": 0,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 5000,
                 "water": 313,
@@ -232,6 +239,7 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
@@ -264,6 +272,7 @@
             "property_type": "one bedroom",
             "bedrooms": 1,
             "bathrooms": 1,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 13000,
                 "water": 813,
@@ -296,6 +305,7 @@
             "property_type": "two bed room",
             "bedrooms": 2,
             "bathrooms": 2,
+            "isVerified": true,
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
