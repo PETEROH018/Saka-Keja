@@ -211,6 +211,12 @@ export default function ApartmentDetails(){
                 <span className="text-xl font-black text-gray-950">{Object.values(apartment['monthly-expense-breakdown']).reduce((acc, curr) => acc + curr, 0)}</span>
               </div>
               <p className="text-[11px] text-gray-400 font-medium mb-6 italic leading-relaxed">*Utilitiy costs are estimates based on average student usage metrics.</p>
+
+              <button 
+                className="w-full font-bold py-3.5 px-4 rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 text-sm bg-purple-700 hover:bg-purple-800 text-white shadow-purple-100 active:scale-[0.99]"
+              >
+               Contact Owner
+              </button>
             </div>
             </aside>
         </div>
