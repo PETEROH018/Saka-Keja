@@ -1,9 +1,49 @@
 import { useEffect, useState } from "react";
 
+// This function is used to render the different icons that show an apartment's specifications
+const IconRender = ({ type }) => {
+  const baseClass = "w-5 h-5 text-gray-500 mb-1";
+  switch (type) {
+    case 'bed':
+      return (
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10V19a2 2 0 002 2h14a2 2 0 002-2v-9M3 10l9-7 9 7M3 10v4a2 2 0 002 2h14a2 2 0 002-2v-4" />
+        </svg>
+      );
+    case 'bath':
+      return (
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 12v3a4 4 0 004 4h10a4 4 0 004-4v-3M4 8h16M7 4h10M9 8v-2a1 1 0 011-1h4a1 1 0 011 1v2" />
+        </svg>
+      );
+    case 'sofa':
+      return (
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 11V7a2 2 0 012-2h12a2 2 0 012 2v4M3 11a2 2 0 00-2 2v3a1 1 0 001 1h2a1 1 0 001-1v-1h14v1a1 1 0 001 1h2a1 1 0 001-1v-3a2 2 0 00-2-2M3 11h18M7 16v2m10-2v2" />
+        </svg>
+      );
+    case 'wifi':
+      return (
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856a9.75 9.75 0 0113.788 0M1.924 8.674a14.25 14.25 0 0120.152 0M12 18.25h.008v.008H12v-.008z"/>
+        </svg>
+      );
+    case 'Security Guard':
+      return (
+        <svg className={baseClass} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
+
 export default function ApartmentDetails(){
     const [showAllPhotos, setShowAllPhotos] = useState(false);
     const [isLoading, setIsLoading] = useState(true)
     const [apartment,setApartment] = useState({})
+  
     useEffect(()=>{
         fetch("http://localhost:3000/apartments/1")
         .then(response=> response.json())
@@ -73,6 +113,23 @@ export default function ApartmentDetails(){
                 </svg>
                 {apartment.location}
               </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"bed"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bedrooms</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.bedrooms}</span>
+                </div>
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"bath"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bathrooms</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.bathrooms}</span>
+                </div>
+                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <IconRender type={"sofa"} />
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">furnished</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.furnished ? 'YES' : 'NO'}</span>
+                </div>
             </div>
         </div>
         </div>
