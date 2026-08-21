@@ -3,6 +3,7 @@ import Login from './pages/Login/Auth'
 import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
+import SearchResults from './pages/SearchResults/SearchResults'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
@@ -13,10 +14,10 @@ function App() {
     <Routes>
       <Route path='/home' element={<Home/>}/>
       <Route path='/admin-dash' element={<AdminDashboard/>}/>
-      <Route path='/login' element={<Login/>}/>
-      <Route path='/' element={<Login/>}/>
       <Route path='/apartment-details' element={<ApartmentDetails/>}/>
-    </Routes>    
+      <Route path='/search' element={<SearchResults/>}/>
+      <Route path='/' element={<Login/>}/>
+      </Routes>
     </BrowserRouter>
     </>
   )
