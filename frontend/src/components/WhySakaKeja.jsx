@@ -100,10 +100,10 @@ export default function WhySakaKeja() {
   };
 
   return (
-    <main className="bg-surface text-on-surface font-sans min-h-screen">
-    <section className="max-w-5xl mx-auto px-6 py-16 text-center">
+  <section className="w-full max-w-5xl mx-auto px-6 flex flex-col justify-between gap-16 text-center">
 
-      {/* HEADER */}
+    {/* HEADER */}
+    <div>
       <span className="text-xs font-semibold tracking-widest uppercase text-primary">
         Why us
       </span>
@@ -116,89 +116,90 @@ export default function WhySakaKeja() {
         We take the stress out of student housing hunting with intelligent
         matching and verified listings.
       </p>
+    </div>
 
 
-      {/* STATS */}
-      <div className="stats-strip">
-        {stats.map((stat) => (
-          <div className="stat" key={stat.label}>
-            <span className="stat-number">
-              {stat.number}
-            </span>
+    {/* STATS */}
+    <div className="stats-strip w-full">
+      {stats.map((stat) => (
+        <div className="stat" key={stat.label}>
+          <span className="stat-number">
+            {stat.number}
+          </span>
 
-            <span className="stat-label">
-              {stat.label}
-            </span>
+          <span className="stat-label">
+            {stat.label}
+          </span>
+        </div>
+      ))}
+    </div>
+
+
+    {/* FEATURES */}
+    <div className="grid md:grid-cols-2 gap-6 text-left w-full">
+      {features.map((feature) => (
+        <FeatureCard
+          key={feature.title}
+          title={feature.title}
+          description={feature.description}
+          icon={feature.icon}
+        />
+      ))}
+    </div>
+
+
+    {/* TESTIMONIAL */}
+    <div className="testimonial w-full" data-reveal>
+
+      <p className="testimonial-quote">
+        "Saka Keja found me a place five minutes from campus in two days.
+        I didn't have to worry about deposit scams like my friends did."
+      </p>
+
+      <div className="testimonial-author">
+
+        <div className="avatar">
+          WK
+        </div>
+
+        <div className="text-left">
+
+          <div className="font-semibold text-sm">
+            Wanjiru K.
           </div>
-        ))}
-      </div>
 
-
-      {/* FEATURES */}
-      <div className="grid md:grid-cols-2 gap-4 mt-10 text-left">
-        {features.map((feature) => (
-          <FeatureCard
-            key={feature.title}
-            title={feature.title}
-            description={feature.description}
-            icon={feature.icon}
-          />
-        ))}
-      </div>
-
-
-      {/* TESTIMONIAL */}
-      <div className="testimonial mt-10" data-reveal>
-
-        <p className="testimonial-quote">
-          "Saka Keja found me a place five minutes from campus in two days.
-          I didn't have to worry about deposit scams like my friends did."
-        </p>
-
-        <div className="testimonial-author">
-
-          <div className="avatar">
-            WK
-          </div>
-
-          <div className="text-left">
-
-            <div className="font-semibold text-sm">
-              Wanjiru K.
-            </div>
-
-            <div className="text-xs text-on-surface-variant">
-              Kenyatta University
-            </div>
-
+          <div className="text-xs text-on-surface-variant">
+            Kenyatta University
           </div>
 
         </div>
-      </div>
-
-
-      {/* CTA */}
-      <div className="cta-card mt-10" data-reveal>
-
-        <h3 className="font-semibold text-lg mb-1 text-on-primary">
-          Ready to find your space?
-        </h3>
-
-        <p className="text-sm text-primary-container mb-4">
-          Join thousands of students who've already found their perfect
-          home on Saka Keja.
-        </p>
-
-        <button
-          className="cta-button"
-          onClick={handleGetStarted}
-        >
-          Get Started
-        </button>
 
       </div>
+    </div>
 
-    </section>
-    </main>
+
+    {/* CTA */}
+    <div className="cta-card w-full" data-reveal>
+
+      <h3 className="font-semibold text-lg mb-1 text-on-primary">
+        Ready to find your space?
+      </h3>
+
+      <p className="text-sm text-primary-container mb-4">
+        Join thousands of students who've already found their perfect
+        home on Saka Keja.
+      </p>
+
+      <button
+        className="cta-button"
+        onClick={handleGetStarted}
+      >
+        Get Started
+      </button>
+
+    </div>
+
+  </section>
+
   );
 }
