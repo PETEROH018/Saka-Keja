@@ -120,6 +120,7 @@ export default function ApartmentDetails(){
                 {apartment.location}
               </p>
             </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"bed"} />
@@ -151,7 +152,26 @@ export default function ApartmentDetails(){
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">Security Guard</span>
                   <span className="text-sm font-bold text-gray-800">{apartment['Security Guard'] ? 'YES' : 'NO'}</span>
                 </div>
-            
+            </div>
+
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
+              <h3 className="text-lg font-bold text-gray-900 mb-5">What's nearby?</h3>
+              <div className="space-y-4">
+                {apartment['nearby amenities'].map((place, idx) => (
+                  <div key={idx} className="flex items-start gap-3.5 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                    <div className="bg-gray-100/70 p-2.5 rounded-xl border border-gray-100/70">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm text-gray-800">{place.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{place.distance}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
         </div>
         </div>
