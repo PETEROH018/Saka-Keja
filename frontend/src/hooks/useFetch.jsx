@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { useEffect, useState } from "react";
-
 export default function useFetch(endpoint, options) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
