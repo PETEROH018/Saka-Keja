@@ -5,6 +5,7 @@ import UnitsGrid from "../../components/UnitssGrid/UnitsGrid"
 import useFetch from "../../hooks/useFetch";
 import { useState } from "react";
 
+
 export default function Home() {
   const [endpoint, setEndpoint] = useState("http://localhost:3000/featured");
   // After search, the endpoint will be changed triggering another fetch (http://localhost:3000/apartments)

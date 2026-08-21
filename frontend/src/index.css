@@ -1,21 +1,19 @@
 @import "tailwindcss";
 
+@import "tailwindcss";
+
+/* ============ Design tokens ============ */
 @theme {
-  --font-sans: "Inter", sans-serif;
-
   --color-surface: #fdf7ff;
-  --color-surface-container: #f2ecf4;
   --color-surface-container-low: #f8f2fa;
-
+  --color-surface-container: #f2ecf4;
   --color-on-surface: #1d1b20;
   --color-on-surface-variant: #494551;
-
   --color-outline: #7a7582;
   --color-outline-variant: #cbc4d2;
 
   --color-primary: #4f378a;
   --color-on-primary: #ffffff;
-
   --color-primary-container: #6750a4;
   --color-on-primary-container: #e0d2ff;
 
@@ -25,4 +23,136 @@
   --color-tertiary: #765b00;
   --color-tertiary-container: #c9a74d;
   --color-on-tertiary-container: #503d00;
+}
+
+/* ============ Component classes ============ */
+@layer components {
+
+  .stats-strip {
+    @apply flex flex-wrap justify-center gap-4 mt-10;
+  }
+
+  .stat {
+    @apply flex-1 min-w-[140px] max-w-[180px] bg-white border border-outline-variant
+           rounded-2xl p-5 flex flex-col items-center shadow-sm
+           transition-all duration-300;
+  }
+
+  .stat:hover {
+    @apply -translate-y-1 border-primary shadow-lg;
+  }
+
+  .stat-number {
+    @apply text-2xl font-extrabold text-primary;
+  }
+
+  .stat-label {
+    @apply text-xs text-on-surface-variant mt-1 text-center;
+  }
+
+  .feature-card {
+    @apply relative bg-white border border-outline-variant rounded-2xl p-7
+           overflow-hidden shadow-sm transition-all duration-300;
+  }
+
+  .feature-card::before {
+    content: "";
+    @apply absolute -top-[40%] -right-[20%] w-[140px] h-[140px] rounded-full pointer-events-none;
+    background: radial-gradient(circle, rgba(103, 80, 164, 0.08), transparent 70%);
+  }
+
+  .feature-card:hover {
+    @apply -translate-y-1.5 border-primary shadow-xl;
+  }
+
+  .icon-chip {
+    @apply w-11 h-11 rounded-xl flex items-center justify-center mb-4;
+    background: linear-gradient(135deg, var(--color-secondary-container), #cfbcff);
+    box-shadow: inset 0 0 0 1px rgba(79, 55, 138, 0.08);
+  }
+
+  .feature-card h3 {
+    @apply text-base font-bold text-on-surface mb-1;
+  }
+
+  .feature-card p {
+    @apply text-sm text-on-surface-variant leading-relaxed;
+  }
+
+  .testimonial {
+    @apply relative max-w-xl mx-auto mt-14 text-center px-6 py-8
+           bg-surface-container-low border border-outline-variant rounded-3xl;
+  }
+
+  .testimonial::before {
+    content: "\201C";
+    @apply absolute -top-2 left-1/2 -translate-x-1/2 text-6xl font-extrabold leading-none;
+    color: #cfbcff;
+    font-family: Georgia, serif;
+  }
+
+  .testimonial-quote {
+    @apply relative text-lg italic text-on-surface leading-relaxed;
+  }
+
+  .testimonial-author {
+    @apply flex items-center justify-center gap-3 mt-5;
+  }
+
+  .avatar {
+    @apply w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+    box-shadow: 0 4px 10px rgba(79, 55, 138, 0.25);
+  }
+
+  .cta-card {
+    @apply relative overflow-hidden rounded-3xl p-8 mt-12 max-w-xl mx-auto text-left;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+    box-shadow: 0 20px 40px rgba(79, 55, 138, 0.25);
+  }
+
+  .cta-card::after {
+    content: "";
+    @apply absolute -bottom-16 -right-16 w-[180px] h-[180px] rounded-full pointer-events-none;
+    background: radial-gradient(circle, rgba(201, 167, 77, 0.25), transparent 70%);
+  }
+
+  .cta-heading {
+    @apply text-white text-xl font-bold mb-1;
+  }
+
+  .cta-text {
+    @apply text-sm mb-5;
+    color: var(--color-on-primary-container);
+  }
+
+  .cta-button {
+    @apply text-sm font-bold px-6 py-2.5 rounded-xl border-none cursor-pointer
+           transition-all duration-200;
+    background: var(--color-tertiary-container);
+    color: var(--color-on-tertiary-container);
+    box-shadow: 0 6px 16px rgba(201, 167, 77, 0.4);
+  }
+
+  .cta-button:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 10px 22px rgba(201, 167, 77, 0.5);
+  }
+
+  .cta-button:active {
+    @apply translate-y-0;
+  }
+
+  .cta-button--clicked {
+    background: var(--color-tertiary);
+    @apply text-white;
+  }
+
+  .reveal-init {
+    @apply opacity-0 translate-y-4 transition-all duration-500;
+  }
+
+  .reveal-init.revealed {
+    @apply opacity-100 translate-y-0;
+  }
 }
