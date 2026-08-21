@@ -140,5 +140,49 @@
             "Water reliable": true,
             "Security Guard": true
         }
+    ], 
+    "featured": [
+        {
+            "id": "8",
+            "name": "Lavington Palms",
+            "description": "Luxury 2-bedroom apartment with scenic views, CCTV monitoring, and borehole backup",
+            "location": "Lavington",
+            "property_type": "two bed room",
+            "bedrooms": 2,
+            "rent": 18000,
+            "furnished": true,
+            "image_Url": "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
+            "WiFi included": true,
+            "Water reliable": true,
+            "Security Guard": true
+        },
+        {
+            "id": "9",
+            "name": "Thika Sunrise Flats",
+            "description": "Newly built 1-bedroom flat with private balcony, tiles, and fiber connection ready",
+            "location": "Thika",
+            "property_type": "one bedroom",
+            "bedrooms": 1,
+            "rent": 13000,
+            "furnished": false,
+            "image_Url": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80",
+            "WiFi included": false,
+            "Water reliable": true,
+            "Security Guard": false
+        },
+        {
+            "id": "10",
+            "name": "Syokimau Gateway Gardens",
+            "description": "Secure gated community apartment with playground access and reliable management",
+            "location": "Syokimau",
+            "property_type": "two bed room",
+            "bedrooms": 2,
+            "rent": 18000,
+            "furnished": true,
+            "image_Url": "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80",
+            "WiFi included": true,
+            "Water reliable": true,
+            "Security Guard": true
+        }
     ]
 }
