@@ -191,6 +191,7 @@ export default function ApartmentDetails(){
                 ))}
               </div>
             </div>
+            </div>
             <aside className="sticky top-24 space-y-4">
             <div className="bg-white border-2 border-purple-600 rounded-3xl p-6 shadow-lg shadow-purple-500/5">
               <div className="flex items-baseline justify-between mb-1">
@@ -260,9 +261,8 @@ export default function ApartmentDetails(){
             </button>
             </aside>
         </div>
-        </div>
         </main>
-        
+
         {showAllPhotos && (
         <div className="fixed inset-0 bg-black/95 z-50 overflow-y-auto p-4 md:p-10">
           <div className="max-w-7xl mx-auto">
