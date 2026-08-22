@@ -1,6 +1,6 @@
 import CompareProperties from "../../components/CompareProperties/CompareProperties";
-import Header from "../../components/layout/Header"; // check if this already exists too, same way
-import Footer from "../../components/layout/Footer";  // path to teammate's actual file — confirm location
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 export default function ComparePage() {
   return (
