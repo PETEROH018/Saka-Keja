@@ -102,6 +102,109 @@ export default function AdminDashboard() {
           })}
         </section>
 
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">        
+
+          {/* Listings Performance */}
+          <section className="lg:col-span-5 flex flex-col gap-6">
+            <div className="rounded-2xl border border-outline-variant/60 bg-white p-6 shadow-2xs">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/40">
+                <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  Listings Performance
+                </h2>
+                <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  3/4 Occupied
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {propertyOverview.map((property) => (
+                  <div
+                    key={property.id}
+                    className="flex items-center justify-between rounded-xl border border-outline-variant/40 p-3.5 hover:bg-surface-container-low transition-colors"
+                  >
+                    <div>
+                      <h4 className="text-sm font-bold text-on-surface">{property.name}</h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs font-semibold text-primary">{property.rent}</span>
+                        <span className="text-gray-300">•</span>
+                        <span className="flex items-center gap-1 text-xs text-on-surface-variant">
+                          <MapPin className="h-3 w-3" />
+                          {property.location}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${property.status === "Available" ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-700"}`}>
+                        {property.status}
+                      </span>
+                      <div className="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1.5">
+                        <span>{property.views} views</span>
+                        <span>•</span>
+                        <span>{property.inquiries} inq.</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+           {/* Recent Inquiries */}
+          <section className="lg:col-span-7 flex flex-col rounded-2xl border border-outline-variant/60 bg-white p-6 shadow-2xs">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant/40">
+              <div>
+                <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                  Recent Inquiries
+                </h2>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  17 new inquiries received
+                </p>
+              </div>
+              <button className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+                View All (17)
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 flex-1">
+              {recentInquiries.map((inquiry) => (
+                <div
+                  key={inquiry.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-outline-variant/40 p-4 transition-all hover:bg-surface-container-low hover:border-primary/30"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-on-secondary-container">
+                      {inquiry.avatar}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-on-surface">{inquiry.name}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${inquiry.status === "New" ? "bg-indigo-100 text-indigo-700" : "bg-amber-100 text-amber-800"}`}>
+                          {inquiry.status}
+                        </span>
+                      </div>
+                      <p className="text-xs font-medium text-primary mt-0.5">{inquiry.property}</p>
+                      <p className="text-xs text-on-surface-variant line-clamp-1 mt-1">&quot;{inquiry.message}&quot;</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-outline-variant/30">
+                    <span className="flex items-center gap-1 text-[11px] text-on-surface-variant">
+                      <Clock className="h-3 w-3" />
+                      {inquiry.time}
+                    </span>
+                    <button className="rounded-lg bg-surface-container-low px-3 py-1 text-xs font-semibold text-primary border border-outline-variant/60 hover:bg-primary hover:text-white transition-colors">
+                      Reply
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
       </main>
     </div>
   )
