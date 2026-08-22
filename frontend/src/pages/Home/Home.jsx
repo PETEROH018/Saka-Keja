@@ -3,6 +3,7 @@ import WhySakaKeja from "../../components/WhySakaKeja";
 import Footer from "../../components/Footer/Footer"
 import UnitsGrid from "../../components/UnitssGrid/UnitsGrid"
 import useFetch from "../../hooks/useFetch";
+import Filter from "../../components/FilterComponent/Filter";
 import { useState } from "react";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
     <>
       {/* Main navigation for the student home page */}
       <Navbar showSearch={false} />
+      <Filter/>
       <main className="bg-surface text-on-surface font-sans min-h-screen flex flex-col justify-center items-center py-16">
       <UnitsGrid units={units} loading={loading} error={error}/>
       <WhySakaKeja />
