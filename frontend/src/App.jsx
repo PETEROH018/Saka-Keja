@@ -4,6 +4,7 @@ import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
+import MyProperties from './pages/MyProperties/MyProperties'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Route path='/admin-dash' element={<AdminDashboard/>}/>
       <Route path='/apartment-details' element={<ApartmentDetails/>}/>
       <Route path='/search' element={<SearchResults/>}/>
+      <Route path="/my-properties" element={<MyProperties />} />
       <Route path='/' element={<Login/>}/>
       </Routes>
     </BrowserRouter>
