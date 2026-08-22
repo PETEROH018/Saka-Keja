@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
+import useFetch from "../../hooks/useFetch";
 
 import OwnerSidebar from "../../components/OwnerSidebar/OwnerSidebar";
 
@@ -7,13 +8,18 @@ export default function MyProperties() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-
+  const {
+    data: properties,
+    loading,
+    error,
+  } = useFetch("http://localhost:3000/apartments");
   const filters = [
     { label: "All Properties", value: "all" },
     { label: "Available", value: "available" },
     { label: "Pending", value: "pending" },
     { label: "Occupied", value: "occupied" },
   ];
+
   return (
     <div className="flex min-h-screen bg-[#faf8fc]">
       <OwnerSidebar />
@@ -52,8 +58,8 @@ export default function MyProperties() {
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
                   className={`rounded-full border px-4 py-2 text-xs font-medium transition ${isActive
-                      ? "border-violet-200 bg-violet-100 text-violet-700"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-violet-200 hover:text-violet-700"
+                    ? "border-violet-200 bg-violet-100 text-violet-700"
+                    : "border-gray-200 bg-white text-gray-600 hover:border-violet-200 hover:text-violet-700"
                     }`}
                 >
                   {filter.label}
@@ -61,6 +67,25 @@ export default function MyProperties() {
               );
             })}
           </div>
+          {loading && <p className="mt-6 text-sm text-gray-500">Loading properties...</p>}
+
+          {
+            error && (
+              <p className="mt-6 text-sm text-red-500">
+                Failed to load properties: {error}
+              </p>
+            )
+          }
+
+          {
+            properties && (
+              <p className="mt-6 text-sm text-gray-600">
+                Loaded {properties.length} properties
+              </p>
+            )
+          }
+
+
         </div>
       </main>
     </div>
