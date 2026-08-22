@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Building2, PlusCircle, HelpCircle, Mail, User } from "lucide-react"
+import { Home, LayoutDashboard, Building2, PlusCircle, HelpCircle, Mail, User, ShieldCheck } from "lucide-react"
 import { NavLink } from "react-router-dom";
 
 
@@ -13,41 +13,65 @@ export default function AdminSideBar() {
     ]
 
     const linkClass = ({ isActive }) =>
-      `admin-sidebar-link flex items-center gap-2 rounded-md px-3 py-2 font-medium transition-all duration-200 ${
+      `admin-sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
       isActive
-        ? 'bg-purple-700 text-purple-100'
-        : 'text-black hover:bg-purple-400 hover:text-white'
+        ? 'bg-primary text-white shadow-sm'
+        : 'text-on-surface-variant hover:bg-primary/10 hover:text-primary'
     }`;
 
     return (
-        <>
-        <div className="admin-sidebar absolute h-screen w-[30%] bg-surface-container-low p-2 text-on-surface">
-          <h1 className="flex items-center justify-center p-2 font-extrabold text-primary"><span className="m-1 inline-block"><Home/></span>Saka Keja</h1>
-            <div className="flex items-center justify-between p-2 mb-7 mt-7 gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-center font-bold text-white">JD</div>
-                <div className="flex items-center justify-center">
-                <div className="font-bold">Property owner</div>
-                {/*if the owner is verified <div>Verified owner</div> */}
-                </div>                
+        <aside className="w-64 md:w-72 shrink-0 min-h-screen border-r border-outline-variant/60 bg-surface-container-low p-5 text-on-surface flex flex-col justify-between">
+          <div>
+            {/* Logo */}
+            <div className="flex items-center gap-2.5 px-2 py-3 mb-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm">
+                <Home className="h-5 w-5" />
+              </div>
+              <span className="text-xl font-extrabold tracking-tight text-primary">Saka Keja</span>
             </div>
-            <div >
-            {navlinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={linkClass}              >
-                <Icon className="h-5 w-5" />
-                <span>{link.label}</span>
-              </NavLink>
-            );
-          })}
+
+            {/* Profile Card */}
+            <div className="flex items-center gap-3 rounded-xl border border-outline-variant/60 bg-white p-3 shadow-2xs mb-6">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shadow-xs">
+                JD
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-bold text-on-surface">John Doe</div>
+                <div className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  <span>Verified Landlord</span>
+                </div>
+              </div>
             </div>
-            <div className="absolute bottom-4 rounded bg-primary p-2 text-white transition-colors hover:bg-primary-container">
-                + List New Property
-            </div>
-        </div>
-        </>
+
+            {/* Nav Links */}
+            <nav className="space-y-1.5">
+              {navlinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    className={linkClass}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span>{link.label}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Bottom Action */}
+          <div className="pt-6">
+            <NavLink 
+              to="/add-property"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-primary-container active:scale-[0.98]"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>List New Property</span>
+            </NavLink>
+          </div>
+        </aside>
     )
 }
