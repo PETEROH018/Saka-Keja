@@ -59,4 +59,15 @@ const FEATURE_ROWS = [
     label: "Water Reliable",
     render: (p) => (p["Water reliable"] ? <Check /> : <Cross />),
   },
-  
+    {
+    label: "Security Guard",
+    render: (p) => (p["Security Guard"] ? <Check /> : <Cross />),
+  },
+  {
+    label: "Nearest Amenity",
+    render: (p) => {
+      const nearest = p["nearby amenities"][0];
+      return `${nearest.title} — ${nearest.distance}`;
+    },
+  },
+];
