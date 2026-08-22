@@ -17,8 +17,11 @@ export default function Filter({ onSearch, onFilter }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const filterData = { location, price, bedrooms };
-    if (onSearch) onSearch(filterData);
-    if (onFilter) onFilter(filterData);
+    if (!location && !price && !bedrooms) {
+      onSearch(filterData);
+    } else {
+      onFilter(filterData);
+    }
   };
 
   const handleReset = () => {
