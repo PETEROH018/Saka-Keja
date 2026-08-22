@@ -71,3 +71,57 @@ const FEATURE_ROWS = [
     },
   },
 ];
+export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
+  const properties = useMemo(
+    () => propertyIds.map((id) => db.apartments.find((a) => a.id === id)).filter(Boolean),
+    [propertyIds]
+  );
+
+  const cheapest = useMemo(() => {
+    if (properties.length === 0) return null;
+    return properties.reduce((min, p) =>
+      totalMonthlyCost(p) < totalMonthlyCost(min) ? p : min
+    );
+  }, [properties]);
+
+  if (properties.length === 0) {
+    return <p className="compare-empty">No properties selected for comparison.</p>;
+  }
+
+  return (
+    <section className="compare-section">
+      <div className="compare-header">
+        <a href="#" className="compare-back">&larr; Back to Search</a>
+        <h1 className="compare-title">Compare Properties</h1>
+        <p className="compare-subtitle">
+          Review your shortlisted options side-by-side to make the best decision.
+        </p>
+      </div>
+
+      <div className="compare-table-wrap">
+        <table className="compare-table">
+          <thead>
+            <tr>
+              <th className="compare-feature-col">Features</th>
+              {properties.map((p) => (
+                <th key={p.id} className="compare-property-col">
+                  {p.id === cheapest.id && (
+                    <span className="compare-badge">Best Value</span>
+                  )}
+                  <div className="compare-thumb">
+                    <img src={p.image_Urls[0]} alt={p.name} loading="lazy" />
+                  </div>
+                  <div className="compare-property-name">{p.name}</div>
+                  <div className="compare-property-location">{p.location}</div>
+                  {p.isVerified && (
+                    <span className="compare-verified">
+                      <Check /> Verified
+                    </span>
+                  )}
+                  <button className="compare-view-btn">View Details</button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
