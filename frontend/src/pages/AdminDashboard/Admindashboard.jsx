@@ -68,36 +68,40 @@ export default function AdminDashboard() {
               Welcome back! Here&apos;s what&apos;s happening with your properties today.
             </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-              <input
-                type="text"
-                placeholder="Search listings..."
-                className="h-10 rounded-xl border border-outline-variant bg-white pl-9 pr-4 text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-secondary-container"
-              />
-            </div>
-            
-            <button 
-              type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-outline-variant bg-white text-on-surface-variant transition hover:bg-surface-container-low hover:text-primary"
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-            </button>
-
-            <button 
-              type="button"
-              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-primary-container active:scale-[0.98]"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Property</span>
-            </button>
-          </div>
         </header>
 
-        
+        {/* 4 Stat Cards */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          {stats.map((stat) => {
+            const IconComponent = stat.icon
+            return (
+              <div
+                key={stat.id}
+                className="group relative overflow-hidden rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg}`}>
+                    <IconComponent className="h-5 w-5" />
+                  </div>
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${stat.badgeBg}`}>
+                    <TrendingUp className="h-3 w-3" />
+                    {stat.change}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="block text-3xl font-extrabold tracking-tight text-on-surface mb-1">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">
+                    {stat.title}
+                  </span>
+                </div>
+              </div>
+            )
+          })}
+        </section>
+
       </main>
     </div>
   )
