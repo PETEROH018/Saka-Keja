@@ -20,6 +20,7 @@ export default function AdminSideBar() {
     }`;
 
     return (
+      
         <aside className="w-64 md:w-72 shrink-0 min-h-screen border-r border-outline-variant/60 bg-surface-container-low p-5 text-on-surface flex flex-col justify-between">
           <div>
             {/* Logo */}
@@ -61,6 +62,6 @@ export default function AdminSideBar() {
                 + List New Property
             </div>
         </div>
-        </>
+      </aside>
     )
 }
