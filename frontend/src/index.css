@@ -305,3 +305,31 @@
   opacity: 1;
   transform: translateY(0);
 }
+.compare-section {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.compare-back {
+  font-size: 0.85rem;
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+}
+
+.compare-back:hover {
+  color: var(--color-primary);
+}
+
+.compare-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin-top: 0.5rem;
+}
+
+.compare-subtitle {
+  color: var(--color-on-surface-variant);
+  margin-top: 0.25rem;
+  margin-bottom: 2rem;
+}
