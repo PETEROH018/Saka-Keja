@@ -1,8 +1,5 @@
-import { useMemo } from "react";
-import db from "../../data/db.json";
-import "./CompareProperties.css";
+import { useMemo, useState, useEffect } from "react";
 
-// Small check / cross icons so we don't pull in an icon library for two glyphs
 function Check() {
   return (
     <svg className="feat-icon feat-icon--yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -28,7 +25,6 @@ function totalMonthlyCost(property) {
   return b.rent + b.water + b.internet + b.electricity;
 }
 
-// Each row: a label + a function that pulls/formats the value from a property
 const FEATURE_ROWS = [
   {
     label: "Monthly Rent",
@@ -59,7 +55,7 @@ const FEATURE_ROWS = [
     label: "Water Reliable",
     render: (p) => (p["Water reliable"] ? <Check /> : <Cross />),
   },
-    {
+  {
     label: "Security Guard",
     render: (p) => (p["Security Guard"] ? <Check /> : <Cross />),
   },
@@ -71,10 +67,27 @@ const FEATURE_ROWS = [
     },
   },
 ];
+
 export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
+  const [apartments, setApartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/apartments") // adjust to your backend's actual port/route
+      .then((res) => res.json())
+      .then((data) => {
+        setApartments(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load apartments:", err);
+        setLoading(false);
+      });
+  }, []);
+
   const properties = useMemo(
-    () => propertyIds.map((id) => db.apartments.find((a) => a.id === id)).filter(Boolean),
-    [propertyIds]
+    () => propertyIds.map((id) => apartments.find((a) => a.id === id)).filter(Boolean),
+    [propertyIds, apartments]
   );
 
   const cheapest = useMemo(() => {
@@ -83,6 +96,10 @@ export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
       totalMonthlyCost(p) < totalMonthlyCost(min) ? p : min
     );
   }, [properties]);
+
+  if (loading) {
+    return <p className="compare-empty">Loading...</p>;
+  }
 
   if (properties.length === 0) {
     return <p className="compare-empty">No properties selected for comparison.</p>;
@@ -124,7 +141,6 @@ export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
             </tr>
           </thead>
           <tbody>
-          </tbody>
             {FEATURE_ROWS.map((row) => (
               <tr key={row.label} className={row.emphasis ? "compare-row--emphasis" : ""}>
                 <td className="compare-feature-label">{row.label}</td>
