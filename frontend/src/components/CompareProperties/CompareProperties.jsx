@@ -125,3 +125,19 @@ export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
           </thead>
           <tbody>
           </tbody>
+            {FEATURE_ROWS.map((row) => (
+              <tr key={row.label} className={row.emphasis ? "compare-row--emphasis" : ""}>
+                <td className="compare-feature-label">{row.label}</td>
+                {properties.map((p) => (
+                  <td key={p.id} className="compare-value-cell">
+                    {row.render(p)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
