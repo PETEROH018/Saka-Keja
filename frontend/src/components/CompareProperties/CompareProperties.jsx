@@ -43,3 +43,20 @@ const FEATURE_ROWS = [
     label: "Type",
     render: (p) => p.property_type,
   },
+  {
+    label: "Bedrooms / Bathrooms",
+    render: (p) => `${p.bedrooms} bed • ${p.bathrooms} bath`,
+  },
+  {
+    label: "Furnished",
+    render: (p) => (p.furnished ? <Check /> : <Cross />),
+  },
+  {
+    label: "Wi-Fi Included",
+    render: (p) => (p["WiFi included"] ? <Check /> : <Cross />),
+  },
+  {
+    label: "Water Reliable",
+    render: (p) => (p["Water reliable"] ? <Check /> : <Cross />),
+  },
+  
