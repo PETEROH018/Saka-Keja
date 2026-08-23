@@ -3,3 +3,4 @@
 // style(StudentProfile): configure responsive container constraints
 // feat(StudentProfile): add avatar image card section
 // style(StudentProfile): set avatar image object-fit and borders
+// feat(StudentProfile): implement name and program header details
