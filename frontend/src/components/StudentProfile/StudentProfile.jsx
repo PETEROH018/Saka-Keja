@@ -6,8 +6,7 @@ import {
   Mail, 
   Phone, 
   X, 
-  Instagram, 
-  Linkedin 
+  Globe 
 } from 'lucide-react';
 
 export default function StudentProfile() {
@@ -26,11 +25,10 @@ export default function StudentProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
       
-      {/* 🟢 TOP NAVBAR */}
+      {/* TOP NAVBAR */}
       <header className="bg-white border-b border-gray-100 px-8 py-3.5 flex items-center justify-between sticky top-0 z-20">
-        {/* Left: Brand & Links */}
         <div className="flex items-center space-x-10">
-          <span className="text-xl font-bold text-[#4f46e5]">Makazi</span>
+          <span className="text-xl font-bold text-[#4f46e5]">Saka Keja</span>
           <nav className="hidden md:flex space-x-6 text-xs font-medium text-gray-500">
             <a href="#discover" className="hover:text-[#4f46e5] transition">Discover</a>
             <a href="#map" className="hover:text-[#4f46e5] transition">Map</a>
@@ -39,7 +37,6 @@ export default function StudentProfile() {
           </nav>
         </div>
 
-        {/* Right: Search, Button, Avatar */}
         <div className="flex items-center space-x-3">
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -60,10 +57,8 @@ export default function StudentProfile() {
         </div>
       </header>
 
-      {/* 🟢 MAIN BODY CONTENT */}
+      {/* MAIN CONTENT */}
       <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow">
-        
-        {/* HEADER: Title, Subtitle, Edit Button */}
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">Student Profile</h1>
@@ -75,31 +70,25 @@ export default function StudentProfile() {
           </button>
         </div>
 
-        {/* 2-COLUMN CARDS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
           {/* PERSONAL INFORMATION CARD */}
           <div className="bg-white rounded-xl p-6 border border-gray-100/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
             <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
               Personal Information
             </h2>
-
             <div className="space-y-4 text-xs">
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Full Name</p>
                 <p className="font-medium text-gray-800">{profileData.fullName}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Email Address</p>
                 <p className="font-medium text-gray-800">{profileData.email}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Phone Number</p>
                 <p className="font-medium text-gray-800">{profileData.phone}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Date of Birth</p>
                 <p className="font-medium text-gray-800">{profileData.dateOfBirth}</p>
@@ -112,7 +101,6 @@ export default function StudentProfile() {
             <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
               Academic Information
             </h2>
-
             <div className="space-y-4 text-xs">
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">University/Institution</p>
@@ -123,45 +111,36 @@ export default function StudentProfile() {
                   <span className="font-semibold text-gray-800">{profileData.university}</span>
                 </div>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Course of Study</p>
                 <p className="font-medium text-gray-800">{profileData.course}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Year of Study</p>
                 <p className="font-medium text-gray-800">{profileData.yearOfStudy}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Student ID Number</p>
                 <p className="font-medium text-gray-800">{profileData.studentId}</p>
               </div>
-
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Expected Graduation</p>
                 <p className="font-medium text-gray-800">{profileData.expectedGraduation}</p>
               </div>
             </div>
           </div>
-
         </div>
       </main>
 
-      {/* 🟢 FOOTER */}
+      {/* FOOTER */}
       <footer className="bg-[#f2eff8]/60 border-t border-gray-200/50 text-[11px] text-gray-500 pt-10 pb-8 mt-auto">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-8">
-          
-          {/* Brand Info */}
           <div className="md:col-span-1">
-            <span className="text-[#4f46e5] font-bold text-base block mb-2">Makazi</span>
+            <span className="text-[#4f46e5] font-bold text-base block mb-2">Saka Keja</span>
             <p className="text-gray-400 leading-normal text-[11px]">
               Helping students find the perfect home near campus, quickly and safely.
             </p>
           </div>
-
-          {/* Column 1 */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-2.5 text-xs">For Students</h3>
             <ul className="space-y-1.5 text-gray-500">
@@ -171,8 +150,6 @@ export default function StudentProfile() {
               <li><a href="#guide" className="hover:text-gray-800 transition">Housing Guide</a></li>
             </ul>
           </div>
-
-          {/* Column 2 */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-2.5 text-xs">For Owners</h3>
             <ul className="space-y-1.5 text-gray-500">
@@ -181,8 +158,6 @@ export default function StudentProfile() {
               <li><a href="#faq" className="hover:text-gray-800 transition">Owner FAQ</a></li>
             </ul>
           </div>
-
-          {/* Column 3 */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-2.5 text-xs">Company</h3>
             <ul className="space-y-1.5 text-gray-500">
@@ -192,14 +167,12 @@ export default function StudentProfile() {
               <li><a href="#terms" className="hover:text-gray-800 transition">Terms</a></li>
             </ul>
           </div>
-
-          {/* Column 4: Support & Contacts */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-2.5 text-xs">Support</h3>
             <div className="space-y-2 text-gray-500">
               <div className="flex items-center space-x-1.5">
                 <Mail className="w-3 h-3 text-gray-400" />
-                <span>hello@makazi.com</span>
+                <span>hello@sakakeja.com</span>
               </div>
               <div className="flex items-center space-x-1.5">
                 <Phone className="w-3 h-3 text-gray-400" />
@@ -210,19 +183,15 @@ export default function StudentProfile() {
                   <span className="text-[9px] font-bold text-gray-600">i</span>
                 </div>
                 <X className="w-3.5 h-3.5 cursor-pointer hover:text-gray-600 transition" />
-                <Linkedin className="w-3.5 h-3.5 cursor-pointer hover:text-gray-600 transition" />
+                <Globe className="w-3.5 h-3.5 cursor-pointer hover:text-gray-600 transition" />
               </div>
             </div>
           </div>
-
         </div>
-
-        {/* Copyright Footer Line */}
         <div className="max-w-5xl mx-auto px-6 mt-8 pt-5 border-t border-gray-200/50 text-[10px] text-gray-400">
-          © 2024 Makazi Student Housing. All rights reserved.
+          © 2026 Saka Keja Student Housing. All rights reserved.
         </div>
       </footer>
-
     </div>
   );
 }
