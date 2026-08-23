@@ -481,6 +481,38 @@ export default function AddAppartment(){
                     </small>
                   </span>
                 </label>
+
+                 <label className="flex min-h-[62px] cursor-pointer items-center gap-3 rounded-md border border-[#e2dce6] bg-[#fcf9fd] px-3">
+                  <input
+                    type="checkbox"
+                    name="securityGuard"
+                    checked={form.securityGuard}
+                    onChange={handleChange}
+                    className="peer sr-only"
+                  />
+
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-[#cfc5d6] text-white peer-checked:border-[#60409a] peer-checked:bg-[#60409a]">
+                    {form.securityGuard && (
+                      <Icon name="check" size={11} />
+                    )}
+                  </span>
+
+                  <Icon
+                    name="shield"
+                    size={17}
+                    className="text-[#64439a]"
+                  />
+
+                  <span>
+                    <strong className="block text-[10px] font-semibold">
+                      Security Guard
+                    </strong>
+
+                    <small className="mt-0.5 block text-[8px] text-[#8c8590]">
+                      On-site security available
+                    </small>
+                  </span>
+                </label>
               </div>
             </section>
 
