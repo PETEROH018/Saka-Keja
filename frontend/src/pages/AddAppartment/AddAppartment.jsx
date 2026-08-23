@@ -688,7 +688,18 @@ export default function AddAppartment(){
 
               </div>
             </section>
+            
+            <div className="flex justify-end gap-2 border-t border-[#e6e0e8] pt-5">
 
+              <button
+                type="submit"
+                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084]"
+              >
+                Continue to Units
+                <Icon name="arrowRight" size={12} />
+              </button>
+
+            </div>
             </form>        
             </main>
         </div>
