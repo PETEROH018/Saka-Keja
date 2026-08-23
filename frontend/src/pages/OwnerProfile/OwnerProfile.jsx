@@ -1,4 +1,3 @@
-import { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import Footer from "../../components/Footer/Footer";
 import UnitsGrid from "../../components/UnitssGrid/UnitsGrid";
@@ -16,58 +15,11 @@ import {
   Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
-const EXAMPLE_LISTINGS = [
-  {
-    id: "1",
-    name: "JKUAT Serene Heights",
-    location: "Juja, Near JKUAT Main Gate",
-    propertyType: "Bedsitter",
-    bedrooms: 0,
-    bathrooms: 1,
-    rent: 8000,
-    status: "Available",
-    isVerified: true,
-    views: 482,
-    inquiries: 12,
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "2",
-    name: "Kilimani Executive Studio",
-    location: "Kilimani, Near Yaya Centre",
-    propertyType: "1 Bedroom Studio",
-    bedrooms: 1,
-    bathrooms: 1,
-    rent: 18000,
-    status: "Occupied",
-    isVerified: true,
-    views: 920,
-    inquiries: 28,
-    image:
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "3",
-    name: "Parklands Student 1-Bed",
-    location: "Parklands, Near UoN Law Campus",
-    propertyType: "1 Bedroom",
-    bedrooms: 1,
-    bathrooms: 1,
-    rent: 25000,
-    status: "Available",
-    isVerified: true,
-    views: 610,
-    inquiries: 19,
-    image:
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
-  },
-];
 
 function OwnerProfile() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
+  const EXAMPLE_LISTINGS = useFetch('http://localhost:3000/apartments');
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-surface font-sans text-on-surface">
@@ -205,6 +157,22 @@ function OwnerProfile() {
               </div>
             </div>
           </div>
+
+          <section>
+            <div className="flex items-center justify-between border-b border-outline-variant/40 pb-4">
+              <div>
+                <h2 className="text-xl font-bold text-on-surface">Your Listings</h2>
+                <p className="mt-1 text-sm text-on-surface-variant">
+                  View and manage the properties on your profile.
+                </p>
+              </div>
+            </div>
+            <UnitsGrid
+              units={EXAMPLE_LISTINGS.data}
+              loading={EXAMPLE_LISTINGS.loading}
+              error={EXAMPLE_LISTINGS.error}
+            />
+          </section>
         </div>
         <div className="mt-12">
           <Footer />
