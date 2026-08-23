@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../Header/Header';
+import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { 
   Search, 
@@ -28,7 +28,7 @@ export default function StudentProfile() {
     <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
       
       {/* TOP NAVBAR */}
-    <Header/>
+    <Navbar/>
 
       {/* MAIN CONTENT */}
       <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow">
