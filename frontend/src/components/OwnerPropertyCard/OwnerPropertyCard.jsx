@@ -72,9 +72,29 @@ export default function OwnerPropertyCard({ property }) {
                     </div>
                 </div>
 
+                {status === "occupied" && (
+                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 rounded-lg bg-violet-50 px-3 py-2 text-xs">
+                        <span className="text-gray-600">
+                            Tenant:{" "}
+                            <strong className="font-semibold text-gray-900">
+                                {property.tenant ?? "—"}
+                            </strong>
+                        </span>
+
+                        <span className="text-gray-600">
+                            Lease ends:{" "}
+                            <strong className="font-semibold text-gray-900">
+                                {property.leaseEnd ?? "—"}
+                            </strong>
+                        </span>
+                    </div>
+                )}
+
                 <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
                     <span>
-                        <strong className="font-semibold text-gray-700">{views}</strong>{" "}
+                        <strong className="font-semibold text-gray-700">
+                            {views}
+                        </strong>{" "}
                         views
                     </span>
 
