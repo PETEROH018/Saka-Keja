@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 
+//This function handles displaying different svg icons on this page
 const Icon = ({ name, size = 16, className = "" }) => {
   const common = {
     width: size,
@@ -171,7 +172,36 @@ const Icon = ({ name, size = 16, className = "" }) => {
   return icons[name] || null;
 };
 
+const inputClass =
+  "h-9 w-full rounded-md border border-[#ddd6e2] bg-[#fcf8fd] px-2.5 text-[10px] text-[#38333d] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10";
+
+const labelClass =
+  "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
+
 export default function AddAppartment(){
+     const [form, setForm] = useState({
+        buildingName: "",
+        propertyType: "",
+        address: "",
+        description: "",
+        furnished: false,
+        wifiIncluded: false,
+        waterReliable: false,
+        securityGuard: false,
+        images: [],
+      });
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const propertyData = {
+        ...form,
+        amenities,
+        };
+
+        console.log(propertyData);
+        };
+
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
         <div className="flex min-h-screen">
@@ -230,50 +260,25 @@ export default function AddAppartment(){
                         ))}
             </div>
             
-             {/* FORM */}
+             {/* INPUT FORM */}
             <form
                 onSubmit={handleSubmit}
                 className="rounded-lg border border-[#ded7e2] bg-white px-5 py-7 shadow-sm sm:px-8"
             >
-
-            {/* Existing apartment */}
+            
+            {/*form title */}
             <section>
-              <h2 className="mb-4 text-sm font-semibold">
-                Which apartment are you adding to?
-              </h2>
-
-              <div className="flex items-center gap-4 sm:gap-16">
-
-                <div className="relative w-full max-w-[155px]">
-                  <Icon
-                    name="search"
-                    size={13}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#958c9b]"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Search existing apartments..."
-                    className={`${inputClass} pl-8`}
-                  />
-                </div>
-
-                <span className="text-[8px] text-gray-400">
-                  OR
-                </span>
-
-              </div>
-
-              <button
-                type="button"
+              <div
                 className="mt-3 flex h-14 w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#7048a7] bg-[#fcf8ff] text-xs font-semibold text-[#5d3a94] hover:bg-[#f8f0ff]"
               >
                 <Icon name="apartment" size={17} />
                 Add New Apartment Building
-              </button>
+              </div>
             </section>
-
             <div className="my-7 h-px bg-[#e5dfe7]" />
+
+           
+
             </form>
 
 
