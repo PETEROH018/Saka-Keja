@@ -20,6 +20,30 @@ export default function MyProperties() {
     { label: "Pending", value: "pending" },
     { label: "Occupied", value: "occupied" },
   ];
+  const filterCounts = {
+    all: properties?.length ?? 0,
+    available: properties?.filter(
+      (property) => property.status === "available"
+    ).length ?? 0,
+    pending: properties?.filter(
+      (property) => property.status === "pending"
+    ).length ?? 0,
+    occupied: properties?.filter(
+      (property) => property.status === "occupied"
+    ).length ?? 0,
+  };
+  const filteredProperties = (properties ?? []).filter((property) => {
+    const matchesFilter =
+      activeFilter === "all" || property.status === activeFilter;
+
+    const searchValue = searchTerm.toLowerCase().trim();
+
+    const matchesSearch =
+      property.name.toLowerCase().includes(searchValue) ||
+      property.location.toLowerCase().includes(searchValue);
+
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <div className="flex min-h-screen bg-[#faf8fc]">
@@ -63,7 +87,7 @@ export default function MyProperties() {
                     : "border-gray-200 bg-white text-gray-600 hover:border-violet-200 hover:text-violet-700"
                     }`}
                 >
-                  {filter.label}
+                  {filter.label} ({filterCounts[filter.value]})
                 </button>
               );
             })}
@@ -80,13 +104,19 @@ export default function MyProperties() {
 
           {properties && (
             <div className="mt-6 flex max-w-5xl flex-col gap-4">
-              {properties.map((property) => (
+              {filteredProperties.map((property) => (
                 <OwnerPropertyCard
                   key={property.id}
                   property={property}
                 />
               ))}
             </div>
+          )}
+
+          {!loading && !error && filteredProperties.length === 0 && (
+            <p className="mt-6 text-sm text-gray-500">
+              No properties found.
+            </p>
           )}
 
 
