@@ -371,6 +371,15 @@ export default function AddAppartment(){
               </div>
             </section>
 
+            <section className="mb-8">
+              <h3 className="mb-4 text-[13px] font-semibold">
+                Property Features
+              </h3>
+
+              <div className="grid gap-2.5 sm:grid-cols-2">
+
+              </div>
+            </section>
             </form>
 
 
