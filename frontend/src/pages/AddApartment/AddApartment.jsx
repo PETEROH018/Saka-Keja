@@ -37,7 +37,7 @@ export default function AddApartment(){
             
             {/* SIDEBAR */}
             <AdminSideBar />
-
+        <div className="border-b border-[#e4dce8] bg-[#fcf8fd]">
              {/* Title */}
 
         <div className="px-5 pt-7 lg:px-7">
@@ -59,6 +59,96 @@ export default function AddApartment(){
               "Review your property details before publishing."}
           </p>
 
+        </div>
+        
+        {/*STEPPER*/}
+          <div className="px-5 pt-6 lg:px-7">
+
+          <div className="mx-auto mb-7 flex w-full max-w-[650px] items-start">
+
+            {[
+              ["1", "Location"],
+              ["2", "Units"],
+              ["3", "Review"],
+            ].map(([number, label], index) => {
+
+              const stepNumber = Number(number);
+
+              const isActive =
+                currentStep === stepNumber;
+
+              const isCompleted =
+                currentStep > stepNumber;
+
+              return (
+                <React.Fragment key={number}>
+
+                  {/* STEP */}
+
+                  <div
+                    className={`flex min-w-[55px] flex-col items-center gap-1.5 ${
+                      isCompleted
+                        ? "cursor-pointer"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (isCompleted) {
+                        setCurrentStep(
+                          stepNumber
+                        );
+                      }
+                    }}
+                  >
+
+                    <div
+                      className={`grid h-[18px] w-[18px] place-items-center rounded-full text-[8px] ${
+                        isActive ||
+                        isCompleted
+                          ? "bg-[#5e3b95] text-white"
+                          : "bg-[#eeeaf0] text-[#746d78]"
+                      }`}
+                    >
+                      {isCompleted
+                        ? "✓"
+                        : number}
+                    </div>
+
+
+                    <span
+                      className={`text-[8px] ${
+                        isActive ||
+                        isCompleted
+                          ? "text-[#5e3b95]"
+                          : "text-[#aaa4ad]"
+                      }`}
+                    >
+                      {label}
+                    </span>
+
+                  </div>
+
+
+                  {/* LINE */}
+
+                  {index < 2 && (
+                    <div
+                      className={`mt-2 h-px flex-1 ${
+                        currentStep >
+                        stepNumber
+                          ? "bg-[#5e3b95]"
+                          : "bg-[#dad3de]"
+                      }`}
+                    />
+                  )}
+
+                </React.Fragment>
+              );
+            })}
+
+          </div>
+
+        </div>
+        
         </div>
             
         </div>
