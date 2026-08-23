@@ -5,6 +5,7 @@ import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ComparePage from "./pages/Compare/ComparePage";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <Route path='/apartment-details' element={<ApartmentDetails/>}/>
       <Route path='/search' element={<SearchResults/>}/>
       <Route path='/' element={<Login/>}/>
+      <Route path="/compare" element={<ComparePage />} />
       </Routes>
     </BrowserRouter>
     </>
