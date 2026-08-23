@@ -14,7 +14,7 @@ export default function AdminSideBar() {
         {to: "/my-properties", label: "My Properties", icon: Building2},
         {to: "/add-property", label: "Add Property", icon: PlusCircle},
         {to: "/inquiries", label: "Inquiries", icon: HelpCircle},
-        {to: "/admin-profile", label: "Profile", icon: User},
+        {to: "/owner-profile", label: "Profile", icon: User},
     ]
 
     const linkClass = ({ isActive }) =>

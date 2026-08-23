@@ -7,6 +7,7 @@ import SearchResults from './pages/SearchResults/SearchResults'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage";
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx";
+import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/' element={<Login/>}/>
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
+        <Route path="/owner-profile" element={<OwnerProfile/>}/>
       </Routes>
     </BrowserRouter>
   )
