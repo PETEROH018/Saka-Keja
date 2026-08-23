@@ -14,8 +14,8 @@ export default function OwnerPropertyCard({ property }) {
     };
 
     return (
-        <article className="flex gap-4 rounded-xl border border-gray-200 bg-white p-4">
-            <div className="h-36 w-44 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+        <article className="flex gap-3 rounded-xl border border-gray-200 bg-white p-3">
+            <div className="h-32 w-40 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                 {image ? (
                     <img
                         src={image}
@@ -49,7 +49,7 @@ export default function OwnerPropertyCard({ property }) {
                     </span>
                 </div>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
                     <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                         <p className="text-xs text-gray-500">Monthly Rent</p>
                         <p className="mt-1 text-sm font-semibold text-gray-900">
@@ -90,7 +90,7 @@ export default function OwnerPropertyCard({ property }) {
                     </div>
                 )}
 
-                <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
+                <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
                     <span>
                         <strong className="font-semibold text-gray-700">
                             {views}
