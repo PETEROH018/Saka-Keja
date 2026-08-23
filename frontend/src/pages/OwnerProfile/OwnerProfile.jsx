@@ -216,7 +216,73 @@ function OwnerProfile() {
             </div>
           </div>
 
-          {/* MANAGE_LISTINGS_PLACEHOLDER */}
+          {/* Manage Listings Section */}
+          <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-on-surface flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  Manage Listings
+                </h2>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  View and manage your student rental properties.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant" />
+                  <input
+                    type="text"
+                    placeholder="Search listings..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full rounded-xl border border-outline-variant/80 bg-white pl-9 pr-4 py-2 text-xs text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-secondary-container"
+                  />
+                </div>
+
+                <div className="flex rounded-xl border border-outline-variant/60 bg-white p-1 shadow-2xs">
+                  <button
+                    onClick={() => setActiveTab("all")}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      activeTab === "all"
+                        ? "bg-primary text-white shadow-xs"
+                        : "text-on-surface-variant hover:text-primary"
+                    }`}
+                  >
+                    All ({EXAMPLE_LISTINGS.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("available")}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      activeTab === "available"
+                        ? "bg-primary text-white shadow-xs"
+                        : "text-on-surface-variant hover:text-primary"
+                    }`}
+                  >
+                    Available
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("occupied")}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      activeTab === "occupied"
+                        ? "bg-primary text-white shadow-xs"
+                        : "text-on-surface-variant hover:text-primary"
+                    }`}
+                  >
+                    Occupied
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Note: Example data notice */}
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 text-xs text-primary">
+              💡 <strong>Note:</strong> Showing 3 example listings. These placeholder listings will later be replaced with data from the database.
+            </div>
+
+            {/* LISTINGS_GRID_INNER_PLACEHOLDER */}
+          </div>
         </div>
         <div className="mt-12">
           <Footer />
