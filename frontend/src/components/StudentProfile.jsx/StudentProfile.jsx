@@ -30,3 +30,4 @@
 // feat(StudentProfile): add quick details metadata rows
 // style(StudentProfile): adjust icon color opacity
 // refactor(StudentProfile): extract profile fields logic
+// style(StudentProfile): polish dark mode card contrast
