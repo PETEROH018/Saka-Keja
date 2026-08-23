@@ -7,7 +7,7 @@ import './SearchResults.css';
 export default function SearchResults() {
   const navigate = useNavigate();
 
-  // Data & Loading States
+  // Data & Load States
   const [allApartments, setAllApartments] = useState([]);
   const [filteredApartments, setFilteredApartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export default function SearchResults() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Default');
 
-  // Fetch Data from JSON Server (apartments endpoint)
+  // Fetch Data from JSON Server
   useEffect(() => {
     fetch('http://localhost:5000/apartments')
       .then((res) => {
@@ -41,7 +41,7 @@ export default function SearchResults() {
       });
   }, []);
 
-  // Handle Checkbox Toggles
+  // Handle Checkboxes
   const handleTypeChange = (type) => {
     setPropertyTypes(prev => 
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
@@ -64,7 +64,7 @@ export default function SearchResults() {
     setFilteredApartments(allApartments);
   };
 
-  // Apply Filters Logic
+  // Apply Filters
   const handleApplyFilters = () => {
     let result = allApartments.filter(item => {
       const rent = item["monthly-expense-breakdown"]?.rent || 0;
@@ -72,7 +72,7 @@ export default function SearchResults() {
       const matchMin = minRent ? rent >= Number(minRent) : true;
       const matchMax = maxRent ? rent <= Number(maxRent) : true;
       
-      // Property type matching (e.g., 'bedsitter', 'single', 'one bedroom', 'two bed room')
+      // Property type matching
       const matchType = propertyTypes.length > 0 
         ? propertyTypes.some(t => item.property_type.toLowerCase().includes(t.toLowerCase())) 
         : true;
