@@ -191,6 +191,20 @@ export default function AddAppartment(){
         images: [],
       });
 
+      const handleChange = (e) => {
+        const { name, value, type, checked, files } = e.target;
+
+        setForm((prev) => ({
+        ...prev,
+        [name]:
+            type === "checkbox"
+            ? checked
+            : type === "file"
+                ? Array.from(files)
+                    : value,
+            }));
+        };
+
       const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -293,6 +307,7 @@ export default function AddAppartment(){
                   <input
                     name="buildingName"
                     value={form.buildingName}
+                    onChange={handleChange}
                     placeholder="e.g. Equity Residences"
                     required
                     className={inputClass}
