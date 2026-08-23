@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 
+//This is the list of the types of properties that can be listed by an owner
+const propertyTypes = [
+  "Mixed",
+  "Single",
+  "Bedsitter",
+  "One Bedroom",
+  "Two Bedroom",
+];
 //This function handles displaying different svg icons on this page
 const Icon = ({ name, size = 16, className = "" }) => {
   const common = {
@@ -313,6 +321,39 @@ export default function AddAppartment(){
                     className={inputClass}
                   />
                 </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Property Type
+                  </label>
+
+                  <div className="relative">
+                    <select
+                      name="propertyType"
+                      value={form.propertyType}
+                      onChange={handleChange}
+                      required
+                      className={`${inputClass} appearance-none pr-8`}
+                    >
+                      <option value="">
+                        Select Type...
+                      </option>
+
+                      {propertyTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+
+                    <Icon
+                      name="chevronDown"
+                      size={13}
+                      className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+                    />
+                  </div>
+                </div>
+
               </div>
             </section>
 
