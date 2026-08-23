@@ -20,7 +20,7 @@ function App() {
         <Route path='/' element={<Login/>}/>
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
-        <Route path='owner-profile' element={<OwnerProfile/>}/>
+        <Route path="/owner-profile" element={<OwnerProfile/>}/>
       </Routes>
     </BrowserRouter>
   )

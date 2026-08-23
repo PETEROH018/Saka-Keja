@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import Footer from "../../components/Footer/Footer";
+import UnitsGrid from "../../components/UnitssGrid/UnitsGrid";
 import {
   ShieldCheck,
   Mail,
@@ -24,8 +25,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// 3 Example listings dataset for the Manage Listings section.
-// NOTE: These placeholder listings will later be replaced with live data from the database.
 const EXAMPLE_LISTINGS = [
   {
     id: "1",
@@ -214,135 +213,6 @@ function OwnerProfile() {
                 <CheckCircle2 className="h-6 w-6" />
               </div>
             </div>
-          </div>
-
-          {/* Manage Listings Section */}
-          <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-bold text-on-surface flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-primary" />
-                  Manage Listings
-                </h2>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  View and manage your student rental properties.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <div className="relative flex-1 sm:w-64">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant" />
-                  <input
-                    type="text"
-                    placeholder="Search listings..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full rounded-xl border border-outline-variant/80 bg-white pl-9 pr-4 py-2 text-xs text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-secondary-container"
-                  />
-                </div>
-
-                <div className="flex rounded-xl border border-outline-variant/60 bg-white p-1 shadow-2xs">
-                  <button
-                    onClick={() => setActiveTab("all")}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      activeTab === "all"
-                        ? "bg-primary text-white shadow-xs"
-                        : "text-on-surface-variant hover:text-primary"
-                    }`}
-                  >
-                    All ({EXAMPLE_LISTINGS.length})
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("available")}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      activeTab === "available"
-                        ? "bg-primary text-white shadow-xs"
-                        : "text-on-surface-variant hover:text-primary"
-                    }`}
-                  >
-                    Available
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("occupied")}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      activeTab === "occupied"
-                        ? "bg-primary text-white shadow-xs"
-                        : "text-on-surface-variant hover:text-primary"
-                    }`}
-                  >
-                    Occupied
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Note: Example data notice */}
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 text-xs text-primary">
-              💡 <strong>Note:</strong> Showing 3 example listings. These placeholder listings will later be replaced with data from the database.
-            </div>
-
-            {/* 3 Example Listings Grid */}
-            {filteredListings.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredListings.map((listing) => (
-                  <div
-                    key={listing.id}
-                    className="group rounded-2xl border border-outline-variant/60 bg-white overflow-hidden shadow-2xs hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
-                        <img
-                          src={listing.image}
-                          alt={listing.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute top-3 left-3">
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs font-bold shadow-xs backdrop-blur-md ${
-                              listing.status === "Available"
-                                ? "bg-emerald-500/90 text-white"
-                                : "bg-indigo-600/90 text-white"
-                            }`}
-                          >
-                            {listing.status}
-                          </span>
-                        </div>
-                        {listing.isVerified && (
-                          <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-emerald-700 shadow-xs backdrop-blur-sm">
-                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                            <span>Verified</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* CARD_BODY_INNER_PLACEHOLDER */}
-                    </div>
-
-                    <div className="p-5 pt-0 grid grid-cols-2 gap-2">
-                      <button className="flex items-center justify-center gap-1.5 rounded-xl border border-outline-variant/60 bg-white py-2 text-xs font-semibold text-on-surface hover:bg-surface-container-low hover:border-primary/40 transition-colors cursor-pointer">
-                        <Edit className="h-3.5 w-3.5 text-primary" />
-                        <span>Edit</span>
-                      </button>
-                      <Link
-                        to="/apartment-details"
-                        className="flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2 text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
-                      >
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        <span>View Details</span>
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-outline-variant/60 bg-white p-12 text-center">
-                <Building2 className="mx-auto h-12 w-12 text-outline-variant" />
-                <h3 className="mt-3 text-base font-bold text-on-surface">No listings found</h3>
-                <p className="mt-1 text-xs text-on-surface-variant">
-                  Try adjusting your search criteria or filter tabs.
-                </p>
-              </div>
-            )}
           </div>
         </div>
         <div className="mt-12">
