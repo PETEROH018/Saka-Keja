@@ -244,3 +244,4 @@ export default function StudentProfile() {
 // style(StudentProfile): fine-tune bio line-height and text color
 // feat(StudentProfile): create social links list wrapper
 // style(StudentProfile): add hover states to social media icons
+// refactor(StudentProfile): organize JSX return structure
