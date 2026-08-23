@@ -126,3 +126,39 @@ it("saves updated property details", async () => {
     })
   );
 });
+it("shows a success message after saving changes", async () => {
+  window.history.pushState({}, "", "/edit-property/1");
+
+  vi.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: "1",
+        name: "JKUAT Serene Heights",
+        location: "Juja",
+        property_type: "bedsitter",
+        bedrooms: 0,
+        bathrooms: 1,
+        status: "available",
+        "monthly-expense-breakdown": {
+          rent: 8000,
+        },
+      }),
+    })
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({}),
+    });
+
+  render(<App />);
+
+  await screen.findByLabelText(/property name/i);
+
+  await userEvent.click(
+    screen.getByRole("button", { name: /save changes/i })
+  );
+
+  expect(
+    await screen.findByText(/property updated successfully/i)
+  ).toBeInTheDocument();
+});

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 
 
+
 function EditPropertyForm({ property }) {
     const [name, setName] = useState(property.name ?? "");
     const [location, setLocation] = useState(property.location ?? "");
@@ -13,28 +14,35 @@ function EditPropertyForm({ property }) {
     const [bedrooms, setBedrooms] = useState(property.bedrooms ?? "");
     const [bathrooms, setBathrooms] = useState(property.bathrooms ?? "");
     const [status, setStatus] = useState(property.status ?? "available");
+    const [saveMessage, setSaveMessage] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        await fetch(`http://localhost:3000/apartments/${property.id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name,
-                location,
-                property_type: propertyType,
-                bedrooms: Number(bedrooms),
-                bathrooms: Number(bathrooms),
-                status,
-                "monthly-expense-breakdown": {
-                    ...property["monthly-expense-breakdown"],
-                    rent: Number(rent),
+        const response = await fetch(
+            `http://localhost:3000/apartments/${property.id}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-            }),
-        });
+                body: JSON.stringify({
+                    name,
+                    location,
+                    property_type: propertyType,
+                    bedrooms: Number(bedrooms),
+                    bathrooms: Number(bathrooms),
+                    status,
+                    "monthly-expense-breakdown": {
+                        ...property["monthly-expense-breakdown"],
+                        rent: Number(rent),
+                    },
+                }),
+            }
+        );
+        if (response.ok) {
+            setSaveMessage("Property updated successfully");
+        }
     }
 
     return (
@@ -114,6 +122,11 @@ function EditPropertyForm({ property }) {
                 <button type="submit">
                     Save Changes
                 </button>
+                {saveMessage && (
+                    <p>
+                        {saveMessage}
+                    </p>
+                )}
             </div>
         </form >
     );
