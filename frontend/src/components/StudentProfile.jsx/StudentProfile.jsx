@@ -35,3 +35,4 @@
 // style(StudentProfile): align footer links and copyright text
 // refactor(StudentProfile): remove unused imports
 // style(StudentProfile): tweak container max-width bounds
+// refactor(StudentProfile): format document spacing
