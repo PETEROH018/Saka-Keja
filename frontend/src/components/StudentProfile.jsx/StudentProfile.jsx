@@ -254,3 +254,4 @@ export default function StudentProfile() {
 // style(StudentProfile): adjust card border radius
 // refactor(StudentProfile): standardize section spacing
 // style(StudentProfile): update header text tracking
+// feat(StudentProfile): add quick details metadata rows
