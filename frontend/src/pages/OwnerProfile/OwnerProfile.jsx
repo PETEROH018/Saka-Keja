@@ -281,7 +281,68 @@ function OwnerProfile() {
               💡 <strong>Note:</strong> Showing 3 example listings. These placeholder listings will later be replaced with data from the database.
             </div>
 
-            {/* LISTINGS_GRID_INNER_PLACEHOLDER */}
+            {/* 3 Example Listings Grid */}
+            {filteredListings.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredListings.map((listing) => (
+                  <div
+                    key={listing.id}
+                    className="group rounded-2xl border border-outline-variant/60 bg-white overflow-hidden shadow-2xs hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+                        <img
+                          src={listing.image}
+                          alt={listing.name}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute top-3 left-3">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-bold shadow-xs backdrop-blur-md ${
+                              listing.status === "Available"
+                                ? "bg-emerald-500/90 text-white"
+                                : "bg-indigo-600/90 text-white"
+                            }`}
+                          >
+                            {listing.status}
+                          </span>
+                        </div>
+                        {listing.isVerified && (
+                          <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-emerald-700 shadow-xs backdrop-blur-sm">
+                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                            <span>Verified</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* CARD_BODY_INNER_PLACEHOLDER */}
+                    </div>
+
+                    <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+                      <button className="flex items-center justify-center gap-1.5 rounded-xl border border-outline-variant/60 bg-white py-2 text-xs font-semibold text-on-surface hover:bg-surface-container-low hover:border-primary/40 transition-colors cursor-pointer">
+                        <Edit className="h-3.5 w-3.5 text-primary" />
+                        <span>Edit</span>
+                      </button>
+                      <Link
+                        to="/apartment-details"
+                        className="flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2 text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        <span>View Details</span>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-outline-variant/60 bg-white p-12 text-center">
+                <Building2 className="mx-auto h-12 w-12 text-outline-variant" />
+                <h3 className="mt-3 text-base font-bold text-on-surface">No listings found</h3>
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  Try adjusting your search criteria or filter tabs.
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-12">
