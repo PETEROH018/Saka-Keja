@@ -12,3 +12,4 @@
 // feat(StudentProfile): construct academic info card section
 // style(StudentProfile): add card background and shadow styling
 // feat(StudentProfile): add badge tags for enrollment status
+// style(StudentProfile): style status pill colors with Tailwind
