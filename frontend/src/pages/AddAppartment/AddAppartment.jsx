@@ -24,6 +24,15 @@ const Icon = ({ name, size = 16, className = "" }) => {
   };
 
   const icons = {
+    sofa: (
+    <svg {...common}>
+        <path d="M5 11V8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3" />
+        <path d="M4 14v-2a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v2" />
+        <path d="M4 14h16v4H4z" />
+        <path d="M6 18v2M18 18v2" />
+        <path d="M7 9V7M17 9V7" />
+    </svg>
+    ),
     dashboard: (
       <svg {...common}>
         <rect x="4" y="4" width="6" height="6" rx="1" />
@@ -392,6 +401,12 @@ export default function AddAppartment(){
                     )}
                   </span>
 
+                  <Icon
+                    name="sofa"
+                    size={17}
+                    className="text-[#64439a]"
+                  />
+
                   <span>
                     <strong className="block text-[10px] font-semibold">
                       Furnished
@@ -402,6 +417,38 @@ export default function AddAppartment(){
                     </small>
                   </span>
                 </label>      
+
+                <label className="flex min-h-[62px] cursor-pointer items-center gap-3 rounded-md border border-[#e2dce6] bg-[#fcf9fd] px-3">
+                  <input
+                    type="checkbox"
+                    name="wifiIncluded"
+                    checked={form.wifiIncluded}
+                    onChange={handleChange}
+                    className="peer sr-only"
+                  />
+
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-[#cfc5d6] text-white peer-checked:border-[#60409a] peer-checked:bg-[#60409a]">
+                    {form.wifiIncluded && (
+                      <Icon name="check" size={11} />
+                    )}
+                  </span>
+
+                  <Icon
+                    name="wifi"
+                    size={17}
+                    className="text-[#64439a]"
+                  />
+
+                  <span>
+                    <strong className="block text-[10px] font-semibold">
+                      Wi-Fi Included
+                    </strong>
+
+                    <small className="mt-0.5 block text-[8px] text-[#8c8590]">
+                      Internet is included
+                    </small>
+                  </span>
+                </label>
               </div>
             </section>
 
