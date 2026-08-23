@@ -26,3 +26,4 @@
 // feat(StudentProfile): add fallbacks for missing profile data
 // style(StudentProfile): adjust card border radius
 // refactor(StudentProfile): standardize section spacing
+// style(StudentProfile): update header text tracking
