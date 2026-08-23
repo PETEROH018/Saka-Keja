@@ -22,3 +22,4 @@
 // feat(StudentProfile): add email quick action slot
 // style(StudentProfile): update font weight hierarchy
 // refactor(StudentProfile): clean up class name declarations
+// style(StudentProfile): balance two-column layout grid
