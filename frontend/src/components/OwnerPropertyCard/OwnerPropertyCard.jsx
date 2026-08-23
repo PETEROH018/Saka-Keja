@@ -1,0 +1,71 @@
+export default function OwnerPropertyCard({ property }) {
+  const rent = property["monthly-expense-breakdown"]?.rent;
+  const image = property.image_Urls?.[0];
+
+  return (
+    <article className="flex gap-4 rounded-xl border border-gray-200 bg-white p-4">
+      <div className="h-36 w-44 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+        {image ? (
+          <img
+            src={image}
+            alt={property.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-gray-400">
+            No image
+          </div>
+        )}
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <h2 className="text-lg font-semibold text-gray-900">
+          {property.name}
+        </h2>
+
+        <p className="mt-1 text-sm text-gray-500">
+          {property.location}
+        </p>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+            <p className="text-xs text-gray-500">Monthly Rent</p>
+            <p className="mt-1 text-sm font-semibold text-gray-900">
+              Ksh {rent?.toLocaleString() ?? "—"}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+            <p className="text-xs text-gray-500">Property Type</p>
+            <p className="mt-1 text-sm font-semibold capitalize text-gray-900">
+              {property.property_type}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+            <p className="text-xs text-gray-500">Rooms</p>
+            <p className="mt-1 text-sm font-semibold text-gray-900">
+              {property.bedrooms} Bed · {property.bathrooms} Bath
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex shrink-0 flex-col gap-3 border-l border-gray-100 pl-4">
+        <button
+          type="button"
+          className="text-sm text-gray-600 transition hover:text-violet-700"
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
+          className="text-sm text-gray-600 transition hover:text-violet-700"
+        >
+          Insights
+        </button>
+      </div>
+    </article>
+  );
+}

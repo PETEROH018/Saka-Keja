@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import useFetch from "../../hooks/useFetch";
+import OwnerPropertyCard from "../../components/OwnerPropertyCard/OwnerPropertyCard";
 
 import OwnerSidebar from "../../components/OwnerSidebar/OwnerSidebar";
 
@@ -77,13 +78,16 @@ export default function MyProperties() {
             )
           }
 
-          {
-            properties && (
-              <p className="mt-6 text-sm text-gray-600">
-                Loaded {properties.length} properties
-              </p>
-            )
-          }
+          {properties && (
+            <div className="mt-6 flex max-w-5xl flex-col gap-4">
+              {properties.map((property) => (
+                <OwnerPropertyCard
+                  key={property.id}
+                  property={property}
+                />
+              ))}
+            </div>
+          )}
 
 
         </div>
