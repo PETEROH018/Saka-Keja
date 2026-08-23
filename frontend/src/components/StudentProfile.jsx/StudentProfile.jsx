@@ -255,3 +255,4 @@ export default function StudentProfile() {
 // refactor(StudentProfile): standardize section spacing
 // style(StudentProfile): update header text tracking
 // feat(StudentProfile): add quick details metadata rows
+// style(StudentProfile): adjust icon color opacity
