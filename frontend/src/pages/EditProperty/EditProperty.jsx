@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import OwnerSidebar from "../../components/OwnerSidebar/OwnerSidebar";
 
@@ -236,10 +236,16 @@ export default function EditProperty() {
             <OwnerSidebar />
 
             <main className="flex-1 px-8 py-7">
+                <Link
+                    to="/my-properties"
+                    className="mb-3 inline-block text-sm font-medium text-violet-600 hover:text-violet-800"
+                >
+                    ← Back to My Properties
+                </Link>
+
                 <h1 className="text-3xl font-bold text-gray-900">
                     Edit Property
                 </h1>
-
                 <p className="mt-1 text-sm text-gray-500">
                     Update your property details and availability.
                 </p>
