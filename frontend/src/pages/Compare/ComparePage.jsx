@@ -1,11 +1,11 @@
 import CompareProperties from "../../components/CompareProperties/CompareProperties";
-import Header from "../../components/Header/Header";
+import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 export default function ComparePage() {
   return (
     <>
-      <Header />
+      <Navbar />
       <CompareProperties propertyIds={["1", "3", "5"]} />
       <Footer />
     </>

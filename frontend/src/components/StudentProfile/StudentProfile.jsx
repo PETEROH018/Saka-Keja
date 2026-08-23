@@ -1,0 +1,112 @@
+import React from 'react';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import { 
+  Search, 
+  Pencil, 
+  Building2, 
+  Mail, 
+  Phone, 
+  X, 
+  Globe 
+} from 'lucide-react';
+
+export default function StudentProfile() {
+  const profileData = {
+    fullName: 'Jane Smith',
+    email: 'jane.smith@students.uonbi.ac.ke',
+    phone: '+254 712 345 678',
+    dateOfBirth: '14th March, 2002',
+    university: 'University of Nairobi',
+    course: 'BSc. Computer Science',
+    yearOfStudy: 'Year 3',
+    studentId: 'P15/1234/2021',
+    expectedGraduation: 'July 2025'
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
+      
+      {/* TOP NAVBAR */}
+    <Header/>
+
+      {/* MAIN CONTENT */}
+      <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow">
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">Student Profile</h1>
+            <p className="text-gray-400 text-xs mt-1">Manage your personal information and university details.</p>
+          </div>
+          <button className="flex items-center space-x-1.5 text-[11px] border border-gray-200 bg-white rounded-md px-3 py-1.5 text-gray-600 hover:bg-gray-50 transition shadow-2xs font-medium">
+            <Pencil className="w-3 h-3 text-gray-500" />
+            <span>Edit Profile</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* PERSONAL INFORMATION CARD */}
+          <div className="bg-white rounded-xl p-6 border border-gray-100/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+            <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
+              Personal Information
+            </h2>
+            <div className="space-y-4 text-xs">
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Full Name</p>
+                <p className="font-medium text-gray-800">{profileData.fullName}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Email Address</p>
+                <p className="font-medium text-gray-800">{profileData.email}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Phone Number</p>
+                <p className="font-medium text-gray-800">{profileData.phone}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Date of Birth</p>
+                <p className="font-medium text-gray-800">{profileData.dateOfBirth}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ACADEMIC INFORMATION CARD */}
+          <div className="bg-white rounded-xl p-6 border border-gray-100/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+            <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
+              Academic Information
+            </h2>
+            <div className="space-y-4 text-xs">
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">University/Institution</p>
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-4 h-4 rounded bg-gray-100 flex items-center justify-center text-gray-500">
+                    <Building2 className="w-2.5 h-2.5" />
+                  </div>
+                  <span className="font-semibold text-gray-800">{profileData.university}</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Course of Study</p>
+                <p className="font-medium text-gray-800">{profileData.course}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Year of Study</p>
+                <p className="font-medium text-gray-800">{profileData.yearOfStudy}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Student ID Number</p>
+                <p className="font-medium text-gray-800">{profileData.studentId}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Expected Graduation</p>
+                <p className="font-medium text-gray-800">{profileData.expectedGraduation}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* FOOTER */}
+     <Footer/>
+    </div>
+  );
+}
