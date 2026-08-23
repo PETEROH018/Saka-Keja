@@ -241,3 +241,4 @@ export default function StudentProfile() {
 // feat(StudentProfile): add badge tags for enrollment status
 // style(StudentProfile): style status pill colors with Tailwind
 // feat(StudentProfile): add student bio summary paragraph
+// style(StudentProfile): fine-tune bio line-height and text color
