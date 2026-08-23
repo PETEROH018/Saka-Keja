@@ -242,3 +242,4 @@ export default function StudentProfile() {
 // style(StudentProfile): style status pill colors with Tailwind
 // feat(StudentProfile): add student bio summary paragraph
 // style(StudentProfile): fine-tune bio line-height and text color
+// feat(StudentProfile): create social links list wrapper
