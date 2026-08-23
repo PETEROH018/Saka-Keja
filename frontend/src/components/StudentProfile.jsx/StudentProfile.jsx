@@ -36,3 +36,4 @@
 // refactor(StudentProfile): remove unused imports
 // style(StudentProfile): tweak container max-width bounds
 // refactor(StudentProfile): format document spacing
+// style(StudentProfile): final visual hierarchy adjustments
