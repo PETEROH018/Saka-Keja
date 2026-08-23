@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 
 // This function is used to render the different icons that show an apartment's specifications
 const IconRender = ({ type }) => {
@@ -290,6 +291,7 @@ export default function ApartmentDetails(){
         )}
         </div>
         }
+        <Footer/>
         </>
     )
 }
