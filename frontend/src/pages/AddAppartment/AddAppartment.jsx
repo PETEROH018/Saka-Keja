@@ -277,7 +277,29 @@ export default function AddAppartment(){
             </section>
             <div className="my-7 h-px bg-[#e5dfe7]" />
 
-           
+            {/* Building Details */}
+            <section className="mb-8">
+              <h3 className="mb-4 text-[13px] font-semibold">
+                New Building Details
+              </h3>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+
+                <div>
+                  <label className={labelClass}>
+                    Building Name
+                  </label>
+
+                  <input
+                    name="buildingName"
+                    value={form.buildingName}
+                    placeholder="e.g. Equity Residences"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </section>
 
             </form>
 
