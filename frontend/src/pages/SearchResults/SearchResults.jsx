@@ -255,3 +255,35 @@ export default function SearchResults() {
             </div>
           )}
 
+          {/* PAGINATION */}
+          <div className="pagination">
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {[1, 2, 3].map(num => (
+              <button 
+                key={num} 
+                className={`page-num ${currentPage === num ? 'active' : ''}`}
+                onClick={() => setCurrentPage(num)}
+              >
+                {num}
+              </button>
+            ))}
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, 3))}
+              disabled={currentPage === 3}
+            >
+              &gt;
+            </button>
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
+  );
+}
