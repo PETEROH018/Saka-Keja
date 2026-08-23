@@ -247,3 +247,4 @@ export default function StudentProfile() {
 // refactor(StudentProfile): organize JSX return structure
 // style(StudentProfile): fix mobile viewport padding
 // feat(StudentProfile): add email quick action slot
+// style(StudentProfile): update font weight hierarchy
