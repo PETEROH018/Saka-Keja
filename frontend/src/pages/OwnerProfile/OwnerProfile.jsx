@@ -12,16 +12,8 @@ import {
   PlusCircle,
   Building2,
   Users,
-  Star,
   CheckCircle2,
-  Search,
-  Eye,
-  MessageSquare,
-  Bed,
-  Bath,
-  Wifi,
-  Edit,
-  ExternalLink,
+  Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -166,7 +158,7 @@ function OwnerProfile() {
                   Total Listings
                 </p>
                 <h3 className="text-2xl font-extrabold text-on-surface mt-1">3</h3>
-                <p className="text-xs font-medium text-emerald-600 mt-1">2 Active • 1 Occupied</p>
+                <p className="text-xs font-medium text-emerald-600 mt-1">2 Active </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Building2 className="h-6 w-6" />
@@ -192,12 +184,11 @@ function OwnerProfile() {
                   Average Rating
                 </p>
                 <h3 className="text-2xl font-extrabold text-on-surface mt-1 flex items-center gap-1">
-                  4.8 <Star className="h-5 w-5 fill-amber-400 text-amber-400 inline" />
                 </h3>
                 <p className="text-xs font-medium text-on-surface-variant mt-1">From 34 reviews</p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-                <Star className="h-6 w-6" />
+            <Star/>
               </div>
             </div>
 
