@@ -251,3 +251,4 @@ export default function StudentProfile() {
 // refactor(StudentProfile): clean up class name declarations
 // style(StudentProfile): balance two-column layout grid
 // feat(StudentProfile): add fallbacks for missing profile data
+// style(StudentProfile): adjust card border radius
