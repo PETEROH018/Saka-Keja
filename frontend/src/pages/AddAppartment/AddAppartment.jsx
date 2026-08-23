@@ -196,7 +196,7 @@ const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
 
 export default function AddAppartment(){
-     const [form, setForm] = useState({
+    const [form, setForm] = useState({
         buildingName: "",
         propertyType: "",
         address: "",
@@ -208,7 +208,11 @@ export default function AddAppartment(){
         images: [],
       });
 
-      const handleChange = (e) => {
+    const [amenities, setAmenities] = useState([
+          { title: "", distance: "" },
+        ]);
+
+    const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
 
         setForm((prev) => ({
@@ -221,11 +225,34 @@ export default function AddAppartment(){
                     : value,
             }));
         };
+    
+    const handleAmenityChange = (index, field, value) => {
+        setAmenities((prev) =>
+            prev.map((amenity, i) =>
+                i === index
+                ? { ...amenity, [field]: value }
+                : amenity
+            )
+            );
+        };
 
-      const handleSubmit = (e) => {
+    const addAmenity = () => {
+            setAmenities((prev) => [
+            ...prev,
+            { title: "", distance: "" },
+            ]);
+        };
+
+    const removeAmenity = (index) => {
+            setAmenities((prev) =>
+            prev.filter((_, i) => i !== index)
+            );
+        };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        const propertyData = {
+    const propertyData = {
         ...form,
         amenities,
         };
@@ -574,6 +601,92 @@ export default function AddAppartment(){
                   ))}
                 </div>
               )}
+            </section>
+
+            <section className="mb-8">
+
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-[13px] font-semibold">
+                    Nearby Amenities
+                  </h3>
+
+                  <p className="mt-1 text-[9px] text-[#8b858f]">
+                    Add useful places near the property and their distance.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addAmenity}
+                  className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2]"
+                >
+                  <Icon name="plus" size={12} />
+                  Add Amenity
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-3">
+
+                {amenities.map((amenity, index) => (
+                  <div
+                    key={index}
+                    className="grid gap-3 sm:grid-cols-[1fr_150px_32px]"
+                  >
+
+                    <div>
+                      <label className={labelClass}>
+                        Amenity Title
+                      </label>
+
+                      <input
+                        value={amenity.title}
+                        onChange={(e) =>
+                          handleAmenityChange(
+                            index,
+                            "title",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. Supermarket"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={labelClass}>
+                        Distance
+                      </label>
+
+                      <input
+                        value={amenity.distance}
+                        onChange={(e) =>
+                          handleAmenityChange(
+                            index,
+                            "distance",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. 500 m"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {amenities.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeAmenity(index)}
+                        className="mt-auto grid h-9 place-items-center rounded-md bg-[#faeeee] text-[#9b5360] hover:bg-[#f8e2e2]"
+                        title="Remove amenity"
+                      >
+                        <Icon name="trash" size={14} />
+                      </button>
+                    )}
+
+                  </div>
+                ))}
+
+              </div>
             </section>
 
             </form>        
