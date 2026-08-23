@@ -19,3 +19,4 @@
 // style(StudentProfile): add hover states to social media icons
 // refactor(StudentProfile): organize JSX return structure
 // style(StudentProfile): fix mobile viewport padding
+// feat(StudentProfile): add email quick action slot
