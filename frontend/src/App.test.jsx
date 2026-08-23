@@ -23,7 +23,7 @@ describe("App routing", () => {
 
 it("loads the property being edited", async () => {
   window.history.pushState({}, "", "/edit-property/1");
-  
+
   vi.spyOn(globalThis, "fetch").mockResolvedValue({
     ok: true,
     json: async () => ({
@@ -45,4 +45,39 @@ it("loads the property being edited", async () => {
   expect(
     await screen.findByDisplayValue("JKUAT Serene Heights")
   ).toBeInTheDocument();
+});
+
+it("prefills the edit form with the property's existing details", async () => {
+  window.history.pushState({}, "", "/edit-property/1");
+
+  vi.spyOn(globalThis, "fetch").mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      id: "1",
+      name: "JKUAT Serene Heights",
+      location: "Juja",
+      property_type: "bedsitter",
+      bedrooms: 0,
+      bathrooms: 1,
+      status: "available",
+      "monthly-expense-breakdown": {
+        rent: 8000,
+      },
+    }),
+  });
+
+  render(<App />);
+
+  expect(
+    await screen.findByDisplayValue("JKUAT Serene Heights")
+  ).toBeInTheDocument();
+
+  expect(screen.getByDisplayValue("Juja")).toBeInTheDocument();
+  expect(screen.getByDisplayValue("bedsitter")).toBeInTheDocument();
+  expect(screen.getByDisplayValue("8000")).toBeInTheDocument();
+  expect(screen.getByDisplayValue("0")).toBeInTheDocument();
+  expect(screen.getByDisplayValue("1")).toBeInTheDocument();
+  expect(screen.getByRole("combobox", { name: /status/i })).toHaveValue(
+    "available"
+  );
 });
