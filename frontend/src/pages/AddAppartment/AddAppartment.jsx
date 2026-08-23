@@ -235,11 +235,11 @@ export default function AddAppartment(){
             {/* Header */}
             <div className="mb-5">
                 <h1 className="text-2xl font-bold tracking-tight sm:text-[27px]">
-                Add a New Property
+                Add a New Apartment
                 </h1>
 
                 <p className="mt-1.5 text-[10px] text-[#77717c]">
-                List a new apartment building or add units to an existing one.
+                List a new apartment building and add available units
                 </p>
             </div>
 
@@ -377,12 +377,35 @@ export default function AddAppartment(){
               </h3>
 
               <div className="grid gap-2.5 sm:grid-cols-2">
+                <label className="flex min-h-[62px] cursor-pointer items-center gap-3 rounded-md border border-[#e2dce6] bg-[#fcf9fd] px-3">
+                  <input
+                    type="checkbox"
+                    name="furnished"
+                    checked={form.furnished}
+                    onChange={handleChange}
+                    className="peer sr-only"
+                  />
 
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-[#cfc5d6] text-white peer-checked:border-[#60409a] peer-checked:bg-[#60409a]">
+                    {form.furnished && (
+                      <Icon name="check" size={11} />
+                    )}
+                  </span>
+
+                  <span>
+                    <strong className="block text-[10px] font-semibold">
+                      Furnished
+                    </strong>
+
+                    <small className="mt-0.5 block text-[8px] text-[#8c8590]">
+                      Property is furnished
+                    </small>
+                  </span>
+                </label>      
               </div>
             </section>
-            </form>
 
-
+            </form>        
             </main>
         </div>
         </div>
