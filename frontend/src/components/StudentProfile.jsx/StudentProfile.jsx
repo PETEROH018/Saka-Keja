@@ -225,4 +225,4 @@ export default function StudentProfile() {
 
     </div>
   );
-}
+}// feat(StudentProfile): initial setup for student profile component
