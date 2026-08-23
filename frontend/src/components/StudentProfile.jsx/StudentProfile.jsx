@@ -2,3 +2,4 @@
 // feat(StudentProfile): add primary layout container
 // style(StudentProfile): configure responsive container constraints
 // feat(StudentProfile): add avatar image card section
+// style(StudentProfile): set avatar image object-fit and borders
