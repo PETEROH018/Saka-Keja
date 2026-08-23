@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function OwnerPropertyCard({ property }) {
+    const navigate = useNavigate();
     const rent = property["monthly-expense-breakdown"]?.rent;
     const image = property.image_Urls?.[0];
 
@@ -117,6 +120,7 @@ export default function OwnerPropertyCard({ property }) {
             <div className="flex shrink-0 flex-col gap-3 border-l border-gray-100 pl-4">
                 <button
                     type="button"
+                    onClick={() => navigate(`/edit-property/${property.id}`)}
                     className="text-sm text-gray-600 transition hover:text-violet-700"
                 >
                     Edit
