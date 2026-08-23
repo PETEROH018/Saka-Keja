@@ -18,7 +18,7 @@ function App() {
         <Route path='/search' element={<SearchResults/>}/>
         <Route path='/' element={<Login/>}/>
         <Route path="/compare" element={<ComparePage />} />
-        <Route path="/StudentProfile" element={<StudentProfile />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
       </Routes>
     </BrowserRouter>
   )
