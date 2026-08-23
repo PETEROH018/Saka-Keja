@@ -7,3 +7,4 @@
 // style(StudentProfile): style student name header typography
 // feat(StudentProfile): integrate Lucide React icons
 // style(StudentProfile): format contact info icon alignment
+// feat(StudentProfile): add student contact details block
