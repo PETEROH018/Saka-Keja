@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -79,5 +80,49 @@ it("prefills the edit form with the property's existing details", async () => {
   expect(screen.getByDisplayValue("1")).toBeInTheDocument();
   expect(screen.getByRole("combobox", { name: /status/i })).toHaveValue(
     "available"
+  );
+});
+
+it("saves updated property details", async () => {
+  window.history.pushState({}, "", "/edit-property/1");
+
+  const fetchMock = vi
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: "1",
+        name: "JKUAT Serene Heights",
+        location: "Juja",
+        property_type: "bedsitter",
+        bedrooms: 0,
+        bathrooms: 1,
+        status: "available",
+        "monthly-expense-breakdown": {
+          rent: 8000,
+        },
+      }),
+    })
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({}),
+    });
+
+  render(<App />);
+
+  const nameInput = await screen.findByLabelText(/property name/i);
+
+  await userEvent.clear(nameInput);
+  await userEvent.type(nameInput, "JKUAT Heights Updated");
+
+  await userEvent.click(
+    screen.getByRole("button", { name: /save changes/i })
+  );
+
+  expect(fetchMock).toHaveBeenLastCalledWith(
+    "http://localhost:3000/apartments/1",
+    expect.objectContaining({
+      method: "PATCH",
+    })
   );
 });

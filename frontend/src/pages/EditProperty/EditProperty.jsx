@@ -14,8 +14,31 @@ function EditPropertyForm({ property }) {
     const [bathrooms, setBathrooms] = useState(property.bathrooms ?? "");
     const [status, setStatus] = useState(property.status ?? "available");
 
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        await fetch(`http://localhost:3000/apartments/${property.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                location,
+                property_type: propertyType,
+                bedrooms: Number(bedrooms),
+                bathrooms: Number(bathrooms),
+                status,
+                "monthly-expense-breakdown": {
+                    ...property["monthly-expense-breakdown"],
+                    rent: Number(rent),
+                },
+            }),
+        });
+    }
+
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
             <label htmlFor="property-name">
                 Property Name
             </label>
@@ -87,8 +110,12 @@ function EditPropertyForm({ property }) {
                     <option value="pending">Pending</option>
                     <option value="occupied">Occupied</option>
                 </select>
+
+                <button type="submit">
+                    Save Changes
+                </button>
             </div>
-        </div>
+        </form >
     );
 }
 
