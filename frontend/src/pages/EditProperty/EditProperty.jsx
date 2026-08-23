@@ -15,9 +15,12 @@ function EditPropertyForm({ property }) {
     const [bathrooms, setBathrooms] = useState(property.bathrooms ?? "");
     const [status, setStatus] = useState(property.status ?? "available");
     const [saveMessage, setSaveMessage] = useState("");
+    const [saveError, setSaveError] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault();
+        setSaveMessage("");
+        setSaveError("");
 
         const response = await fetch(
             `http://localhost:3000/apartments/${property.id}`,
@@ -42,6 +45,8 @@ function EditPropertyForm({ property }) {
         );
         if (response.ok) {
             setSaveMessage("Property updated successfully");
+        } else {
+            setSaveError("Failed to update property");
         }
     }
 
@@ -125,6 +130,11 @@ function EditPropertyForm({ property }) {
                 {saveMessage && (
                     <p>
                         {saveMessage}
+                    </p>
+                )}
+                {saveError && (
+                    <p>
+                        {saveError}
                     </p>
                 )}
             </div>
