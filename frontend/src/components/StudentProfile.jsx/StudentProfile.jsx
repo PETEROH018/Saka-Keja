@@ -248,3 +248,4 @@ export default function StudentProfile() {
 // style(StudentProfile): fix mobile viewport padding
 // feat(StudentProfile): add email quick action slot
 // style(StudentProfile): update font weight hierarchy
+// refactor(StudentProfile): clean up class name declarations
