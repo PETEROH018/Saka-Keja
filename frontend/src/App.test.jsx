@@ -200,3 +200,54 @@ it("shows an error message when saving changes fails", async () => {
     await screen.findByText(/failed to update property/i)
   ).toBeInTheDocument();
 });
+it("disables the save button while the property update is in progress", async () => {
+  window.history.pushState({}, "", "/edit-property/1");
+
+  let resolveUpdate;
+
+  vi.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: "1",
+        name: "JKUAT Serene Heights",
+        location: "Juja",
+        property_type: "bedsitter",
+        bedrooms: 0,
+        bathrooms: 1,
+        status: "available",
+        "monthly-expense-breakdown": {
+          rent: 8000,
+        },
+      }),
+    })
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveUpdate = resolve;
+        })
+    );
+
+  render(<App />);
+
+  await screen.findByLabelText(/property name/i);
+
+  const saveButton = screen.getByRole("button", {
+    name: /save changes/i,
+  });
+
+  await userEvent.click(saveButton);
+
+  expect(
+    screen.getByRole("button", { name: /saving/i })
+  ).toBeDisabled();
+
+  resolveUpdate({
+    ok: true,
+    json: async () => ({}),
+  });
+
+  expect(
+    await screen.findByRole("button", { name: /save changes/i })
+  ).toBeEnabled();
+});

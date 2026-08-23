@@ -16,40 +16,47 @@ function EditPropertyForm({ property }) {
     const [status, setStatus] = useState(property.status ?? "available");
     const [saveMessage, setSaveMessage] = useState("");
     const [saveError, setSaveError] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
 
     async function handleSubmit(e) {
         e.preventDefault();
+
         setSaveMessage("");
         setSaveError("");
+        setIsSaving(true);
 
-        const response = await fetch(
-            `http://localhost:3000/apartments/${property.id}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name,
-                    location,
-                    property_type: propertyType,
-                    bedrooms: Number(bedrooms),
-                    bathrooms: Number(bathrooms),
-                    status,
-                    "monthly-expense-breakdown": {
-                        ...property["monthly-expense-breakdown"],
-                        rent: Number(rent),
+        try {
+            const response = await fetch(
+                `http://localhost:3000/apartments/${property.id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
                     },
-                }),
+                    body: JSON.stringify({
+                        name,
+                        location,
+                        property_type: propertyType,
+                        bedrooms: Number(bedrooms),
+                        bathrooms: Number(bathrooms),
+                        status,
+                        "monthly-expense-breakdown": {
+                            ...property["monthly-expense-breakdown"],
+                            rent: Number(rent),
+                        },
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                setSaveMessage("Property updated successfully");
+            } else {
+                setSaveError("Failed to update property");
             }
-        );
-        if (response.ok) {
-            setSaveMessage("Property updated successfully");
-        } else {
-            setSaveError("Failed to update property");
+        } finally {
+            setIsSaving(false);
         }
     }
-
     return (
         <form onSubmit={handleSubmit}>
             <label htmlFor="property-name">
@@ -124,8 +131,11 @@ function EditPropertyForm({ property }) {
                     <option value="occupied">Occupied</option>
                 </select>
 
-                <button type="submit">
-                    Save Changes
+                <button
+                    type="submit"
+                    disabled={isSaving}
+                >
+                    {isSaving ? "Saving..." : "Save Changes"}
                 </button>
                 {saveMessage && (
                     <p>
