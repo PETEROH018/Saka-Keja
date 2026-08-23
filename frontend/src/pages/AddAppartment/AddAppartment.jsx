@@ -353,7 +353,21 @@ export default function AddAppartment(){
                     />
                   </div>
                 </div>
+              </div>
 
+              <div className="mt-3">
+                <label className={labelClass}>
+                  Building Description
+                </label>
+
+                <textarea
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="Briefly describe the amenities and general vibe of the building..."
+                  className="w-full resize-y rounded-md border border-[#ddd6e2] bg-[#fcf8fd] p-2.5 text-[10px] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10"
+                />
               </div>
             </section>
 
