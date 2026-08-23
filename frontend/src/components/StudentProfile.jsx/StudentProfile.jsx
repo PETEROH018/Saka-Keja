@@ -236,3 +236,4 @@ export default function StudentProfile() {
 // style(StudentProfile): format contact info icon alignment
 // feat(StudentProfile): add student contact details block
 // style(StudentProfile): adjust grid gap for contact information
+// feat(StudentProfile): construct academic info card section
