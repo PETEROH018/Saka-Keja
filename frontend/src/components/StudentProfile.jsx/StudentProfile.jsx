@@ -16,3 +16,4 @@
 // feat(StudentProfile): add student bio summary paragraph
 // style(StudentProfile): fine-tune bio line-height and text color
 // feat(StudentProfile): create social links list wrapper
+// style(StudentProfile): add hover states to social media icons
