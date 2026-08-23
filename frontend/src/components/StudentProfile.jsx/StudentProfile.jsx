@@ -5,3 +5,4 @@
 // style(StudentProfile): set avatar image object-fit and borders
 // feat(StudentProfile): implement name and program header details
 // style(StudentProfile): style student name header typography
+// feat(StudentProfile): integrate Lucide React icons
