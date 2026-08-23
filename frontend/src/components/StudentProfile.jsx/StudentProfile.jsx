@@ -11,3 +11,4 @@
 // style(StudentProfile): adjust grid gap for contact information
 // feat(StudentProfile): construct academic info card section
 // style(StudentProfile): add card background and shadow styling
+// feat(StudentProfile): add badge tags for enrollment status
