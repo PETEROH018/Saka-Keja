@@ -233,3 +233,4 @@ export default function StudentProfile() {
 // feat(StudentProfile): implement name and program header details
 // style(StudentProfile): style student name header typography
 // feat(StudentProfile): integrate Lucide React icons
+// style(StudentProfile): format contact info icon alignment
