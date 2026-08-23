@@ -261,3 +261,4 @@ export default function StudentProfile() {
 // feat(StudentProfile): add footer section inside component
 // style(StudentProfile): align footer links and copyright text
 // refactor(StudentProfile): remove unused imports
+// style(StudentProfile): tweak container max-width bounds
