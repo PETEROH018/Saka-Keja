@@ -231,3 +231,4 @@ export default function StudentProfile() {
 // feat(StudentProfile): add avatar image card section
 // style(StudentProfile): set avatar image object-fit and borders
 // feat(StudentProfile): implement name and program header details
+// style(StudentProfile): style student name header typography
