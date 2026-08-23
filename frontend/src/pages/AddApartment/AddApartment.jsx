@@ -195,7 +195,7 @@ const inputClass =
 const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
 
-export default function AddAppartment(){
+export default function AddApartment(){
     const [form, setForm] = useState({
         buildingName: "",
         propertyType: "",
