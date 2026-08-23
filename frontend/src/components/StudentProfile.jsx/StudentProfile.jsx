@@ -33,3 +33,4 @@
 // style(StudentProfile): polish dark mode card contrast
 // feat(StudentProfile): add footer section inside component
 // style(StudentProfile): align footer links and copyright text
+// refactor(StudentProfile): remove unused imports
