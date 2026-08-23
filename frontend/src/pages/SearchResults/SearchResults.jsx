@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Navbar from '../../components/Navbar/Navbar';
+import Footer from '../../components/Footer/Footer';
 import './SearchResults.css';
 
 const initialProperties = [
@@ -98,6 +100,8 @@ const sortedProperties = getSortedProperties(properties);
   };
 
   return (
+    <>
+    <Navbar showSearch={true} />
     <div className="search-container">
       {/* LEFT SIDEBAR - FILTERS */}
       <aside className="filter-sidebar">
@@ -264,5 +268,7 @@ const sortedProperties = getSortedProperties(properties);
         </div>
       </main>
     </div>
+    <Footer/>
+    </>
   );
 }
