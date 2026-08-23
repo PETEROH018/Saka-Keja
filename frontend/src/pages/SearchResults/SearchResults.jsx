@@ -195,4 +195,95 @@ export default function SearchResults() {
             </div>
           </header>
 
-          
+{/* DYNAMIC CONTENT GRID */}
+          {loading ? (
+            <div className="no-results">Loading available properties...</div>
+          ) : error ? (
+            <div className="no-results">Error loading data: {error}</div>
+          ) : (
+            <div className="cards-grid">
+              {displayedApartments.length > 0 ? (
+                displayedApartments.map((item) => {
+                  const rent = item["monthly-expense-breakdown"]?.rent || 0;
+                  const firstImage = item.image_Urls && item.image_Urls.length > 0 
+                    ? item.image_Urls[0] 
+                    : 'https://via.placeholder.com/800x600';
+                  const primaryAmenity = item["nearby amenities"]?.[0]?.distance || '';
+
+                  return (
+                    <article key={item.id} className="property-card">
+                      <div className="card-image-wrapper">
+                        <img src={firstImage} alt={item.name} />
+                        {item.isVerified && <span className="verified-badge">🛡️ Verified</span>}
+                      </div>
+
+                      <div className="card-body">
+                        <div className="card-title-row">
+                          <h3>{item.name}</h3>
+                          <div className="price-tag">
+                            <span className="amount">KES {rent.toLocaleString()}</span>
+                            <span className="period">/ month</span>
+                          </div>
+                        </div>
+
+                        <p className="location-text">📍 {item.location} {primaryAmenity ? `· ${primaryAmenity}` : ''}</p>
+
+                        <div className="fit-note">
+                          <span>✔️</span>
+                          <p>{item.description}</p>
+                        </div>
+
+                        <div className="card-footer">
+                          <div className="specs">
+                            <span>🛏️ {item.property_type}</span>
+                            <span>🚿 {item.bathrooms} Bath</span>
+                          </div>
+                          <button 
+                            className="details-btn" 
+                            onClick={() => navigate('/apartment-details', { state: { property: item } })}
+                          >
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
+              ) : (
+                <p className="no-results">No properties match your filter criteria.</p>
+              )}
+            </div>
+          )}
+
+          {/* PAGINATION */}
+          <div className="pagination">
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {[1, 2, 3].map(num => (
+              <button 
+                key={num} 
+                className={`page-num ${currentPage === num ? 'active' : ''}`}
+                onClick={() => setCurrentPage(num)}
+              >
+                {num}
+              </button>
+            ))}
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, 3))}
+              disabled={currentPage === 3}
+            >
+              &gt;
+            </button>
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
+  );
+}
