@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import CompareProperties from "../../components/CompareProperties/CompareProperties";
 import PropertySelector from "../../components/CompareProperties/PropertySelector";
-import Header from "../../components/Header/Header";
+import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 export default function ComparePage() {
@@ -21,7 +21,7 @@ export default function ComparePage() {
 
   return (
     <>
-      <Header />
+      <Navbar />
       {selectedIds === null ? (
         <PropertySelector onCompare={(ids) => setSelectedIds(ids)} />
       ) : (

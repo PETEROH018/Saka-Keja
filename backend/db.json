@@ -9,6 +9,12 @@
             "bedrooms": 0,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "available",
+            "totalViews": 142,
+            "activeInquiries": 5,
+            "lastUpdated": "2 days ago",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -27,10 +33,22 @@
             "Water reliable": true,
             "Security Guard": false,
             "nearby amenities": [
-                { "title": "JKUAT Main Gate", "distance": "0.5 km • 6 min walk" },
-                { "title": "Juja Stage", "distance": "0.3 km • 4 min walk" },
-                { "title": "Juja City Mall", "distance": "0.8 km • 10 min walk" },
-                { "title": "Local Chemist & Clinic", "distance": "0.2 km • 2 min walk" }
+                {
+                    "title": "JKUAT Main Gate",
+                    "distance": "0.5 km • 6 min walk"
+                },
+                {
+                    "title": "Juja Stage",
+                    "distance": "0.3 km • 4 min walk"
+                },
+                {
+                    "title": "Juja City Mall",
+                    "distance": "0.8 km • 10 min walk"
+                },
+                {
+                    "title": "Local Chemist & Clinic",
+                    "distance": "0.2 km • 2 min walk"
+                }
             ]
         },
         {
@@ -42,6 +60,12 @@
             "bedrooms": 0,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "available",
+            "totalViews": 218,
+            "activeInquiries": 8,
+            "lastUpdated": "1 day ago",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -60,10 +84,22 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Yaya Centre", "distance": "0.6 km • 7 min walk" },
-                { "title": "Adlife Plaza", "distance": "0.4 km • 5 min walk" },
-                { "title": "Kilimani Police Station", "distance": "0.9 km • 11 min walk" },
-                { "title": "Java House Kilimani", "distance": "0.5 km • 6 min walk" }
+                {
+                    "title": "Yaya Centre",
+                    "distance": "0.6 km • 7 min walk"
+                },
+                {
+                    "title": "Adlife Plaza",
+                    "distance": "0.4 km • 5 min walk"
+                },
+                {
+                    "title": "Kilimani Police Station",
+                    "distance": "0.9 km • 11 min walk"
+                },
+                {
+                    "title": "Java House Kilimani",
+                    "distance": "0.5 km • 6 min walk"
+                }
             ]
         },
         {
@@ -75,6 +111,12 @@
             "bedrooms": 2,
             "bathrooms": 2,
             "isVerified": true,
+            "status": "occupied",
+            "totalViews": 187,
+            "activeInquiries": 0,
+            "lastUpdated": "1 week ago",
+            "tenant": "Sarah J.",
+            "leaseEnd": "Dec 2026",
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
@@ -93,10 +135,22 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Sarit Centre", "distance": "0.7 km • 9 min walk" },
-                { "title": "Westgate Shopping Mall", "distance": "1.0 km • 12 min walk" },
-                { "title": "Westlands Matatu Stage", "distance": "0.3 km • 4 min walk" },
-                { "title": "MP Shah Hospital", "distance": "1.4 km • 18 min walk" }
+                {
+                    "title": "Sarit Centre",
+                    "distance": "0.7 km • 9 min walk"
+                },
+                {
+                    "title": "Westgate Shopping Mall",
+                    "distance": "1.0 km • 12 min walk"
+                },
+                {
+                    "title": "Westlands Matatu Stage",
+                    "distance": "0.3 km • 4 min walk"
+                },
+                {
+                    "title": "MP Shah Hospital",
+                    "distance": "1.4 km • 18 min walk"
+                }
             ]
         },
         {
@@ -108,6 +162,12 @@
             "bedrooms": 0,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "pending",
+            "totalViews": 76,
+            "activeInquiries": 2,
+            "lastUpdated": "3 days ago",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 5000,
                 "water": 313,
@@ -126,10 +186,22 @@
             "Water reliable": false,
             "Security Guard": false,
             "nearby amenities": [
-                { "title": "Ruiru Bus Station", "distance": "0.2 km • 3 min walk" },
-                { "title": "Zetech University Ruiru", "distance": "0.9 km • 11 min walk" },
-                { "title": "Naivas Supermarket Ruiru", "distance": "0.4 km • 5 min walk" },
-                { "title": "Ruiru Level 4 Hospital", "distance": "1.1 km • 14 min walk" }
+                {
+                    "title": "Ruiru Bus Station",
+                    "distance": "0.2 km • 3 min walk"
+                },
+                {
+                    "title": "Zetech University Ruiru",
+                    "distance": "0.9 km • 11 min walk"
+                },
+                {
+                    "title": "Naivas Supermarket Ruiru",
+                    "distance": "0.4 km • 5 min walk"
+                },
+                {
+                    "title": "Ruiru Level 4 Hospital",
+                    "distance": "1.1 km • 14 min walk"
+                }
             ]
         },
         {
@@ -141,6 +213,12 @@
             "bedrooms": 1,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "occupied",
+            "totalViews": 164,
+            "activeInquiries": 0,
+            "lastUpdated": "5 days ago",
+            "tenant": "Brian M.",
+            "leaseEnd": "Nov 2026",
             "monthly-expense-breakdown": {
                 "rent": 13000,
                 "water": 813,
@@ -159,10 +237,22 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Kasarani Stadium", "distance": "1.1 km • 14 min walk" },
-                { "title": "Thika Road Mall (TRM)", "distance": "1.8 km • 5 min drive" },
-                { "title": "Kasarani Police Station", "distance": "0.5 km • 6 min walk" },
-                { "title": "Equity Bank Kasarani", "distance": "0.3 km • 4 min walk" }
+                {
+                    "title": "Kasarani Stadium",
+                    "distance": "1.1 km • 14 min walk"
+                },
+                {
+                    "title": "Thika Road Mall (TRM)",
+                    "distance": "1.8 km • 5 min drive"
+                },
+                {
+                    "title": "Kasarani Police Station",
+                    "distance": "0.5 km • 6 min walk"
+                },
+                {
+                    "title": "Equity Bank Kasarani",
+                    "distance": "0.3 km • 4 min walk"
+                }
             ]
         },
         {
@@ -174,6 +264,12 @@
             "bedrooms": 0,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "available",
+            "totalViews": 201,
+            "activeInquiries": 6,
+            "lastUpdated": "Today",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 8000,
                 "water": 500,
@@ -192,10 +288,22 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Two Rivers Mall", "distance": "1.2 km • 15 min walk" },
-                { "title": "Ruaka Shopping Centre", "distance": "0.3 km • 4 min walk" },
-                { "title": "Cleanshelf Supermarket", "distance": "0.4 km • 5 min walk" },
-                { "title": "Ruaka Bypass Stage", "distance": "0.2 km • 3 min walk" }
+                {
+                    "title": "Two Rivers Mall",
+                    "distance": "1.2 km • 15 min walk"
+                },
+                {
+                    "title": "Ruaka Shopping Centre",
+                    "distance": "0.3 km • 4 min walk"
+                },
+                {
+                    "title": "Cleanshelf Supermarket",
+                    "distance": "0.4 km • 5 min walk"
+                },
+                {
+                    "title": "Ruaka Bypass Stage",
+                    "distance": "0.2 km • 3 min walk"
+                }
             ]
         },
         {
@@ -207,6 +315,12 @@
             "bedrooms": 0,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "pending",
+            "totalViews": 93,
+            "activeInquiries": 4,
+            "lastUpdated": "2 days ago",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 5000,
                 "water": 313,
@@ -225,10 +339,22 @@
             "Water reliable": true,
             "Security Guard": false,
             "nearby amenities": [
-                { "title": "Kenyatta University Main Campus", "distance": "1.2 km • 15 min walk" },
-                { "title": "Kahawa Sukari Matatu Stage", "distance": "0.4 km • 5 min walk" },
-                { "title": "Quickmart Supermarket", "distance": "0.8 km • 10 min walk" },
-                { "title": "Iron Fit Gym", "distance": "0.3 km • 4 min walk" }
+                {
+                    "title": "Kenyatta University Main Campus",
+                    "distance": "1.2 km • 15 min walk"
+                },
+                {
+                    "title": "Kahawa Sukari Matatu Stage",
+                    "distance": "0.4 km • 5 min walk"
+                },
+                {
+                    "title": "Quickmart Supermarket",
+                    "distance": "0.8 km • 10 min walk"
+                },
+                {
+                    "title": "Iron Fit Gym",
+                    "distance": "0.3 km • 4 min walk"
+                }
             ]
         },
         {
@@ -240,6 +366,12 @@
             "bedrooms": 2,
             "bathrooms": 2,
             "isVerified": true,
+            "status": "occupied",
+            "totalViews": 256,
+            "activeInquiries": 0,
+            "lastUpdated": "4 days ago",
+            "tenant": "Mercy K.",
+            "leaseEnd": "Jan 2027",
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
@@ -258,10 +390,22 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Lavington Mall", "distance": "0.6 km • 8 min walk" },
-                { "title": "Jaffery Sports Club", "distance": "0.9 km • 11 min walk" },
-                { "title": "Lavington Green Centre", "distance": "0.5 km • 6 min walk" },
-                { "title": "Nairobi Hospital Outpatient Lavington", "distance": "0.7 km • 9 min walk" }
+                {
+                    "title": "Lavington Mall",
+                    "distance": "0.6 km • 8 min walk"
+                },
+                {
+                    "title": "Jaffery Sports Club",
+                    "distance": "0.9 km • 11 min walk"
+                },
+                {
+                    "title": "Lavington Green Centre",
+                    "distance": "0.5 km • 6 min walk"
+                },
+                {
+                    "title": "Nairobi Hospital Outpatient Lavington",
+                    "distance": "0.7 km • 9 min walk"
+                }
             ]
         },
         {
@@ -273,6 +417,12 @@
             "bedrooms": 1,
             "bathrooms": 1,
             "isVerified": true,
+            "status": "available",
+            "totalViews": 131,
+            "activeInquiries": 5,
+            "lastUpdated": "Yesterday",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 13000,
                 "water": 813,
@@ -291,10 +441,22 @@
             "Water reliable": true,
             "Security Guard": false,
             "nearby amenities": [
-                { "title": "Mount Kenya University Main Campus", "distance": "0.8 km • 10 min walk" },
-                { "title": "Ananas Mall Thika", "distance": "1.3 km • 16 min walk" },
-                { "title": "Thika Level 5 Hospital", "distance": "1.0 km • 12 min walk" },
-                { "title": "Thika Main Stage", "distance": "0.6 km • 7 min walk" }
+                {
+                    "title": "Mount Kenya University Main Campus",
+                    "distance": "0.8 km • 10 min walk"
+                },
+                {
+                    "title": "Ananas Mall Thika",
+                    "distance": "1.3 km • 16 min walk"
+                },
+                {
+                    "title": "Thika Level 5 Hospital",
+                    "distance": "1.0 km • 12 min walk"
+                },
+                {
+                    "title": "Thika Main Stage",
+                    "distance": "0.6 km • 7 min walk"
+                }
             ]
         },
         {
@@ -306,6 +468,12 @@
             "bedrooms": 2,
             "bathrooms": 2,
             "isVerified": true,
+            "status": "pending",
+            "totalViews": 109,
+            "activeInquiries": 3,
+            "lastUpdated": "3 days ago",
+            "tenant": null,
+            "leaseEnd": null,
             "monthly-expense-breakdown": {
                 "rent": 18000,
                 "water": 1125,
@@ -324,13 +492,25 @@
             "Water reliable": true,
             "Security Guard": true,
             "nearby amenities": [
-                { "title": "Syokimau SGR Terminus", "distance": "1.5 km • 4 min drive" },
-                { "title": "Gateway Mall", "distance": "1.0 km • 12 min walk" },
-                { "title": "Mombasa Road Stage", "distance": "0.7 km • 9 min walk" },
-                { "title": "JKIA Airport Gate", "distance": "5.0 km • 10 min drive" }
+                {
+                    "title": "Syokimau SGR Terminus",
+                    "distance": "1.5 km • 4 min drive"
+                },
+                {
+                    "title": "Gateway Mall",
+                    "distance": "1.0 km • 12 min walk"
+                },
+                {
+                    "title": "Mombasa Road Stage",
+                    "distance": "0.7 km • 9 min walk"
+                },
+                {
+                    "title": "JKIA Airport Gate",
+                    "distance": "5.0 km • 10 min drive"
+                }
             ]
         }
-    ], 
+    ],
     "featured": [
         {
             "id": "1",

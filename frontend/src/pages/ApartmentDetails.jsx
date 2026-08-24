@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 
 // This function is used to render the different icons that show an apartment's specifications
 const IconRender = ({ type }) => {
@@ -69,6 +71,7 @@ export default function ApartmentDetails(){
     return(
         
         <>
+        <Navbar/>
         {isLoading
         ?<p>Loading Apartment Details...</p>
         :<div className="min-h-screen bg-gray-50 font-sans antialiased text-gray-900 pb-12">
@@ -288,6 +291,7 @@ export default function ApartmentDetails(){
         )}
         </div>
         }
+        <Footer/>
         </>
     )
 }
