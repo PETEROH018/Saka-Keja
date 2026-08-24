@@ -121,6 +121,13 @@ export default function ApartmentUnitForm(){
     }));
   };
 
+  const handleSharedChange = (e) => {
+    setUnit((prev) => ({
+      ...prev,
+      shared: e.target.checked,
+    }));
+  };
+
   return(
     <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
         <h1 className="text-[22px] font-bold tracking-tight">
@@ -258,8 +265,51 @@ export default function ApartmentUnitForm(){
                 </FormField>
 
               </div>
+              <div className="mt-6">
+
+                <h3 className="mb-3 text-[10px] font-semibold text-[#353039]">
+                  Unit Features
+                </h3>
 
 
+                <div className="grid gap-3 sm:grid-cols-3">
+
+
+                  {/* SHARED */}
+
+                  <label className="flex h-9 cursor-pointer items-center gap-2 text-[10px] text-[#625c66]">
+
+                    <input
+                      type="checkbox"
+                      checked={
+                        unit.shared
+                      }
+                      onChange={
+                        handleSharedChange
+                      }
+                      className="sr-only"
+                    />
+
+                    <span
+                      className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
+                        unit.shared
+                          ? "border-[#5e3b95] bg-[#5e3b95] text-white"
+                          : "border-[#cec5d4] bg-white"
+                      }`}
+                    >
+                      {unit.shared && (
+                        <Icon
+                          name="check"
+                          size={9}
+                        />
+                      )}
+                    </span>
+
+                    Shared
+
+                  </label>
+                </div>      
+              </div>        
               </div>
               </div>
               </div>
