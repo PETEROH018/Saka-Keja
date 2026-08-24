@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage";
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx";
 import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
+import About from "./pages/About/About.jsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
 
+        <Route path="/about" element={<About />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
