@@ -75,8 +75,6 @@ const amenityOptions = [
 ];
 
 const emptyUnit = {
-  unitTypeName: "",
-  numberOfUnits: "",
   monthlyRent: "",
   depositAmount: "",
   size: "",
@@ -159,7 +157,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
     setEditingId(null);
   };
 
-  const handleAddUnit = () => {
+ const handleAddUnit = () => {
     if (
       !unit.unitType ||
       !unit.monthlyRent
@@ -190,21 +188,55 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
         unit.bedrooms
       ),
     };
-    setUnits([...units,unitData])
+
+
+    /* UPDATE EXISTING UNIT */
+
+    if (editingId) {
+      setUnits((prev) =>
+        prev.map((item) =>
+          item.id === editingId
+            ? {
+                ...unitData,
+                id: editingId,
+                unitNumber:item.unitNumber,
+              }
+            : item
+        )
+      );
+
+      resetForm();
+      return;
+    }
+
+    /* ADD NEW INDIVIDUAL UNIT */
+
+    const nextNumber =
+      units.length + 1;
+
+    const newUnit = {
+      ...unitData,
+
+      id: Date.now(),
+
+      unitNumber:
+        `Unit ${String(
+          nextNumber
+        ).padStart(3, "0")}`,
+    };
+
+    setUnits((prev) => [
+      ...prev,
+      newUnit,
+    ]);
+
     resetForm();
-    return;
-  }
+  };
+console.log(units)
 
   return(
     <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
-        <h1 className="text-[22px] font-bold tracking-tight">
-          Add Units
-        </h1>
-
-        <p className="mt-1 text-[10px] text-[#77717c]">
-          Add the individual units available in this
-          apartment.
-        </p>
+       
 
       <div className="mx-auto max-w-[900px] px-5 py-7 lg:px-7">
 
@@ -221,8 +253,8 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 
               <h2 className="mb-5 text-[12px] font-semibold">
                 {editingId
-                  ? "Edit Unit Type"
-                  : "Add Unit Type"}
+                  ? "Edit Unit"
+                  : "Add Unit"}
               </h2>
                   <FormField
                 label="Unit Type"
@@ -594,6 +626,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
             setUnit={setUnit}
             setUnits={setUnits}
             setEditingId={setEditingId}
+            editingId={editingId}
           />     
               </div>
               <div className="mx-auto mt-7 flex w-full max-w-[900px] items-center justify-between">
