@@ -628,3 +628,122 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+/* ============ Property Selector ============ */
+.selector-section {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.selector-card {
+  position: relative;
+  display: block;
+  background: #ffffff;
+  border: 2px solid var(--color-outline-variant);
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selector-card:hover {
+  border-color: var(--color-primary);
+}
+
+.selector-card--selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-secondary-container);
+}
+
+.selector-card--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selector-checkbox {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.selector-thumb {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+}
+
+.selector-info {
+  padding: 0.85rem 1rem 1.1rem;
+}
+
+.selector-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-on-surface);
+}
+
+.selector-location {
+  font-size: 0.78rem;
+  color: var(--color-on-surface-variant);
+  margin-top: 0.15rem;
+}
+
+.selector-rent {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: 0.4rem;
+}
+
+.selector-check-badge {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.selector-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-outline-variant);
+}
+
+.selector-count {
+  font-size: 0.85rem;
+  color: var(--color-on-surface-variant);
+  font-weight: 600;
+}
+
+.selector-compare-btn {
+  width: auto;
+  padding: 0.6rem 1.5rem;
+}
+
+.selector-compare-btn:disabled {
+  background: var(--color-outline-variant);
+  color: var(--color-outline);
+  cursor: not-allowed;
+}
