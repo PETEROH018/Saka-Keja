@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
-
-
+import ApartmentDetailsForm from "../../components/ApartmentDetailsForm/ApartmentDetailsForm";
+import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
 
 export default function AddApartment(){
   const [currentStep, setCurrentStep] = useState(1);
@@ -33,22 +33,33 @@ export default function AddApartment(){
   };
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
-        <div className="flex min-h-screen">
-            
-            {/* SIDEBAR */}
-            <AdminSideBar />
-        <div className="border-b border-[#e4dce8] bg-[#fcf8fd]">
-             {/* Title */}
+
+  <div className="flex min-h-screen">
+
+    <AdminSideBar />
+
+    <main className="min-w-0 flex-1">
+
+      <div className="border-b border-[#e4dce8] bg-[#fcf8fd]">
+
+        {/* TITLE */}
 
         <div className="px-5 pt-7 lg:px-7">
 
           <h1 className="text-2xl font-bold">
-            {currentStep === 1 && "Add a New Property"}
-            {currentStep === 2 && "Add Units"}
-            {currentStep === 3 && "Review Property"}
+            {currentStep === 1 &&
+              "Add a New Property"}
+
+            {currentStep === 2 &&
+              "Add Units"}
+
+            {currentStep === 3 &&
+              "Review Property"}
           </h1>
 
+
           <p className="mt-1 text-[10px] text-[#77717c]">
+
             {currentStep === 1 &&
               "List a new apartment building or add units to an existing one."}
 
@@ -57,14 +68,17 @@ export default function AddApartment(){
 
             {currentStep === 3 &&
               "Review your property details before publishing."}
+
           </p>
 
         </div>
-        
-        {/*STEPPER*/}
-          <div className="px-5 pt-6 lg:px-7">
 
-          <div className="mx-auto mb-7 flex w-full max-w-[650px] items-start">
+
+        {/* STEPPER */}
+
+        <div className="px-5 pb-6 pt-6 lg:px-7">
+
+          <div className="mx-auto flex w-full max-w-[650px] items-start">
 
             {[
               ["1", "Location"],
@@ -100,6 +114,8 @@ export default function AddApartment(){
                     }}
                   >
 
+                    {/* CIRCLE */}
+
                     <div
                       className={`grid h-[18px] w-[18px] place-items-center rounded-full text-[8px] ${
                         isActive ||
@@ -114,11 +130,13 @@ export default function AddApartment(){
                     </div>
 
 
+                    {/* LABEL */}
+
                     <span
                       className={`text-[8px] ${
                         isActive ||
                         isCompleted
-                          ? "text-[#5e3b95]"
+                          ? "font-medium text-[#5e3b95]"
                           : "text-[#aaa4ad]"
                       }`}
                     >
@@ -128,7 +146,7 @@ export default function AddApartment(){
                   </div>
 
 
-                  {/* LINE */}
+                  {/* CONNECTING LINE */}
 
                   {index < 2 && (
                     <div
@@ -148,10 +166,46 @@ export default function AddApartment(){
           </div>
 
         </div>
-        
-        </div>
-            
-        </div>
-        </div>
+
+      </div>
+
+
+      {/* FORM CONTENT */}
+
+      <div className="px-5 py-7 lg:px-7">
+
+        {currentStep === 1 && (
+          <ApartmentDetailsForm
+            onContinue={
+              handleLocationContinue
+            }
+          />
+        )}
+
+
+        {currentStep === 2 && (
+          <ApartmentUnitForm
+            onBack={handleBack}
+            onContinue={
+              handleUnitsContinue
+            }
+          />
+        )}
+
+
+        {currentStep === 3 && (
+          <div>
+            {/* ReviewStep goes here */}
+          </div>
+        )}
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
     )
 }
