@@ -6,27 +6,33 @@ export default function UnitCard({
   location,
   property_type: propertyType,
   bedrooms,
-  rent,
   furnished,
-  image_Url: imageUrl,
+  isVerified,
+  image_Urls: imageUrls = [],
+  ["monthly-expense-breakdown"]: expenseBreakdown = {},
   ["WiFi included"]: wifiIncluded,
   ["Water reliable"]: waterReliable,
   ["Security Guard"]: securityGuard,
 }) {
+  const imageUrl = imageUrls[0];
+  const rent = expenseBreakdown.rent ?? 0;
+
   return (
-    <div className="max-w-sm rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="unit-card group max-w-sm overflow-hidden rounded-xl border border-outline-variant bg-white shadow-sm">
       {/* Image & Badge Container */}
       <div className="relative h-48 w-full bg-gray-100">
         <img
-          src={imageUrl}
+          src={imageUrl || "https://placehold.co/1200x800/f2ecf4/4f378a?text=Saka+Keja"}
           alt={name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
         {/* Verified Badge */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-emerald-700 backdrop-blur-sm shadow-sm">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-          <span>Verified Listing</span>
-        </div>
+        {isVerified && (
+          <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-emerald-700 shadow-sm backdrop-blur-sm">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+            <span>Verified Listing</span>
+          </div>
+        )}
       </div>
 
       {/* Content Container */}
@@ -75,7 +81,7 @@ export default function UnitCard({
         </div>
 
         {/* Action Button */}
-        <button className="mt-2 w-full rounded-lg border border-gray-300 bg-white py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+        <button className="mt-2 w-full rounded-lg border border-outline-variant bg-white py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary">
           View Details
         </button>
       </div>

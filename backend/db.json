@@ -513,46 +513,235 @@
     ],
     "featured": [
         {
-            "id": "8",
-            "name": "Lavington Palms",
-            "description": "Luxury 2-bedroom apartment with scenic views, CCTV monitoring, and borehole backup",
-            "location": "Lavington",
-            "property_type": "two bed room",
-            "bedrooms": 2,
-            "rent": 18000,
-            "furnished": true,
-            "image_Url": "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
+            "id": "1",
+            "name": "JKUAT Serene Heights",
+            "description": "Located very close to JKUAT university in a serene environment with ample security and water",
+            "location": "Juja",
+            "property_type": "bedsitter",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
+            "furnished": false,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
+            ],
             "WiFi included": true,
             "Water reliable": true,
-            "Security Guard": true
+            "Security Guard": false,
+            "nearby amenities": [
+                { "title": "JKUAT Main Gate", "distance": "0.5 km • 6 min walk" },
+                { "title": "Juja Stage", "distance": "0.3 km • 4 min walk" },
+                { "title": "Juja City Mall", "distance": "0.8 km • 10 min walk" },
+                { "title": "Local Chemist & Clinic", "distance": "0.2 km • 2 min walk" }
+            ]
         },
         {
-            "id": "9",
-            "name": "Thika Sunrise Flats",
-            "description": "Newly built 1-bedroom flat with private balcony, tiles, and fiber connection ready",
-            "location": "Thika",
-            "property_type": "one bedroom",
-            "bedrooms": 1,
-            "rent": 13000,
-            "furnished": false,
-            "image_Url": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80",
+            "id": "2",
+            "name": "Kilimani Executive Studio",
+            "description": "Modern studio apartment with high-speed internet and 24/7 security near shopping centers",
+            "location": "Kilimani",
+            "property_type": "bedsitter",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
+            "furnished": true,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
+            ],
+            "WiFi included": true,
+            "Water reliable": true,
+            "Security Guard": true,
+            "nearby amenities": [
+                { "title": "Yaya Centre", "distance": "0.6 km • 7 min walk" },
+                { "title": "Adlife Plaza", "distance": "0.4 km • 5 min walk" },
+                { "title": "Kilimani Police Station", "distance": "0.9 km • 11 min walk" },
+                { "title": "Java House Kilimani", "distance": "0.5 km • 6 min walk" }
+            ]
+        },
+        {
+            "id": "3",
+            "name": "Westlands Grand Residency",
+            "description": "Spacious two-bedroom apartment featuring modern finishes and ample natural lighting",
+            "location": "Westlands",
+            "property_type": "two bed room",
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 18000,
+                "water": 1125,
+                "internet": 2700,
+                "electricity": 900
+            },
+            "furnished": true,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80"
+            ],
             "WiFi included": false,
             "Water reliable": true,
-            "Security Guard": false
+            "Security Guard": true,
+            "nearby amenities": [
+                { "title": "Sarit Centre", "distance": "0.7 km • 9 min walk" },
+                { "title": "Westgate Shopping Mall", "distance": "1.0 km • 12 min walk" },
+                { "title": "Westlands Matatu Stage", "distance": "0.3 km • 4 min walk" },
+                { "title": "MP Shah Hospital", "distance": "1.4 km • 18 min walk" }
+            ]
         },
         {
-            "id": "10",
-            "name": "Syokimau Gateway Gardens",
-            "description": "Secure gated community apartment with playground access and reliable management",
-            "location": "Syokimau",
-            "property_type": "two bed room",
-            "bedrooms": 2,
-            "rent": 18000,
-            "furnished": true,
-            "image_Url": "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80",
+            "id": "4",
+            "name": "Ruiru Transit Haven",
+            "description": "Affordable single room apartment close to main transport routes and local amenities",
+            "location": "Ruiru",
+            "property_type": "single",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 5000,
+                "water": 313,
+                "internet": 750,
+                "electricity": 250
+            },
+            "furnished": false,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80"
+            ],
+            "WiFi included": false,
+            "Water reliable": false,
+            "Security Guard": false,
+            "nearby amenities": [
+                { "title": "Ruiru Bus Station", "distance": "0.2 km • 3 min walk" },
+                { "title": "Zetech University Ruiru", "distance": "0.9 km • 11 min walk" },
+                { "title": "Naivas Supermarket Ruiru", "distance": "0.4 km • 5 min walk" },
+                { "title": "Ruiru Level 4 Hospital", "distance": "1.1 km • 14 min walk" }
+            ]
+        },
+        {
+            "id": "5",
+            "name": "Kasarani Parkview Court",
+            "description": "Cozy one-bedroom flat with dedicated parking space and perimeter fence",
+            "location": "Kasarani",
+            "property_type": "one bedroom",
+            "bedrooms": 1,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 13000,
+                "water": 813,
+                "internet": 1950,
+                "electricity": 650
+            },
+            "furnished": false,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80"
+            ],
             "WiFi included": true,
             "Water reliable": true,
-            "Security Guard": true
+            "Security Guard": true,
+            "nearby amenities": [
+                { "title": "Kasarani Stadium", "distance": "1.1 km • 14 min walk" },
+                { "title": "Thika Road Mall (TRM)", "distance": "1.8 km • 5 min drive" },
+                { "title": "Kasarani Police Station", "distance": "0.5 km • 6 min walk" },
+                { "title": "Equity Bank Kasarani", "distance": "0.3 km • 4 min walk" }
+            ]
+        },
+        {
+            "id": "6",
+            "name": "Ruaka Crest Apartments",
+            "description": "Executive studio featuring built-in wardrobes, fitted kitchen, and uninterrupted water supply",
+            "location": "Ruaka",
+            "property_type": "bedsitter",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 8000,
+                "water": 500,
+                "internet": 1200,
+                "electricity": 400
+            },
+            "furnished": true,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80"
+            ],
+            "WiFi included": true,
+            "Water reliable": true,
+            "Security Guard": true,
+            "nearby amenities": [
+                { "title": "Two Rivers Mall", "distance": "1.2 km • 15 min walk" },
+                { "title": "Ruaka Shopping Centre", "distance": "0.3 km • 4 min walk" },
+                { "title": "Cleanshelf Supermarket", "distance": "0.4 km • 5 min walk" },
+                { "title": "Ruaka Bypass Stage", "distance": "0.2 km • 3 min walk" }
+            ]
+        },
+        {
+            "id": "7",
+            "name": "Sukari Student Lodge",
+            "description": "Quiet environment ideal for students, within walking distance to public transit",
+            "location": "Kahawa Sukari",
+            "property_type": "single",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "isVerified": true,
+            "monthly-expense-breakdown": {
+                "rent": 5000,
+                "water": 313,
+                "internet": 750,
+                "electricity": 250
+            },
+            "furnished": false,
+            "image_Urls": [
+                "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80"
+            ],
+            "WiFi included": true,
+            "Water reliable": true,
+            "Security Guard": false,
+            "nearby amenities": [
+                { "title": "Kenyatta University Main Campus", "distance": "1.2 km • 15 min walk" },
+                { "title": "Kahawa Sukari Matatu Stage", "distance": "0.4 km • 5 min walk" },
+                { "title": "Quickmart Supermarket", "distance": "0.8 km • 10 min walk" },
+                { "title": "Iron Fit Gym", "distance": "0.3 km • 4 min walk" }
+            ]
         }
     ]
 }

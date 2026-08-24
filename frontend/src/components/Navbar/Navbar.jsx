@@ -72,7 +72,7 @@ export default function Navbar({ showSearch = false }) {
           </NavLink>
 
           <NavLink
-            to="/messages"
+            to="/about"
             className={({ isActive }) =>
               `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
                 ? "border-violet-700 text-violet-700"
@@ -80,7 +80,7 @@ export default function Navbar({ showSearch = false }) {
               }`
             }
           >
-            Messages
+            About Us
           </NavLink>
         </div>
 
@@ -143,12 +143,12 @@ export default function Navbar({ showSearch = false }) {
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
             }>Favorites</NavLink>
-            <NavLink to="/messages" onClick={closeMenu} className={({ isActive }) =>
+            <NavLink to="/about" onClick={closeMenu} className={({ isActive }) =>
               `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
                 ? "bg-violet-50 text-violet-700"
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
-            }>Messages</NavLink>
+            }>About Us</NavLink>
 
             <button
               type="button"
