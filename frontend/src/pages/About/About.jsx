@@ -1,6 +1,7 @@
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import aboutHero from "../../assets/images/about-hero-image.jpg";
+import aboutStory from "../../assets/images/about-story-image.jpg";
 import {
     ShieldCheck,
     Search,
@@ -122,6 +123,48 @@ function About() {
                                 We help property owners present their homes clearly and connect with
                                 students who are actively looking for suitable accommodation.
                             </p>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                {/* Why We Started Section */}
+                <section className="bg-[#f2edf5] px-6 py-16 md:py-20">
+                    <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
+
+                        <div className="overflow-hidden rounded-xl">
+                            <img
+                                src={aboutStory}
+                                alt="Student searching for housing with Saka Keja"
+                                className="h-80 w-full object-cover md:h-[420px]"
+                            />
+                        </div>
+
+                        <div>
+                            <h2 className="text-3xl font-bold text-gray-900">
+                                Why We Started
+                            </h2>
+
+                            <div className="mt-5 space-y-4 text-base leading-7 text-gray-600">
+                                <p>
+                                    Finding student housing should not mean relying on scattered
+                                    listings, unclear information, or endless referrals.
+                                </p>
+
+                                <p>
+                                    Saka Keja was created to make that process more structured and
+                                    trustworthy. We want students to understand their options before
+                                    making a decision while giving responsible property owners a clearer
+                                    way to reach them.
+                                </p>
+
+                                <p>
+                                    By bringing housing discovery, property information, and verified
+                                    listings into one experience, we are building a more practical way
+                                    for students to find a place they can confidently call home.
+                                </p>
+                            </div>
                         </div>
 
                     </div>
