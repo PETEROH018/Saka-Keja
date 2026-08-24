@@ -2,6 +2,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import aboutHero from "../../assets/images/about-hero-image.jpg";
 import aboutStory from "../../assets/images/about-story-image.jpg";
+import { Link } from "react-router-dom";
 import {
     ShieldCheck,
     Search,
@@ -170,10 +171,60 @@ function About() {
                     </div>
                 </section>
 
+                {/* CTA Section */}
+                <section className="bg-white px-6 py-16 md:py-20">
+                    <div className="mx-auto max-w-6xl">
+                        <div className="mb-10 text-center">
+                            <h2 className="text-3xl font-bold text-gray-900">
+                                Ready to Get Started?
+                            </h2>
+
+                            <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-gray-600">
+                                Whether you're searching for student housing or looking to reach
+                                students with your property, Saka Keja makes the process simpler.
+                            </p>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {/* Student CTA */}
+                            <div className="rounded-2xl bg-violet-700 p-8 text-white md:p-10">
+                                <h3 className="text-2xl font-bold">
+                                    Looking for your next home?
+                                </h3>
+
+                                <p className="mt-3 max-w-md leading-7 text-violet-100">
+                                    Explore verified student housing and find an option that works for
+                                    you.
+                                </p>
+
+                                <Link to="/search" className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-violet-700 transition hover:bg-violet-50">
+                                    Find a Home
+                                </Link>
+                            </div>
+
+                            {/* Owner CTA */}
+                            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-8 md:p-10">
+                                <h3 className="text-2xl font-bold text-gray-900">
+                                    Have a property for students?
+                                </h3>
+
+                                <p className="mt-3 max-w-md leading-7 text-gray-600">
+                                    List your property and connect with students actively searching for
+                                    accommodation.
+                                </p>
+
+                                <Link to="" className="mt-6 inline-flex rounded-lg bg-violet-700 px-5 py-3 font-semibold text-white transition hover:bg-violet-800">
+                                    List a Property
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </main>
 
             <Footer />
-        </div>
+        </div >
     );
 }
 
