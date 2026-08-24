@@ -18,3 +18,19 @@ export default function SavedProperties() {
     setFavorites(updatedFavorites);
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
   };
+
+return (
+    <>
+      <Navbar showSearch={true} />
+      
+      <main className="saved-container">
+        <header className="saved-header">
+          <h1>Saved Properties</h1>
+          <p>Your shortlisted homes, ready for review.</p>
+        </header>
+
+        {favorites.length > 0 ? (
+          <div className="saved-grid">
+            {favorites.map((item) => {
+              const rent = item["monthly-expense-breakdown"]?.rent || item.price || 0;
+              const image = item.image_Urls?.[0] || item.image || 'https://via.placeholder.com/800x600';
