@@ -114,7 +114,7 @@ function FormField({
 const inputClass =
   "h-9 w-full rounded-md border border-[#dcd3e1] bg-[#fdf9ff] px-2.5 text-[10px] text-[#3f3943] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10";
 
-export default function ApartmentUnitForm(){
+export default function ApartmentUnitForm({units,setUnits}){
   const [unit, setUnit] = useState(emptyUnit);
   const [editingId, setEditingId] = useState(null);
 
@@ -189,7 +189,7 @@ export default function ApartmentUnitForm(){
         unit.bedrooms
       ),
     };
-
+    setUnits([...units,unitData])
     resetForm();
     return;
   }
