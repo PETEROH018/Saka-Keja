@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import useFetch from "../../hooks/useFetch";
 import OwnerPropertyCard from "../../components/OwnerPropertyCard/OwnerPropertyCard";
-
-import OwnerSidebar from "../../components/OwnerSidebar/OwnerSidebar";
+import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 
 export default function MyProperties() {
 
@@ -47,7 +46,7 @@ export default function MyProperties() {
 
   return (
     <div className="flex min-h-screen bg-[#faf8fc]">
-      <OwnerSidebar />
+      <AdminSideBar />
 
       <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900">
