@@ -26,7 +26,11 @@ const formatCurrency = (value) => {
     return Number(value || 0).toLocaleString();
   };
 
-  function SummaryItem({ label, value }) {
+function handleSubmit(){
+    console.log(apartmentData)
+}
+
+function SummaryItem({ label, value }) {
   return (
     <div>
 
@@ -352,7 +356,7 @@ function Feature({ label, active }) {
 
           <button
             type="button"
-            onClick={() => onSubmit?.(property)}
+            onClick={() => onSubmit?.()}
             className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084]"
           >
             Submit Property
