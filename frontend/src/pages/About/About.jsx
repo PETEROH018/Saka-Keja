@@ -39,6 +39,22 @@ function About() {
 
                     </div>
                 </section>
+
+                {/* Mission Section */}
+                <section className="bg-purple-50 px-6 py-14 md:py-16">
+                    <div className="mx-auto max-w-6xl text-center">
+                        <h2 className="text-2xl font-bold text-gray-900">
+                            Our Mission
+                        </h2>
+
+                        <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-gray-600">
+                            To make student housing easier to find, safer to choose, and more
+                            accessible by connecting students with verified homes and trusted
+                            property owners.
+                        </p>
+                    </div>
+                </section>
+                
             </main>
 
             <Footer />
