@@ -75,6 +75,7 @@ const amenityOptions = [
 ];
 
 const emptyUnit = {
+  unitType:"",
   monthlyRent: "",
   depositAmount: "",
   size: "",
