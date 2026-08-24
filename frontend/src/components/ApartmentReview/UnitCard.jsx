@@ -1,3 +1,35 @@
+import Icon from "../Icon/Icon";
+function UnitDetail({
+  icon,
+  label,
+  value,
+}) {
+  return (
+    <div className="rounded-md bg-white px-2.5 py-2">
+
+      <div className="flex items-center gap-1.5">
+
+        {icon && (
+          <span className="text-[#7652aa]">
+            <Icon name={icon} size={10} />
+          </span>
+        )}
+
+        <span className="text-[7px] text-[#8b838e]">
+          {label}
+        </span>
+
+      </div>
+
+      <p className="mt-1 text-[8px] font-medium text-[#49434d]">
+        {value}
+      </p>
+
+    </div>
+  );
+}
+
+
 export default function UnitCard({ unit, formatCurrency }){
     return (
     <div className="rounded-lg border border-[#dcd3e2] bg-[#fdf9ff] p-4">
