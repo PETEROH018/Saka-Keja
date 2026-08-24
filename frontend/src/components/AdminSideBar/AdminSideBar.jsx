@@ -6,7 +6,7 @@ export default function AdminSideBar() {
     const navlinks = [
         {to: "/admin-dash", label: "Dashboard", icon: LayoutDashboard},
         {to: "/my-properties", label: "My Properties", icon: Building2},
-        {to: "/add-property", label: "Add Property", icon: PlusCircle},
+        {to: "/add-apartment", label: "Add Property", icon: PlusCircle},
         {to: "/inquiries", label: "Inquiries", icon: HelpCircle},
         {to: "/messages", label: "Messages", icon: Mail},
         {to: "/admin-profile", label: "Profile", icon: User},
@@ -65,7 +65,7 @@ export default function AdminSideBar() {
           {/* Bottom Action */}
           <div className="pt-6">
             <NavLink 
-              to="/add-property"
+              to="/add-apartment"
               className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-primary-container active:scale-[0.98]"
             >
               <PlusCircle className="h-4 w-4" />
