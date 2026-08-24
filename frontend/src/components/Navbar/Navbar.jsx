@@ -95,12 +95,13 @@ export default function Navbar({ showSearch = false }) {
           </button>
 
           {/* Temporary placeholder until profile data is connected */}
-          <div
+          <NavLink
+            to={"/student-profile"}
             aria-label="User profile"
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
           >
             U
-          </div>
+          </NavLink>
         </div>
 
         <button
