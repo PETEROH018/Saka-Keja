@@ -1,9 +1,10 @@
 // Reusable navigation bar 
 import { useState } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { Menu } from "lucide-react"
 
 export default function Navbar({ showSearch = false }) {
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const handleSearchSubmit = (e) => {
@@ -72,7 +73,7 @@ export default function Navbar({ showSearch = false }) {
           </NavLink>
 
           <NavLink
-            to="/messages"
+            to="/about"
             className={({ isActive }) =>
               `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
                 ? "border-violet-700 text-violet-700"
@@ -80,7 +81,7 @@ export default function Navbar({ showSearch = false }) {
               }`
             }
           >
-            Messages
+            About Us
           </NavLink>
         </div>
 
@@ -88,17 +89,19 @@ export default function Navbar({ showSearch = false }) {
           <button
             type="button"
             className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+            onClick={() => navigate('/search')}
           >
             Find a Home
           </button>
 
           {/* Temporary placeholder until profile data is connected */}
-          <div
+          <NavLink
+            to={"/student-profile"}
             aria-label="User profile"
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
           >
             U
-          </div>
+          </NavLink>
         </div>
 
         <button
@@ -143,12 +146,12 @@ export default function Navbar({ showSearch = false }) {
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
             }>Favorites</NavLink>
-            <NavLink to="/messages" onClick={closeMenu} className={({ isActive }) =>
+            <NavLink to="/about" onClick={closeMenu} className={({ isActive }) =>
               `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
                 ? "bg-violet-50 text-violet-700"
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
-            }>Messages</NavLink>
+            }>About Us</NavLink>
 
             <button
               type="button"
