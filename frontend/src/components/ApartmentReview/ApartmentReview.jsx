@@ -1,4 +1,5 @@
 import Icon from "../Icon/Icon";
+import UnitCard from "./UnitCard";
 
 export default function ApartmentReview({  
   apartmentData = {},
@@ -178,6 +179,31 @@ function Feature({ label, active }) {
 
               </div>
             </div>
+
+            {/* AMENITIES */}
+
+            {amenities?.length > 0 && (
+              <div className="mt-5 border-t border-[#e5dfe8] pt-4">
+
+                <h3 className="mb-3 text-[9px] font-semibold text-[#39333d]">
+                  Property Amenities
+                </h3>
+
+                <div className="flex flex-wrap gap-2">
+                  {amenities.map((amenity, index) => (
+                    <span
+                      key={`${amenity}-${index}`}
+                      className="rounded-md bg-[#eee8f2] px-2 py-1 text-[8px] text-[#5e3b95]"
+                    >
+                      {typeof amenity === "string"
+                        ? amenity
+                        : amenity?.title || "Amenity"}
+                    </span>
+                  ))}
+                </div>
+
+              </div>
+            )}
 
           </section>
         </div>
