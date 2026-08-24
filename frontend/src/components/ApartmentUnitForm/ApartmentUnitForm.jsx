@@ -553,6 +553,36 @@ export default function ApartmentUnitForm({units,setUnits}){
 
               </div>
                 </div>  
+                {/*BUTTON FOR ADDING ANOTHER UNIT */}
+                <button
+              type="button"
+              onClick={
+                resetForm
+              }
+              className="mt-4 flex h-[98px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#cfc3d7] bg-white text-center transition hover:bg-[#fdf9ff]"
+            >
+
+              <span className="mb-2 grid h-7 w-7 place-items-center rounded-full bg-[#eee8f1] text-[#625a66]">
+
+                <Icon
+                  name="plus"
+                  size={15}
+                />
+
+              </span>
+
+
+              <span className="text-[9px] font-medium text-[#3f3943]">
+                Add Another Unit
+              </span>
+
+
+              <span className="mt-1 text-[8px] text-[#8b838e]">
+                Add another individual unit
+              </span>
+
+            </button>
+
               </div>        
               </div>
               </div>
