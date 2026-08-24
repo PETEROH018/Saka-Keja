@@ -1,4 +1,26 @@
-export default function ApartmentReview(){
+import Icon from "../Icon/Icon";
+
+export default function ApartmentReview({  
+  apartmentData = {},
+  onBack,
+  onEditProperty,
+  onEditUnits,
+  onSubmit,
+  }){
+  const {
+    buildingName = "",
+    description = "",
+    address = "",
+    propertyType = "",
+    furnished = false,
+    securityGuard = false,
+    waterReliable = false,
+    wifiIncluded = false,
+    images = [],
+    amenities = [],
+    units = [],
+  } = apartmentData;
+
     return(
         <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
       <div className="mx-auto w-full max-w-[900px]">
@@ -51,6 +73,37 @@ export default function ApartmentReview(){
               </span>
             </div>
           </div>
+
+          {/* PROPERTY DETAILS */}
+
+          <div className="p-5">
+
+            <div className="flex items-start justify-between gap-4">
+
+              <div>
+                <h2 className="text-[15px] font-semibold text-[#39333d]">
+                  {buildingName || "Unnamed Property"}
+                </h2>
+
+                {address && (
+                  <p className="mt-1 text-[9px] text-[#8b838e]">
+                    {address}
+                  </p>
+                )}
+              </div>
+
+             <button
+                type="button"
+                onClick={onEditProperty}
+                className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
+              >
+                <Icon name="edit" size={11} />
+                Edit
+              </button> 
+
+            </div>
+        </div>
+
           </section>
         </div>
         </div>
