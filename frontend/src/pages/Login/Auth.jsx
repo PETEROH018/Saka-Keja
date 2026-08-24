@@ -13,7 +13,7 @@ export default function AuthPage() {
     name: "",
     email: "",
     password: "",
-    accountType: "student",
+    user_type: "student",
   });
 
   function handleLoginChange(event) {
@@ -37,7 +37,7 @@ export default function AuthPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(formData.user_type==="property_manager"? {...formData, ...getLocation}: formData),
         },
       )
       if (!res.ok) {
@@ -56,6 +56,25 @@ export default function AuthPage() {
     }
   }
     
+  function getLocation() {
+    const area = {"location": null}
+    if (!geolocationSupported) return {"location": null}
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude
+        const longitude = position.coords.longitude
+      },
+      (error) => {
+        return(<div>Location permission denied</div>)
+      }
+    )}
+
+  if (!geolocationSupported) {
+    return (
+      {"location": location}
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-container-low p-4 text-on-surface sm:p-6">
@@ -247,7 +266,7 @@ export default function AuthPage() {
                 >
                   <option value="">Select account type</option>
                   <option value="student">Student</option>
-                  <option value="owner">Property Owner</option>
+                  <option value="property_manager">Property Manager</option>
                 </select>
               </div>
 
