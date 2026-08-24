@@ -25,7 +25,23 @@ export default function ApartmentReview({
 const formatCurrency = (value) => {
     return Number(value || 0).toLocaleString();
   };
-  
+
+  function SummaryItem({ label, value }) {
+  return (
+    <div>
+
+      <p className="text-[7px] uppercase tracking-wide text-[#8b838e]">
+        {label}
+      </p>
+
+      <p className="mt-1 text-[9px] font-medium text-[#49434d]">
+        {value}
+      </p>
+
+    </div>
+  );
+}
+
 function Feature({ label, active }) {
   return (
     <div
@@ -258,6 +274,40 @@ function Feature({ label, active }) {
 
             </div>
           )}
+
+        </section>
+
+        {/* LISTING SUMMARY */}
+
+        <section className="mt-6 rounded-lg border border-[#dcd3e2] bg-[#fdf9ff] p-5">
+
+          <h2 className="text-[10px] font-semibold text-[#39333d]">
+            Listing Summary
+          </h2>
+
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+
+            <SummaryItem
+              label="Units"
+              value={units.length}
+            />
+
+            <SummaryItem
+              label="Property Type"
+              value={propertyType || "—"}
+            />
+
+            <SummaryItem
+              label="Furnished"
+              value={furnished ? "Yes" : "No"}
+            />
+
+            <SummaryItem
+              label="Wi-Fi"
+              value={wifiIncluded ? "Included" : "Not included"}
+            />
+
+          </div>
 
         </section>
 
