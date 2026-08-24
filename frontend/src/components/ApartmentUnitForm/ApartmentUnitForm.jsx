@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AddedUnitSummary from "./AddedUnitSummary";
 
 const Icon = ({ name, size = 16, className = "" }) => {
   const common = {
@@ -583,7 +584,17 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 
             </button>
 
-              </div>        
+              </div>   
+               {/* =================================================
+              RIGHT — ADDED UNITS
+          ================================================= */}
+
+          <AddedUnitSummary
+            units={units}
+            setUnit={setUnit}
+            setUnits={setUnits}
+            setEditingId={setEditingId}
+          />     
               </div>
               <div className="mx-auto mt-7 flex w-full max-w-[900px] items-center justify-between">
 
