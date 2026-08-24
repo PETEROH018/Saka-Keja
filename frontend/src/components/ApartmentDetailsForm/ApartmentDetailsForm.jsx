@@ -193,24 +193,8 @@ const inputClass =
 
 const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
-export default function ApartmentDetailsForm({onBack,onContinue}){
+export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,setAmenities}){
 
-        const [form, setForm] = useState({
-            buildingName: "",
-            propertyType: "",
-            address: "",
-            description: "",
-            furnished: false,
-            wifiIncluded: false,
-            waterReliable: false,
-            securityGuard: false,
-            images: [],
-          });
-    
-        const [amenities, setAmenities] = useState([
-              { title: "", distance: "" },
-            ]);
-    
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
     
@@ -247,24 +231,15 @@ export default function ApartmentDetailsForm({onBack,onContinue}){
                 prev.filter((_, i) => i !== index)
                 );
             };
-    
-        const handleSubmit = (e) => {
-            e.preventDefault();
-    
-        const propertyData = {
-            ...form,
-            amenities,
-            };
-    
-            console.log(propertyData);
-            };
+          
+        
     
     return(
         <main className="mx-auto w-full max-w-[900px] px-4 py-8 sm:px-6 lg:px-11">
 
              {/* INPUT FORM */}
             <form
-                onSubmit={handleSubmit}
+                onSubmit={onContinue}
                 className="rounded-lg border border-[#ded7e2] bg-white px-5 py-7 shadow-sm sm:px-8"
             >
             
@@ -637,7 +612,6 @@ export default function ApartmentDetailsForm({onBack,onContinue}){
 
               <button
                 type="submit"
-                onClick={()=>{onContinue()}}
                 className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084]"
               >
                 Continue to Units
