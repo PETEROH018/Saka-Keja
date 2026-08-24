@@ -114,7 +114,7 @@ function FormField({
 const inputClass =
   "h-9 w-full rounded-md border border-[#dcd3e1] bg-[#fdf9ff] px-2.5 text-[10px] text-[#3f3943] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10";
 
-export default function ApartmentUnitForm({units,setUnits}){
+export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
   const [unit, setUnit] = useState(emptyUnit);
   const [editingId, setEditingId] = useState(null);
 
@@ -585,6 +585,34 @@ export default function ApartmentUnitForm({units,setUnits}){
 
               </div>        
               </div>
+              <div className="mx-auto mt-7 flex w-full max-w-[900px] items-center justify-between">
+
+        <button
+          type="button"
+          onClick={onBack}
+          className="h-8 rounded-md border border-[#ddd4df] bg-white px-4 text-[9px] text-[#49434d] hover:bg-gray-50"
+        >
+          Back
+        </button>
+
+
+        <button
+          type="button"
+          disabled={units.length === 0}
+          onClick={onContinue}
+          className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084] disabled:cursor-not-allowed disabled:opacity-40"
+        >
+
+          Continue to Review
+
+          <Icon
+            name="arrowRight"
+            size={11}
+          />
+
+        </button>
+
+      </div>
               </div>
               </div>
               </div>
