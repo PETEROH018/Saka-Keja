@@ -67,6 +67,12 @@ const unitTypeOptions = [
   "Three Bedroom",
 ];
 
+const amenityOptions = [
+  "Balcony",
+  "Kitchenette",
+  "Built-in Wardrobes",
+];
+
 const emptyUnit = {
   unitTypeName: "",
   numberOfUnits: "",
@@ -125,6 +131,21 @@ export default function ApartmentUnitForm(){
     setUnit((prev) => ({
       ...prev,
       shared: e.target.checked,
+    }));
+  };
+
+  const toggleAmenity = (amenity) => {
+    setUnit((prev) => ({
+      ...prev,
+
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(
+            (item) => item !== amenity
+          )
+        : [
+            ...prev.amenities,
+            amenity,
+          ],
     }));
   };
 
@@ -398,8 +419,76 @@ export default function ApartmentUnitForm(){
                     </div>
 
                   </FormField>
-                
-                </div>      
+                </div>    
+                 {/* =========================================
+                    AMENITIES
+                ========================================== */}
+
+                <div className="mt-5">
+
+                  <h4 className="mb-3 text-[10px] font-semibold text-[#353039]">
+                    Additional Amenities
+                  </h4>
+
+
+                  <div className="grid gap-x-7 gap-y-3 sm:grid-cols-3">
+
+                    {amenityOptions.map(
+                      (amenity) => {
+
+                        const checked =
+                          unit.amenities.includes(
+                            amenity
+                          );
+
+                        return (
+                          <label
+                            key={amenity}
+                            className="flex cursor-pointer items-center gap-2 text-[10px] text-[#625c66]"
+                          >
+
+                            <input
+                              type="checkbox"
+                              checked={
+                                checked
+                              }
+                              onChange={() =>
+                                toggleAmenity(
+                                  amenity
+                                )
+                              }
+                              className="sr-only"
+                            />
+
+
+                            <span
+                              className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
+                                checked
+                                  ? "border-[#5e3b95] bg-[#5e3b95] text-white"
+                                  : "border-[#cec5d4] bg-white"
+                              }`}
+                            >
+
+                              {checked && (
+                                <Icon
+                                  name="check"
+                                  size={9}
+                                />
+                              )}
+
+                            </span>
+
+
+                            {amenity}
+
+                          </label>
+                        );
+                      }
+                    )}
+
+                  </div>
+
+                </div>  
               </div>        
               </div>
               </div>
