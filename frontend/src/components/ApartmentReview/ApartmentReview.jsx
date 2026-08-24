@@ -311,6 +311,31 @@ function Feature({ label, active }) {
 
         </section>
 
+        {/* CONFIRMATION */}
+
+        <div className="mt-6 rounded-lg border border-[#ddd5e1] bg-white p-4">
+
+          <div className="flex items-start gap-3">
+
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#eee8f2] text-[#5e3b95]">
+              <Icon name="check" size={13} />
+            </div>
+
+            <div>
+              <h3 className="text-[9px] font-semibold text-[#39333d]">
+                Ready to publish?
+              </h3>
+
+              <p className="mt-1 text-[8px] leading-4 text-[#8b838e]">
+                Make sure all property and unit information is accurate.
+                You can edit the details before submitting.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
         </div>
         </div>
     )
