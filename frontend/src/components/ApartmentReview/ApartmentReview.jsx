@@ -102,6 +102,20 @@ export default function ApartmentReview({
               </button> 
 
             </div>
+
+            {/* DESCRIPTION */}
+
+            {description && (
+              <div className="mt-5 border-t border-[#e5dfe8] pt-4">
+                <h3 className="text-[9px] font-semibold text-[#39333d]">
+                  Description
+                </h3>
+
+                <p className="mt-1.5 text-[9px] leading-5 text-[#716a74]">
+                  {description}
+                </p>
+              </div>
+            )}
         </div>
 
           </section>
