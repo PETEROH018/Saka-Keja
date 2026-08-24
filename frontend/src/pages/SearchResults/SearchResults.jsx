@@ -24,7 +24,7 @@ export default function SearchResults() {
 
   // Fetch Data from JSON Server
   useEffect(() => {
-    fetch('http://localhost:5000/apartments')
+    fetch('http://localhost:3000/apartments')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch apartments');
         return res.json();
@@ -113,7 +113,7 @@ export default function SearchResults() {
             <button className="clear-btn" onClick={handleClearAll}>Clear all</button>
           </div>
 
-          <div className="toggle-box">
+          {/*<div className="toggle-box">
             <span>🗺️ Map View</span>
             <label className="switch">
               <input 
@@ -123,7 +123,7 @@ export default function SearchResults() {
               />
               <span className="slider"></span>
             </label>
-          </div>
+          </div>*/}
 
           <div className="filter-group">
             <label className="group-label">Monthly Rent (KES)</label>
