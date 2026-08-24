@@ -1,64 +1,6 @@
 import { useState } from "react";
 import AddedUnitSummary from "./AddedUnitSummary";
-
-const Icon = ({ name, size = 16, className = "" }) => {
-  const common = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    className,
-  };
-
-  const icons = {
-    check: (
-      <svg {...common}>
-        <path d="m5 12 4 4L19 6" />
-      </svg>
-    ),
-
-    plus: (
-      <svg {...common}>
-        <path d="M12 5v14M5 12h14" />
-      </svg>
-    ),
-
-    arrowRight: (
-      <svg {...common}>
-        <path d="M5 12h14" />
-        <path d="m13 6 6 6-6 6" />
-      </svg>
-    ),
-
-    chevronDown: (
-      <svg {...common}>
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    ),
-
-    edit: (
-      <svg {...common}>
-        <path d="M4 20h4L19 9l-4-4L4 16v4Z" />
-        <path d="m13 6 4 4" />
-      </svg>
-    ),
-
-    trash: (
-      <svg {...common}>
-        <path d="M5 7h14" />
-        <path d="M10 11v5M14 11v5" />
-        <path d="M8 7l1-3h6l1 3" />
-        <path d="M7 7l1 14h8l1-14" />
-      </svg>
-    ),
-  };
-
-  return icons[name] || null;
-};
+import Icon from "../Icon/Icon";
 
 const unitTypeOptions = [
   "Single",
