@@ -192,6 +192,74 @@ export default function ApartmentUnitForm(){
 
               </FormField>
 
+              {/* RENT / DEPOSIT / SIZE */}
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+
+                <FormField
+                  label="Monthly Rent (KSh)"
+                  required
+                >
+
+                  <input
+                    type="number"
+                    min="0"
+                    name="monthlyRent"
+                    value={
+                      unit.monthlyRent
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="15,000"
+                    className={inputClass}
+                  />
+
+                </FormField>
+
+
+                <FormField
+                  label="Deposit Amount"
+                >
+
+                  <input
+                    type="number"
+                    min="0"
+                    name="depositAmount"
+                    value={
+                      unit.depositAmount
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="15,000"
+                    className={inputClass}
+                  />
+
+                </FormField>
+
+
+                <FormField
+                  label="Size (sq ft)"
+                >
+
+                  <input
+                    type="number"
+                    min="0"
+                    name="size"
+                    value={unit.size}
+                    onChange={
+                      handleChange
+                    }
+                    placeholder="250"
+                    className={inputClass}
+                  />
+
+                </FormField>
+
+              </div>
+
+
               </div>
               </div>
               </div>
