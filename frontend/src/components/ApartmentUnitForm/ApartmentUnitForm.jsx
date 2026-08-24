@@ -24,6 +24,7 @@ const emptyUnit = {
   shared: false,
   bathrooms: "0",
   bedrooms: "0",
+  maxOccupants: "1",
   amenities: [],
 };
 
@@ -398,6 +399,38 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
                 </FormField>
 
               </div>
+
+              {/* MAXIMUM OCCUPANTS */}
+
+  <FormField label="Maximum Occupants">
+
+    <div className="relative">
+
+      <select
+        name="maxOccupants"
+        value={unit.maxOccupants}
+        onChange={handleChange}
+        className={`${inputClass} appearance-none pr-8`}
+      >
+        {[1, 2, 3, 4].map((number) => (
+          <option
+            key={number}
+            value={number}
+          >
+            {number}
+          </option>
+        ))}
+      </select>
+
+        <Icon
+          name="chevronDown"
+          size={12}
+          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+        />
+
+        </div>
+
+          </FormField>
 
 
               {/* AMENITIES */}
