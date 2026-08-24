@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import getLocation from "../../utils/GetLocation"
 
 export default function AuthPage() {
   const navigate = useNavigate()
@@ -56,25 +57,6 @@ export default function AuthPage() {
     }
   }
     
-  function getLocation() {
-    const area = {"location": null}
-    if (!geolocationSupported) return {"location": null}
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude
-        const longitude = position.coords.longitude
-      },
-      (error) => {
-        return(<div>Location permission denied</div>)
-      }
-    )}
-
-  if (!geolocationSupported) {
-    return (
-      {"location": location}
-    );
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-container-low p-4 text-on-surface sm:p-6">
