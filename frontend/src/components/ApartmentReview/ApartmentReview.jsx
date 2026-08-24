@@ -336,6 +336,31 @@ function Feature({ label, active }) {
 
         </div>
 
+         {/* FOOTER */}
+
+        <div className="mt-7 flex items-center justify-between">
+
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex h-8 items-center gap-1.5 rounded-md border border-[#ddd4df] bg-white px-4 text-[9px] text-[#49434d] hover:bg-gray-50"
+          >
+            <Icon name="arrowLeft" size={11} />
+            Back
+          </button>
+
+
+          <button
+            type="button"
+            onClick={() => onSubmit?.(property)}
+            className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084]"
+          >
+            Submit Property
+            <Icon name="arrowRight" size={11} />
+          </button>
+
+        </div>
+
         </div>
         </div>
     )
