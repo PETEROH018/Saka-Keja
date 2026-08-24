@@ -149,6 +149,51 @@ export default function ApartmentUnitForm(){
     }));
   };
 
+   const resetForm = () => {
+    setUnit({
+      ...emptyUnit,
+      amenities: [],
+    });
+
+    setEditingId(null);
+  };
+
+  const handleAddUnit = () => {
+    if (
+      !unit.unitType ||
+      !unit.monthlyRent
+    ) {
+      return;
+    }
+
+    const unitData = {
+      ...unit,
+
+      monthlyRent: Number(
+        unit.monthlyRent
+      ),
+
+      depositAmount: Number(
+        unit.depositAmount || 0
+      ),
+
+      size: Number(
+        unit.size || 0
+      ),
+
+      bathrooms: String(
+        unit.bathrooms
+      ),
+
+      bedrooms: String(
+        unit.bedrooms
+      ),
+    };
+
+    resetForm();
+    return;
+  }
+
   return(
     <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
         <h1 className="text-[22px] font-bold tracking-tight">
@@ -420,9 +465,7 @@ export default function ApartmentUnitForm(){
 
                   </FormField>
                 </div>    
-                 {/* =========================================
-                    AMENITIES
-                ========================================== */}
+                 {/* AMENITIES */}
 
                 <div className="mt-5">
 
@@ -487,7 +530,28 @@ export default function ApartmentUnitForm(){
                     )}
 
                   </div>
+                <div className="mt-7 flex justify-end">
 
+                <button
+                  type="button"
+                  onClick={
+                    handleAddUnit
+                  }
+                  className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
+                >
+
+                  <Icon
+                    name="plus"
+                    size={11}
+                  />
+
+                  {editingId
+                    ? "Update Unit"
+                    : "Add Unit"}
+
+                </button>
+
+              </div>
                 </div>  
               </div>        
               </div>
