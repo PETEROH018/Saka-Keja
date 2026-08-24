@@ -18,6 +18,40 @@ export default function ApartmentReview(){
             Check your property details and units before publishing.
           </p>
         </div>
+
+        {/*  PROPERTY OVERVIEW */}
+
+        <section className="overflow-hidden rounded-lg border border-[#dcd3e2] bg-[#fdf9ff]">
+
+          {/* IMAGE */}
+
+          <div className="relative h-[210px] w-full overflow-hidden bg-[#eee8f1]">
+            {images?.length > 0 ? (
+              <img
+                src={
+                  typeof images[0] === "string"
+                    ? images[0]
+                    : URL.createObjectURL(images[0])
+                }
+                alt={buildingName || "Property"}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center text-[#8b838e]">
+                <Icon name="image" size={28} />
+                <span className="mt-2 text-[9px]">
+                  No property image
+                </span>
+              </div>
+            )}
+
+            <div className="absolute bottom-3 left-3">
+              <span className="rounded-md bg-white/95 px-2.5 py-1 text-[8px] font-medium text-[#59388f] shadow-sm">
+                {propertyType || "Property"}
+              </span>
+            </div>
+          </div>
+          </section>
         </div>
         </div>
     )
