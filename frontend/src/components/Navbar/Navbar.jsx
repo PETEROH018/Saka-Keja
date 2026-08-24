@@ -1,9 +1,10 @@
 // Reusable navigation bar 
 import { useState } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { Menu } from "lucide-react"
 
 export default function Navbar({ showSearch = false }) {
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const handleSearchSubmit = (e) => {
@@ -88,6 +89,7 @@ export default function Navbar({ showSearch = false }) {
           <button
             type="button"
             className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+            onClick={() => navigate('/search')}
           >
             Find a Home
           </button>
