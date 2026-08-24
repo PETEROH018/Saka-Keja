@@ -53,8 +53,6 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                 prev.filter((_, i) => i !== index)
                 );
             };
-          
-        
     
     return(
         <main className="mx-auto w-full max-w-[900px] px-4 py-8 sm:px-6 lg:px-11">
