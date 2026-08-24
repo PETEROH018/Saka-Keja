@@ -5,11 +5,7 @@ import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitF
 import ApartmentReview from "../../components/ApartmentReview/ApartmentReview";
 
 export default function AddApartment(){
-  const [currentStep, setCurrentStep] = useState(1);
-  const [units, setUnits] = useState([]);
-  const [apartmentData,setApartmentData] = useState({});
-
-  const [form, setForm] = useState({
+  const emptyForm= {
               buildingName: "",
               propertyType: "",
               address: "",
@@ -19,12 +15,18 @@ export default function AddApartment(){
               waterReliable: false,
               securityGuard: false,
               images: [],
-            });
-  
-  
-  const [amenities, setAmenities] = useState([
+            }
+  const emptyAmenities = [
               { title: "", distance: "" },
-            ]);
+            ]
+  const [currentStep, setCurrentStep] = useState(1);
+  const [units, setUnits] = useState([]);
+  const [apartmentData,setApartmentData] = useState({});
+
+  const [form, setForm] = useState(emptyForm);
+  
+  
+  const [amenities, setAmenities] = useState(emptyAmenities);
   const handleEditProperty = () => {
     setCurrentStep(1)
   }
@@ -60,7 +62,16 @@ export default function AddApartment(){
       Math.max(1, prev - 1)
     );
   };
-  console.log(apartmentData)
+
+  function handleSubmit(){
+          console.log(apartmentData)
+          alert("Apartment added successfully")
+          setApartmentData({})
+          setForm(emptyForm)
+          setUnits([])
+          setAmenities(emptyAmenities)
+          setCurrentStep(1)
+        }
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
 
@@ -235,6 +246,7 @@ export default function AddApartment(){
            onBack={handleBack}
            onEditProperty={handleEditProperty}
            onEditUnits={handleEditUnit}
+           onSubmit={handleSubmit}
           />
         )}
 
