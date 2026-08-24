@@ -25,6 +25,13 @@ export default function AddApartment(){
   const [amenities, setAmenities] = useState([
               { title: "", distance: "" },
             ]);
+  const handleEditProperty = () => {
+    setCurrentStep(1)
+  }
+
+  const handleEditUnit =()=>{
+    setCurrentStep(2)
+  }
 
   const handleApartmentContinue = (e) => {
     e.preventDefault()
@@ -53,6 +60,7 @@ export default function AddApartment(){
       Math.max(1, prev - 1)
     );
   };
+  console.log(apartmentData)
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
 
@@ -225,6 +233,8 @@ export default function AddApartment(){
           <ApartmentReview 
            apartmentData={apartmentData}
            onBack={handleBack}
+           onEditProperty={handleEditProperty}
+           onEditUnits={handleEditUnit}
           />
         )}
 
