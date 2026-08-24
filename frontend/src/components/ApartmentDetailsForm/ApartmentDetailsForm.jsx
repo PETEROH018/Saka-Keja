@@ -193,7 +193,7 @@ const inputClass =
 
 const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
-export default function ApartmentDetailsForm(){
+export default function ApartmentDetailsForm({onBack,onContinue}){
 
         const [form, setForm] = useState({
             buildingName: "",
@@ -261,56 +261,7 @@ export default function ApartmentDetailsForm(){
     
     return(
         <main className="mx-auto w-full max-w-[900px] px-4 py-8 sm:px-6 lg:px-11">
-            {/* Header */}
-            <div className="mb-5">
-                <h1 className="text-2xl font-bold tracking-tight sm:text-[27px]">
-                Add a New Apartment
-                </h1>
 
-                <p className="mt-1.5 text-[10px] text-[#77717c]">
-                List a new apartment building and add available units
-                </p>
-            </div>
-
-            {/* Progress */}
-            <div className="mx-auto mb-7 flex w-full max-w-[650px] items-start">
-                        {[
-                          ["1", "Location"],
-                          ["2", "Units"],
-                          ["3", "Review"],
-                        ].map(([number, label], index) => (
-                          <React.Fragment key={number}>
-            
-                            <div className="flex min-w-[55px] flex-col items-center gap-1.5">
-                              <div
-                                className={`grid h-[18px] w-[18px] place-items-center rounded-full text-[8px] ${
-                                  index === 0
-                                    ? "bg-[#5e3b95] text-white"
-                                    : "bg-[#eeeaf0] text-[#746d78]"
-                                }`}
-                              >
-                                {number}
-                              </div>
-            
-                              <span
-                                className={`text-[8px] ${
-                                  index === 0
-                                    ? "text-[#5e3b95]"
-                                    : "text-[#aaa4ad]"
-                                }`}
-                              >
-                                {label}
-                              </span>
-                            </div>
-            
-                            {index < 3 && (
-                              <div className="mt-2 h-px flex-1 bg-[#dad3de]" />
-                            )}
-            
-                          </React.Fragment>
-                        ))}
-            </div>
-            
              {/* INPUT FORM */}
             <form
                 onSubmit={handleSubmit}
@@ -686,6 +637,7 @@ export default function ApartmentDetailsForm(){
 
               <button
                 type="submit"
+                onClick={()=>{onContinue()}}
                 className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084]"
               >
                 Continue to Units
