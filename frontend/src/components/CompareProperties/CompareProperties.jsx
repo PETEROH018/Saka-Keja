@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 
 function Check() {
   return (
@@ -26,39 +26,14 @@ function totalMonthlyCost(property) {
 }
 
 const FEATURE_ROWS = [
-  {
-    label: "Monthly Rent",
-    render: (p) => formatKsh(p["monthly-expense-breakdown"].rent),
-  },
-  {
-    label: "Total Monthly Cost",
-    render: (p) => formatKsh(totalMonthlyCost(p)),
-    emphasis: true,
-  },
-  {
-    label: "Type",
-    render: (p) => p.property_type,
-  },
-  {
-    label: "Bedrooms / Bathrooms",
-    render: (p) => `${p.bedrooms} bed • ${p.bathrooms} bath`,
-  },
-  {
-    label: "Furnished",
-    render: (p) => (p.furnished ? <Check /> : <Cross />),
-  },
-  {
-    label: "Wi-Fi Included",
-    render: (p) => (p["WiFi included"] ? <Check /> : <Cross />),
-  },
-  {
-    label: "Water Reliable",
-    render: (p) => (p["Water reliable"] ? <Check /> : <Cross />),
-  },
-  {
-    label: "Security Guard",
-    render: (p) => (p["Security Guard"] ? <Check /> : <Cross />),
-  },
+  { label: "Monthly Rent", render: (p) => formatKsh(p["monthly-expense-breakdown"].rent) },
+  { label: "Total Monthly Cost", render: (p) => formatKsh(totalMonthlyCost(p)), emphasis: true },
+  { label: "Type", render: (p) => p.property_type },
+  { label: "Bedrooms / Bathrooms", render: (p) => `${p.bedrooms} bed • ${p.bathrooms} bath` },
+  { label: "Furnished", render: (p) => (p.furnished ? <Check /> : <Cross />) },
+  { label: "Wi-Fi Included", render: (p) => (p["WiFi included"] ? <Check /> : <Cross />) },
+  { label: "Water Reliable", render: (p) => (p["Water reliable"] ? <Check /> : <Cross />) },
+  { label: "Security Guard", render: (p) => (p["Security Guard"] ? <Check /> : <Cross />) },
   {
     label: "Nearest Amenity",
     render: (p) => {
@@ -68,38 +43,13 @@ const FEATURE_ROWS = [
   },
 ];
 
-export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
-  const [apartments, setApartments] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("http://localhost:3000/apartments") // adjust to your backend's actual port/route
-      .then((res) => res.json())
-      .then((data) => {
-        setApartments(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to load apartments:", err);
-        setLoading(false);
-      });
-  }, []);
-
-  const properties = useMemo(
-    () => propertyIds.map((id) => apartments.find((a) => a.id === id)).filter(Boolean),
-    [propertyIds, apartments]
-  );
-
+export default function CompareProperties({ properties, onBack }) {
   const cheapest = useMemo(() => {
     if (properties.length === 0) return null;
     return properties.reduce((min, p) =>
       totalMonthlyCost(p) < totalMonthlyCost(min) ? p : min
     );
   }, [properties]);
-
-  if (loading) {
-    return <p className="compare-empty">Loading...</p>;
-  }
 
   if (properties.length === 0) {
     return <p className="compare-empty">No properties selected for comparison.</p>;
@@ -108,7 +58,9 @@ export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
   return (
     <section className="compare-section">
       <div className="compare-header">
-        <a href="#" className="compare-back">&larr; Back to Search</a>
+        <a href="#" className="compare-back" onClick={(e) => { e.preventDefault(); onBack(); }}>
+          &larr; Back to Search
+        </a>
         <h1 className="compare-title">Compare Properties</h1>
         <p className="compare-subtitle">
           Review your shortlisted options side-by-side to make the best decision.
@@ -122,9 +74,7 @@ export default function CompareProperties({ propertyIds = ["1", "3", "5"] }) {
               <th className="compare-feature-col">Features</th>
               {properties.map((p) => (
                 <th key={p.id} className="compare-property-col">
-                  {p.id === cheapest.id && (
-                    <span className="compare-badge">Best Value</span>
-                  )}
+                  {p.id === cheapest.id && <span className="compare-badge">Best Value</span>}
                   <div className="compare-thumb">
                     <img src={p.image_Urls[0]} alt={p.name} loading="lazy" />
                   </div>
