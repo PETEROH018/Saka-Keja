@@ -175,7 +175,7 @@
 
 .testimonial {
   position: relative;
-  max-w: 36rem;
+  max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
   margin-top: 3.5rem;
