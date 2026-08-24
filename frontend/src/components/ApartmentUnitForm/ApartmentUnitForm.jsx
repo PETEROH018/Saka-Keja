@@ -178,391 +178,346 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 console.log(units)
 
   return(
-    <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
-       
+  <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
 
-      <div className="mx-auto max-w-[900px] px-5 py-7 lg:px-7">
+    <div className="mx-auto w-full max-w-[900px]">
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_220px]">
+      {/* MAIN CONTENT GRID */}
+
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+
+        {/* LEFT COLUMN — UNIT FORM */}
+
+        <div className="min-w-0">
+
+          {/* UNIT FORM */}
+
+          <div className="rounded-lg border border-[#dcd3e2] bg-[#fdf9ff] p-4">
+
+            <h2 className="mb-5 text-[12px] font-semibold text-[#28232d]">
+              {editingId ? "Edit Unit" : "Add Unit"}
+            </h2>
+
+            {/* UNIT TYPE */}
+
+            <FormField
+              label="Unit Type"
+              required
+            >
+              <div className="relative">
+
+                <select
+                  name="unitType"
+                  value={unit.unitType}
+                  onChange={handleChange}
+                  className={`${inputClass} appearance-none pr-9`}
+                >
+                  <option value="">
+                    Select unit type
+                  </option>
+
+                  {unitTypeOptions.map((type) => (
+                    <option
+                      key={type}
+                      value={type}
+                    >
+                      {type}
+                    </option>
+                  ))}
+                </select>
+
+                <Icon
+                  name="chevronDown"
+                  size={12}
+                  className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+                />
+
+              </div>
+            </FormField>
 
 
-          {/* LEFT COLUMN */}
+            {/* RENT / DEPOSIT / SIZE */}
 
-          <div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
 
-            {/* UNIT FORM */}
-
-            <div className="rounded-lg border border-[#dcd3e2] bg-[#fdf9ff] p-4">
-
-              <h2 className="mb-5 text-[12px] font-semibold">
-                {editingId
-                  ? "Edit Unit"
-                  : "Add Unit"}
-              </h2>
-                  <FormField
-                label="Unit Type"
+              <FormField
+                label="Monthly Rent (KSh)"
                 required
               >
-
-                <div className="relative">
-
-                  <select
-                    name="unitType"
-                    value={unit.unitType}
-                    onChange={handleChange}
-                    className={`${inputClass} appearance-none pr-9`}
-                  >
-
-                    <option value="">
-                      Select unit type
-                    </option>
-
-                    {unitTypeOptions.map(
-                      (type) => (
-                        <option
-                          key={type}
-                          value={type}
-                        >
-                          {type}
-                        </option>
-                      )
-                    )}
-
-                  </select>
+                <input
+                  type="number"
+                  min="0"
+                  name="monthlyRent"
+                  value={unit.monthlyRent}
+                  onChange={handleChange}
+                  placeholder="15,000"
+                  className={inputClass}
+                />
+              </FormField>
 
 
-                  <Icon
-                    name="chevronDown"
-                    size={12}
-                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+              <FormField
+                label="Deposit Amount"
+              >
+                <input
+                  type="number"
+                  min="0"
+                  name="depositAmount"
+                  value={unit.depositAmount}
+                  onChange={handleChange}
+                  placeholder="15,000"
+                  className={inputClass}
+                />
+              </FormField>
+
+
+              <FormField
+                label="Size (sq ft)"
+              >
+                <input
+                  type="number"
+                  min="0"
+                  name="size"
+                  value={unit.size}
+                  onChange={handleChange}
+                  placeholder="250"
+                  className={inputClass}
+                />
+              </FormField>
+
+            </div>
+
+
+            {/* UNIT FEATURES */}
+
+            <div className="mt-6">
+
+              <h3 className="mb-3 text-[10px] font-semibold text-[#353039]">
+                Unit Features
+              </h3>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+
+                {/* SHARED */}
+
+                <label className="flex h-9 cursor-pointer items-center gap-2 text-[10px] text-[#625c66]">
+
+                  <input
+                    type="checkbox"
+                    checked={unit.shared}
+                    onChange={handleSharedChange}
+                    className="sr-only"
                   />
+
+                  <span
+                    className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
+                      unit.shared
+                        ? "border-[#5e3b95] bg-[#5e3b95] text-white"
+                        : "border-[#cec5d4] bg-white"
+                    }`}
+                  >
+                    {unit.shared && (
+                      <Icon
+                        name="check"
+                        size={9}
+                      />
+                    )}
+                  </span>
+
+                  Shared
+
+                </label>
+
+
+                {/* BATHROOMS */}
+
+                <FormField label="Number of Bathrooms">
+
+                  <div className="relative">
+
+                    <select
+                      name="bathrooms"
+                      value={unit.bathrooms}
+                      onChange={handleChange}
+                      className={`${inputClass} appearance-none pr-8`}
+                    >
+
+                      {[0, 1, 2].map((number) => (
+                        <option
+                          key={number}
+                          value={number}
+                        >
+                          {number}
+                        </option>
+                      ))}
+
+                    </select>
+
+                    <Icon
+                      name="chevronDown"
+                      size={12}
+                      className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+                    />
+
+                  </div>
+
+                </FormField>
+
+
+                {/* BEDROOMS */}
+
+                <FormField label="Number of Bedrooms">
+
+                  <div className="relative">
+
+                    <select
+                      name="bedrooms"
+                      value={unit.bedrooms}
+                      onChange={handleChange}
+                      className={`${inputClass} appearance-none pr-8`}
+                    >
+
+                      {[0, 1, 2, 3].map((number) => (
+                        <option
+                          key={number}
+                          value={number}
+                        >
+                          {number}
+                        </option>
+                      ))}
+
+                    </select>
+
+                    <Icon
+                      name="chevronDown"
+                      size={12}
+                      className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+                    />
+
+                  </div>
+
+                </FormField>
+
+              </div>
+
+
+              {/* AMENITIES */}
+
+              <div className="mt-5">
+
+                <h4 className="mb-3 text-[10px] font-semibold text-[#353039]">
+                  Additional Amenities
+                </h4>
+
+                <div className="grid gap-x-7 gap-y-3 sm:grid-cols-3">
+
+                  {amenityOptions.map((amenity) => {
+
+                    const checked =
+                      unit.amenities.includes(amenity);
+
+                    return (
+                      <label
+                        key={amenity}
+                        className="flex cursor-pointer items-center gap-2 text-[10px] text-[#625c66]"
+                      >
+
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            toggleAmenity(amenity)
+                          }
+                          className="sr-only"
+                        />
+
+                        <span
+                          className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
+                            checked
+                              ? "border-[#5e3b95] bg-[#5e3b95] text-white"
+                              : "border-[#cec5d4] bg-white"
+                          }`}
+                        >
+                          {checked && (
+                            <Icon
+                              name="check"
+                              size={9}
+                            />
+                          )}
+                        </span>
+
+                        {amenity}
+
+                      </label>
+                    );
+                  })}
 
                 </div>
 
-              </FormField>
-
-              {/* RENT / DEPOSIT / SIZE */}
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-
-                <FormField
-                  label="Monthly Rent (KSh)"
-                  required
-                >
-
-                  <input
-                    type="number"
-                    min="0"
-                    name="monthlyRent"
-                    value={
-                      unit.monthlyRent
-                    }
-                    onChange={
-                      handleChange
-                    }
-                    placeholder="15,000"
-                    className={inputClass}
-                  />
-
-                </FormField>
-
-
-                <FormField
-                  label="Deposit Amount"
-                >
-
-                  <input
-                    type="number"
-                    min="0"
-                    name="depositAmount"
-                    value={
-                      unit.depositAmount
-                    }
-                    onChange={
-                      handleChange
-                    }
-                    placeholder="15,000"
-                    className={inputClass}
-                  />
-
-                </FormField>
-
-
-                <FormField
-                  label="Size (sq ft)"
-                >
-
-                  <input
-                    type="number"
-                    min="0"
-                    name="size"
-                    value={unit.size}
-                    onChange={
-                      handleChange
-                    }
-                    placeholder="250"
-                    className={inputClass}
-                  />
-
-                </FormField>
-
               </div>
-              <div className="mt-6">
 
-                <h3 className="mb-3 text-[10px] font-semibold text-[#353039]">
-                  Unit Features
-                </h3>
+            </div>
 
 
-                <div className="grid gap-3 sm:grid-cols-3">
+            {/* ADD / UPDATE UNIT  */}
 
+            <div className="mt-7 flex justify-end">
 
-                  {/* SHARED */}
-
-                  <label className="flex h-9 cursor-pointer items-center gap-2 text-[10px] text-[#625c66]">
-
-                    <input
-                      type="checkbox"
-                      checked={
-                        unit.shared
-                      }
-                      onChange={
-                        handleSharedChange
-                      }
-                      className="sr-only"
-                    />
-
-                    <span
-                      className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
-                        unit.shared
-                          ? "border-[#5e3b95] bg-[#5e3b95] text-white"
-                          : "border-[#cec5d4] bg-white"
-                      }`}
-                    >
-                      {unit.shared && (
-                        <Icon
-                          name="check"
-                          size={9}
-                        />
-                      )}
-                    </span>
-
-                    Shared
-
-                  </label>
-
-                  {/* BATHROOMS */}
-
-                  <FormField
-                    label="Number of Bathrooms"
-                  >
-
-                    <div className="relative">
-
-                      <select
-                        name="bathrooms"
-                        value={
-                          unit.bathrooms
-                        }
-                        onChange={
-                          handleChange
-                        }
-                        className={`${inputClass} appearance-none pr-8`}
-                      >
-
-                        {[0, 1, 2].map(
-                          (number) => (
-                            <option
-                              key={number}
-                              value={
-                                number
-                              }
-                            >
-                              {number}
-                            </option>
-                          )
-                        )}
-
-                      </select>
-
-
-                      <Icon
-                        name="chevronDown"
-                        size={12}
-                        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
-                      />
-
-                    </div>
-
-                  </FormField>
-
-                  {/* BEDROOMS */}
-
-                  <FormField
-                    label="Number of Bedrooms"
-                  >
-
-                    <div className="relative">
-
-                      <select
-                        name="bedrooms"
-                        value={
-                          unit.bedrooms
-                        }
-                        onChange={
-                          handleChange
-                        }
-                        className={`${inputClass} appearance-none pr-8`}
-                      >
-
-                        {[0, 1, 2, 3].map(
-                          (number) => (
-                            <option
-                              key={number}
-                              value={
-                                number
-                              }
-                            >
-                              {number}
-                            </option>
-                          )
-                        )}
-
-                      </select>
-
-
-                      <Icon
-                        name="chevronDown"
-                        size={12}
-                        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
-                      />
-
-                    </div>
-
-                  </FormField>
-                </div>    
-                 {/* AMENITIES */}
-
-                <div className="mt-5">
-
-                  <h4 className="mb-3 text-[10px] font-semibold text-[#353039]">
-                    Additional Amenities
-                  </h4>
-
-
-                  <div className="grid gap-x-7 gap-y-3 sm:grid-cols-3">
-
-                    {amenityOptions.map(
-                      (amenity) => {
-
-                        const checked =
-                          unit.amenities.includes(
-                            amenity
-                          );
-
-                        return (
-                          <label
-                            key={amenity}
-                            className="flex cursor-pointer items-center gap-2 text-[10px] text-[#625c66]"
-                          >
-
-                            <input
-                              type="checkbox"
-                              checked={
-                                checked
-                              }
-                              onChange={() =>
-                                toggleAmenity(
-                                  amenity
-                                )
-                              }
-                              className="sr-only"
-                            />
-
-
-                            <span
-                              className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
-                                checked
-                                  ? "border-[#5e3b95] bg-[#5e3b95] text-white"
-                                  : "border-[#cec5d4] bg-white"
-                              }`}
-                            >
-
-                              {checked && (
-                                <Icon
-                                  name="check"
-                                  size={9}
-                                />
-                              )}
-
-                            </span>
-
-
-                            {amenity}
-
-                          </label>
-                        );
-                      }
-                    )}
-
-                  </div>
-                <div className="mt-7 flex justify-end">
-
-                <button
-                  type="button"
-                  onClick={
-                    handleAddUnit
-                  }
-                  className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
-                >
-
-                  <Icon
-                    name="plus"
-                    size={11}
-                  />
-
-                  {editingId
-                    ? "Update Unit"
-                    : "Add Unit"}
-
-                </button>
-
-              </div>
-                </div>  
-                {/*BUTTON FOR ADDING ANOTHER UNIT */}
-                <button
-              type="button"
-              onClick={
-                resetForm
-              }
-              className="mt-4 flex h-[98px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#cfc3d7] bg-white text-center transition hover:bg-[#fdf9ff]"
-            >
-
-              <span className="mb-2 grid h-7 w-7 place-items-center rounded-full bg-[#eee8f1] text-[#625a66]">
+              <button
+                type="button"
+                onClick={handleAddUnit}
+                className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
+              >
 
                 <Icon
                   name="plus"
-                  size={15}
+                  size={11}
                 />
 
-              </span>
+                {editingId
+                  ? "Update Unit"
+                  : "Add Unit"}
+
+              </button>
+
+            </div>
+
+          </div>
 
 
-              <span className="text-[9px] font-medium text-[#3f3943]">
-                Add Another Unit
-              </span>
+          {/* ADD ANOTHER UNIT */}
+
+          <button
+            type="button"
+            onClick={resetForm}
+            className="mt-4 flex h-[98px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#cfc3d7] bg-white text-center transition hover:bg-[#fdf9ff]"
+          >
+
+            <span className="mb-2 grid h-7 w-7 place-items-center rounded-full bg-[#eee8f1] text-[#625a66]">
+
+              <Icon
+                name="plus"
+                size={15}
+              />
+
+            </span>
+
+            <span className="text-[9px] font-medium text-[#3f3943]">
+              Add Another Unit
+            </span>
+
+            <span className="mt-1 text-[8px] text-[#8b838e]">
+              Add another individual unit
+            </span>
+
+          </button>
+
+        </div>
 
 
-              <span className="mt-1 text-[8px] text-[#8b838e]">
-                Add another individual unit
-              </span>
+        {/* RIGHT COLUMN — ADDED UNITS */}
 
-            </button>
-
-              </div>   
-               {/* =================================================
-              RIGHT — ADDED UNITS
-          ================================================= */}
+        <aside className="min-w-0 w-full lg:sticky lg:top-6">
 
           <AddedUnitSummary
             units={units}
@@ -570,9 +525,16 @@ console.log(units)
             setUnits={setUnits}
             setEditingId={setEditingId}
             editingId={editingId}
-          />     
-              </div>
-              <div className="mx-auto mt-7 flex w-full max-w-[900px] items-center justify-between">
+          />
+
+        </aside>
+
+      </div>
+
+
+      {/* FOOTER */}
+
+      <div className="mt-7 flex w-full items-center justify-between">
 
         <button
           type="button"
@@ -600,10 +562,10 @@ console.log(units)
         </button>
 
       </div>
-              </div>
-              </div>
-              </div>
-              </div>
+
+    </div>
+  </div>
+
 
   )
 }
