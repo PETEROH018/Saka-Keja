@@ -21,6 +21,34 @@ export default function ApartmentReview({
     units = [],
   } = apartmentData;
 
+function Feature({ label, active }) {
+  return (
+    <div
+      className={`flex items-center gap-2 rounded-md border px-2.5 py-2 ${
+        active
+          ? "border-[#d8cbe3] bg-[#eee8f2]"
+          : "border-[#e5dfe8] bg-white"
+      }`}
+    >
+
+      <span
+        className={`flex h-3.5 w-3.5 items-center justify-center rounded-[3px] border ${
+          active
+            ? "border-[#5e3b95] bg-[#5e3b95] text-white"
+            : "border-[#cec5d4] bg-white"
+        }`}
+      >
+        {active && <Icon name="check" size={9} />}
+      </span>
+
+      <span className="text-[8px] text-[#625c66]">
+        {label}
+      </span>
+
+    </div>
+  );
+}
+
     return(
         <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
       <div className="mx-auto w-full max-w-[900px]">
@@ -117,6 +145,39 @@ export default function ApartmentReview({
               </div>
             )}
         </div>
+
+        {/* PROPERTY FEATURES */}
+
+            <div className="mt-5 border-t border-[#e5dfe8] pt-4">
+
+              <h3 className="mb-3 text-[9px] font-semibold text-[#39333d]">
+                Property Features
+              </h3>
+
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+
+                <Feature
+                  label="Furnished"
+                  active={furnished}
+                />
+
+                <Feature
+                  label="Security Guard"
+                  active={securityGuard}
+                />
+
+                <Feature
+                  label="Reliable Water"
+                  active={waterReliable}
+                />
+
+                <Feature
+                  label="Wi-Fi Included"
+                  active={wifiIncluded}
+                />
+
+              </div>
+            </div>
 
           </section>
         </div>
