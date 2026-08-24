@@ -98,6 +98,10 @@ export default function({units,setUnit,setUnits,setEditingId,editingId}){
                 {item.unitType}
               </p>
 
+              <p className="mt-0.5 text-[8px] text-[#746d78]">
+                Maximum Occupants : {item.maxOccupants}
+              </p>
+
             </div>
 
 
