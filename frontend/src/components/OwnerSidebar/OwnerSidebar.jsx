@@ -45,7 +45,7 @@ const navigationItems = [
 
 export default function OwnerSidebar() {
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-gray-200 bg-white px-4 py-6">
+    <aside className="hidden min-h-screen w-64 flex-col border-r border-gray-200 bg-white px-4 py-6 md:flex">
       <div>
         <h2 className="text-2xl font-bold text-violet-700">
           Saka Keja
@@ -75,10 +75,9 @@ export default function OwnerSidebar() {
             key={label}
             to={path}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                isActive
-                  ? "bg-violet-700 font-medium text-white"
-                  : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive
+                ? "bg-violet-700 font-medium text-white"
+                : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
               }`
             }
           >

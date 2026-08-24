@@ -49,7 +49,7 @@ export default function MyProperties() {
     <div className="flex min-h-screen bg-[#faf8fc]">
       <OwnerSidebar />
 
-      <main className="flex-1 px-8 py-7">
+      <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900">
           My Properties
         </h1>
@@ -57,8 +57,8 @@ export default function MyProperties() {
         <p className="mt-1 text-sm text-gray-500">
           Manage your portfolio, track inquiries, and update availability.
         </p>
-        <div className="mt-5 max-w-xl">
-          <div className="relative">
+        <div className="mt-5 w-full max-w-3xl">
+          <div className="relative max-w-xl">
             <Search
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Pencil, ChartNoAxesCombined } from "lucide-react";
 
 export default function OwnerPropertyCard({ property }) {
     const navigate = useNavigate();
@@ -17,8 +18,8 @@ export default function OwnerPropertyCard({ property }) {
     };
 
     return (
-        <article className="flex gap-3 rounded-xl border border-gray-200 bg-white p-3">
-            <div className="h-32 w-40 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+        <article className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 sm:flex-row sm:gap-5">
+            <div className="h-48 w-full shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:h-auto sm:w-48 sm:self-stretch">
                 {image ? (
                     <img
                         src={image}
@@ -52,22 +53,22 @@ export default function OwnerPropertyCard({ property }) {
                     </span>
                 </div>
 
-                <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <div className="mt-4 grid items-stretch gap-3 sm:grid-cols-3">
+                    <div className="flex min-h-20 flex-col justify-between rounded-lg border border-gray-100 bg-gray-50 p-3">
                         <p className="text-xs text-gray-500">Monthly Rent</p>
                         <p className="mt-1 text-sm font-semibold text-gray-900">
                             Ksh {rent?.toLocaleString() ?? "—"}
                         </p>
                     </div>
 
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                    <div className="flex min-h-20 flex-col justify-between rounded-lg border border-gray-100 bg-gray-50 p-3">
                         <p className="text-xs text-gray-500">Property Type</p>
                         <p className="mt-1 text-sm font-semibold capitalize text-gray-900">
                             {property.property_type}
                         </p>
                     </div>
 
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                    <div className="flex min-h-20 flex-col justify-between rounded-lg border border-gray-100 bg-gray-50 p-3">
                         <p className="text-xs text-gray-500">Rooms</p>
                         <p className="mt-1 text-sm font-semibold text-gray-900">
                             {property.bedrooms} Bed · {property.bathrooms} Bath
@@ -117,20 +118,21 @@ export default function OwnerPropertyCard({ property }) {
                 </div>
             </div>
 
-            <div className="flex shrink-0 flex-col gap-3 border-l border-gray-100 pl-4">
+            <div className="flex shrink-0 gap-2 border-t border-gray-100 pt-3 sm:flex-col sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
                 <button
                     type="button"
                     onClick={() => navigate(`/edit-property/${property.id}`)}
-                    className="text-sm text-gray-600 transition hover:text-violet-700"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-violet-50 hover:text-violet-700 sm:flex-none sm:justify-start"
                 >
-                    Edit
+                    <Pencil size={16} aria-hidden="true" />
+                    <span>Edit</span>
                 </button>
-
                 <button
                     type="button"
-                    className="text-sm text-gray-600 transition hover:text-violet-700"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-violet-50 hover:text-violet-700 sm:flex-none sm:justify-start"
                 >
-                    Insights
+                    <ChartNoAxesCombined size={16} aria-hidden="true" />
+                    <span>Insights</span>
                 </button>
             </div>
         </article>

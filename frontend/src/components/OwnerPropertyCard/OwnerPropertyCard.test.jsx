@@ -51,3 +51,17 @@ describe("OwnerPropertyCard", () => {
         ).toBeInTheDocument();
     });
 });
+
+it("uses a horizontal action row on mobile", () => {
+  render(
+    <MemoryRouter>
+      <OwnerPropertyCard property={property} />
+    </MemoryRouter>
+  );
+
+  const editButton = screen.getByRole("button", { name: /edit/i });
+  const insightsButton = screen.getByRole("button", { name: /insights/i });
+
+  expect(editButton).toHaveClass("flex-1");
+  expect(insightsButton).toHaveClass("flex-1");
+});
