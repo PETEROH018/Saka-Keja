@@ -2,25 +2,47 @@ import React, { useState } from "react";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import ApartmentDetailsForm from "../../components/ApartmentDetailsForm/ApartmentDetailsForm";
 import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
+import ApartmentReview from "../../components/ApartmentReview/ApartmentReview";
 
 export default function AddApartment(){
   const [currentStep, setCurrentStep] = useState(1);
+  const [units, setUnits] = useState([]);
+  const [apartmentData,setApartmentData] = useState({});
 
-  const handleLocationContinue = (locationData) => {
-    // setPropertyData((prev) => ({
-    //   ...prev,
-    //   location: locationData,
-    // }));
+  const [form, setForm] = useState({
+              buildingName: "",
+              propertyType: "",
+              address: "",
+              description: "",
+              furnished: false,
+              wifiIncluded: false,
+              waterReliable: false,
+              securityGuard: false,
+              images: [],
+            });
+  
+  
+  const [amenities, setAmenities] = useState([
+              { title: "", distance: "" },
+            ]);
 
-    setCurrentStep(2);
+  const handleApartmentContinue = (e) => {
+    e.preventDefault()
+    const propertyData = {
+              ...form,
+              amenities,
+              };
+      
+      setApartmentData(propertyData);
+      setCurrentStep(2);
   };
 
 
-  const handleUnitsContinue = (unitsData) => {
-    // setPropertyData((prev) => ({
-    //   ...prev,
-    //   units: unitsData,
-    // }));
+  const handleUnitsContinue = () => {
+    setApartmentData((prev) => ({
+      ...prev,
+      units: units,
+    }));
 
     setCurrentStep(3);
   };
@@ -170,15 +192,19 @@ export default function AddApartment(){
       </div>
 
 
-      {/* FORM CONTENT */}
+      {/* CONTENT */}
 
       <div className="px-5 py-7 lg:px-7">
 
         {currentStep === 1 && (
           <ApartmentDetailsForm
             onContinue={
-              handleLocationContinue
+              handleApartmentContinue
             }
+            form={form}
+            setForm={setForm}
+            amenities={amenities}
+            setAmenities={setAmenities}
           />
         )}
 
@@ -189,14 +215,17 @@ export default function AddApartment(){
             onContinue={
               handleUnitsContinue
             }
+            units={units}
+            setUnits={setUnits}
           />
         )}
 
 
         {currentStep === 3 && (
-          <div>
-            {/* ReviewStep goes here */}
-          </div>
+          <ApartmentReview 
+           apartmentData={apartmentData}
+           onBack={handleBack}
+          />
         )}
 
       </div>
