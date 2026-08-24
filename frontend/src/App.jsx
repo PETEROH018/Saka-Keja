@@ -28,7 +28,7 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
-        <Route path="/saved" element={<SavedProperties />} />
+        <Route path="/savedproperties" element={<SavedProperties />} />
 
         <Route path="/" element={<Login />} />
       </Routes>
