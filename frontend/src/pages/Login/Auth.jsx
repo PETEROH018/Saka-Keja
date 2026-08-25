@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getLocation from "../../utils/GetLocation";
 import { Eye, EyeOff } from "lucide-react";
+import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
 
 export function AuthPage() {
   const navigate = useNavigate()
@@ -38,9 +39,15 @@ export function AuthPage() {
     event.preventDefault();
     const isLogin = formType === "login";
 
-    if (!isLogin && signUpFormData.password !== signUpFormData.confirmPassword) {
-      alert("Passwords do not match. Please try again.");
-      return;
+    if (!isLogin) {
+      if (!isPasswordStrong(signUpFormData.password)) {
+        alert("Please ensure your password is at least 8 characters long and contains mixed characters (uppercase, lowercase, number, and special character).");
+        return;
+      }
+      if (signUpFormData.password !== signUpFormData.confirmPassword) {
+        alert("Passwords do not match. Please try again.");
+        return;
+      }
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
@@ -349,6 +356,8 @@ export function AuthPage() {
                     )}
                   </button>
                 </div>
+
+                <CheckPassword password={signUpFormData.password} />
               </div>
 
               {/* Confirm Password */}
@@ -379,11 +388,11 @@ export function AuthPage() {
                     )}
                   </button>
                 </div>
-                {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword && (
+                {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword?(
                   <p className="mt-1 text-xs text-red-500">
                     Passwords do not match
                   </p>
-                )}
+                ): <p className="mt-1 text-xs text-green-500"> passwords match</p>}
               </div>
 
               {/* Account type */}
