@@ -52,4 +52,6 @@ class ApartmentOwner(Base):
     full_name = Column(String(100), nullable=False)
     email = Column(VARCHAR(30), nullable=False, unique=True)
     phone_number = Column(Integer, nullable=False, unique=True)
-
+    location = Column(String(20), nullable=True)
+    username = Column(VARCHAR(30), unique=True)
+    _password_hash = Column(String, nullable=False)
