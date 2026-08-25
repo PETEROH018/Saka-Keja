@@ -216,7 +216,19 @@ export default function AvailableUnits() {
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                   
-                  
+                  {/* Availability Badge */}
+                  <div className="absolute left-3 top-3 flex items-center gap-1.5">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold shadow-xs backdrop-blur-md ${
+                        unit.isAvailable
+                          ? "bg-emerald-500/90 text-white"
+                          : "bg-gray-700/90 text-white"
+                      }`}
+                    >
+                      <span className={`h-1.5 w-1.5 rounded-full ${unit.isAvailable ? "bg-white animate-pulse" : "bg-gray-300"}`} />
+                      {unit.isAvailable ? "Available" : "Occupied"}
+                    </span>
+                  </div>
       </main>
 
       <Footer />
