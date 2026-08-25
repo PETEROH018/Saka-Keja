@@ -132,7 +132,7 @@ export default function AvailableUnits() {
     setSelectedUnit(unit);
     setBookingSuccess(false);
   };
-
+  
   return (
     <div className="min-h-screen bg-[#FDF7FF] text-gray-900 font-sans flex flex-col justify-between">
       <Navbar />
@@ -184,6 +184,29 @@ export default function AvailableUnits() {
           </div>
         </div>
 
+        {/* ================= UNIT CARD GRID ================= */}
+        {filteredUnits.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-purple-200 bg-white p-12 text-center">
+            <Info className="mx-auto h-10 w-10 text-purple-300 mb-3" />
+            <h3 className="text-lg font-bold text-gray-800">No units found</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Try adjusting your filter or search query to see available units.
+            </p>
+            <button
+              onClick={() => {
+                setActiveTab("All Units");
+              }}
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#59388f] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#452770] cursor-pointer"
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          
+          </div>
+        )}
+
+        <div id="modal-container" />
       </main>
 
       <Footer />
