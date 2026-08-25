@@ -168,16 +168,11 @@ export default function AvailableUnits() {
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
                 Available Units
               </h1>
-              <p className="mt-1.5 text-sm sm:text-base text-gray-600 font-normal flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-[#59388f] shrink-0" />
-                Modern 2 Bedroom / Studio Units available • Westlands, Nairobi
-              </p>
             </div>
 
           </div>
         </div>
 
-        
       </main>
 
       <Footer />
