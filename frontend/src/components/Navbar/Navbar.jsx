@@ -61,7 +61,7 @@ export default function Navbar({ showSearch = false }) {
           </NavLink>
 
           <NavLink
-            to="/favorites"
+            to="/savedproperties"
             className={({ isActive }) =>
               `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
                 ? "border-violet-700 text-violet-700"
