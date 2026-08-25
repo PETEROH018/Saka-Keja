@@ -281,18 +281,30 @@ export default function AvailableUnits() {
                   </div>
 
                   {/* Call to Action Button */}
+                  
                   <div className="mt-6 pt-2">
-                    <button
-                      onClick={() => handleBook(unit)}
-                      disabled={!unit.isAvailable}
+                    {unit.isAvailable? (
+                        <button
+                      onClick={navigate("/unit-details")}
                       className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
                         unit.isAvailable
                           ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
                           : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
                       }`}
                     >
-                      {unit.isAvailable ? "Details" : "Currently Occupied"}
+                      Deatails
                     </button>
+                    ):
+                    <button
+                      disabled={true}
+                      className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+                        unit.isAvailable
+                          ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                      }`}
+                    >
+                      Currently Occupied
+                    </button>}
                   </div>
                 </div>
               </div>
