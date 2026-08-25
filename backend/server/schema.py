@@ -1,8 +1,17 @@
 from marshmallow import ValidationError, fields, validate, validates_schema, Schema
 
-#===========
-#STUDENT SCHEMA
-#===========
+class UnitAmenitySchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+    description = fields.Str(allow_none=True)
+    iconUrl = fields.Str(allow_none=True)
+
+class UnitAmenityJoiningSchema(Schema):
+    id = fields.Int(dump_only=True)
+    unitId = fields.Int(required=True)
+    amenityId = fields.Int(required=True)
+    amenity = fields.Nested(UnitAmenitySchema, dump_only=True)
+
 class StudentSchema(Schema):
     id = fields.Int(dump_only=True, validate=validate.Length(min=1))
     fullname = fields.Str(required=True, validate=validate.Length(min=1))
@@ -23,10 +32,6 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
-
-#===========
-#OWNER SCHEMA
-#===========
 class StudentSchema(Schema):
     id = fields.Int(dump_only=True, validate=validate.Length(min=1))
     fullname = fields.Str(required=True, validate=validate.Length(min=1))

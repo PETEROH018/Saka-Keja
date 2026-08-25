@@ -1,3 +1,5 @@
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, VARCHAR, DateTime
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -5,13 +7,59 @@ from flask_bcrypt import Bcrypt
 
 
 meta = MetaData()
-bcrypt = Bcrypt()
 Base = declarative_base(metadata=meta)
+bcrypt = Bcrypt()
+
+db = SQLAlchemy()
 
 
-#===================
-#STUDENT MODEL
-#===================
+class UnitAmenity(db.Model):
+    __tablename__ = "unit_amenities"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(255))
+    iconUrl = db.Column(db.String(255))
+
+    # Relationship to the join table
+    unit_links = db.relationship(
+        "UnitAmenityJoining",
+        back_populates="amenity",
+        cascade="all, delete-orphan",
+    )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "iconUrl": self.iconUrl,
+        }
+
+
+class UnitAmenityJoining(db.Model):
+    __tablename__ = "unit_amenities_joining"
+
+    id = db.Column(db.Integer, primary_key=True)
+    unitId = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
+    amenityId = db.Column(db.Integer, db.ForeignKey("unit_amenities.id"), nullable=False)
+
+    amenity = db.relationship("UnitAmenity", back_populates="unit_links")
+
+class Unit(db.Model):
+    __tablename__ = "units"
+
+    id = db.Column(db.Integer, primary_key=True)
+    apartmentId = db.Column(db.String(20))  # matches the "id" string in db.json apartments
+    name = db.Column(db.String(150))
+    category = db.Column(db.String(80))
+
+    amenity_links = db.relationship(
+        "UnitAmenityJoining",
+        backref="unit",
+        cascade="all, delete-orphan",
+    )
+
 class Student(Base):
     __tablename__ = "students"
 
@@ -41,13 +89,7 @@ class Student(Base):
     def authenticate(self, password):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
-    
-    
-
-
-#=====================
-#APARTMENT_OWNER MODEL
-#=====================
+ 
 class ApartmentOwner(Base):
     __tablename__ = "apaerment_owners"
 
