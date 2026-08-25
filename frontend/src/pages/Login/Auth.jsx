@@ -388,11 +388,13 @@ export function AuthPage() {
                     )}
                   </button>
                 </div>
-                {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword?(
+                {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword ? (
                   <p className="mt-1 text-xs text-red-500">
                     Passwords do not match
                   </p>
-                ): <p className="mt-1 text-xs text-green-500"> passwords match</p>}
+                ): signUpFormData.confirmPassword ? (
+                  <p className="mt-1 text-xs text-green-500">Passwords match</p>
+                ) : null}
               </div>
 
               {/* Account type */}
