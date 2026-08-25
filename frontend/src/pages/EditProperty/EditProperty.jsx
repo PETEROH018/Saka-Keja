@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
-import OwnerSidebar from "../../components/OwnerSidebar/OwnerSidebar";
-
+import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 
 
 function EditPropertyForm({ property }) {
@@ -233,8 +232,7 @@ export default function EditProperty() {
 
     return (
         <div className="flex min-h-screen bg-[#faf8fc]">
-            <OwnerSidebar />
-
+            <AdminSideBar/>
             <main className="flex-1 px-8 py-7">
                 <Link
                     to="/my-properties"
