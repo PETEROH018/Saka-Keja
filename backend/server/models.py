@@ -1,15 +1,24 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
-from datetime import datetime,timezone
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, VARCHAR, DateTime
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Boolean,
+    ForeignKey,
+    MetaData,
+    VARCHAR,
+    DateTime,
+)
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
+from datetime import datetime, timezone
 
-metadata = MetaData()
-Base = declarative_base(metadata=meta)
+
+meta = MetaData()
 bcrypt = Bcrypt()
-db = SQLAlchemy(metadata=metadata)
+Base = declarative_base(metadata=meta)
+db = SQLAlchemy(metadata=meta)
 
 class ApartmentOwner(Base):
     __tablename__ = "aparment_owners"
@@ -134,4 +143,42 @@ class Student(Base):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
  
+#=====================
+# PAYMENT
+#=====================
 
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(
+        Integer,
+        primary_key=True
+    )
+
+    amount = Column(
+        Integer,
+        nullable=False
+    )
+
+    payment_method = Column(
+        String(30),
+        nullable=False
+    )
+
+    payment_status = Column(
+        String(30),
+        default="Pending",
+        nullable=False
+    )
+
+    transaction_reference = Column(
+        String(100),
+        nullable=True,
+        unique=True
+    )
+
+    payment_date = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
