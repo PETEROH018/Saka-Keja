@@ -115,8 +115,9 @@ class Unit(db.Model):
     
     student_units = relationship(
     "StudentUnit",
-    back_populates="unit"
-    )
+    back_populates="unit",
+    cascade="all, delete-orphan"
+)
     
 class Student(Base):
     __tablename__ = "students"
@@ -152,6 +153,8 @@ class Student(Base):
     "StudentUnit",
     back_populates="student"
     )
+    
+    
         
 #=====================
 #STUDENT_UNIT MODEL
