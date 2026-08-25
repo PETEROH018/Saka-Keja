@@ -85,5 +85,20 @@ def unlink_unit_amenity(link_id):
     return "", 204
 
 
+# ---------- units ----------
+
+@app.route("/units", methods=["GET"])
+def get_units():
+    units = Unit.query.all()
+    result = []
+    for unit in units:
+        unit_data = unit.to_dict()
+        unit_data["amenities"] = [
+            link.amenity.to_dict() for link in unit.amenity_links
+        ]
+        result.append(unit_data)
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
