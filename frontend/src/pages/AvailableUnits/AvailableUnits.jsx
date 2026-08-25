@@ -229,6 +229,14 @@ export default function AvailableUnits() {
                       {unit.isAvailable ? "Available" : "Occupied"}
                     </span>
                   </div>
+
+                  {/* Floor Badge */}
+                  <div className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-800 shadow-xs backdrop-blur-md">
+                    {unit.floorLevel}
+                  </div>
+                </div>
+
+        <div id="modal-container" />
       </main>
 
       <Footer />
