@@ -112,3 +112,44 @@ const INITIAL_UNITS = [
     bathrooms: 2,
   },
 ];
+
+const CATEGORIES = ["All Units", "Studio", "1 Bedroom", "2 Bedroom", "3+ Bedrooms"];
+
+export default function AvailableUnits() {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("All Units");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  const filteredUnits = useMemo(() => {
+    return INITIAL_UNITS.filter((unit) => {
+      const matchesCategory =
+        activeTab === "All Units" || unit.category === activeTab;
+      const matchesSearch =
+        unit.unitName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        unit.floorLevel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        unit.amenities.some((a) => a.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeTab, searchQuery]);
+
+  const handleBook = (unit) => {
+    setSelectedUnit(unit);
+    setBookingSuccess(false);
+  };
+
+  const confirmBooking = () => {
+    setBookingSuccess(true);
+    setTimeout(() => {
+      setBookingSuccess(false);
+      setSelectedUnit(null);
+    }, 2000);
+  };
+
+  return (
+    <>
+    </>
+  );
+}
