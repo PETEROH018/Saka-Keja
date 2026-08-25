@@ -47,4 +47,4 @@ Thumbs.db
 
 # --- Misc ---
 *.bak
-*.swp
+*.swpbackend/server/instance/
