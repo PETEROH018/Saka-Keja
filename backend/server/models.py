@@ -78,7 +78,7 @@ class UnitAmenityJoining(db.Model):
 
     amenity = db.relationship("UnitAmenity", back_populates="unit_links")
     
- class Unit(db.Model):
+class Unit(db.Model):
     __tablename__ = 'units'
 
     id = db.Column(db.Integer, primary_key=True)
