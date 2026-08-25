@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, V
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
+from marshmallow import ValidationError, fields, validate, validates_schema, Schema
 
 meta = MetaData()
 bcrypt = Bcrypt()
