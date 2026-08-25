@@ -87,41 +87,29 @@ export default function ApartmentDetails(){
         </header>
 
         <main className="max-w-7xl mx-auto px-4 py-6">
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
-          <div className="md:col-span-2 aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-            <img src={apartment.image_Urls[0]} alt="apartment image" className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-            </div>
-          </div>
-          <div className="hidden md:grid grid-cols-1 gap-3">
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[1]} alt="apartment image" className="w-full h-full object-cover" />
+        <section className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 mb-4">
+          {apartment.image_Urls.slice(0, 5).map((url, index) => (
+            <div
+              key={index}
+              className={`aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer 
+                ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''} 
+                ${index > 0 ? 'hidden md:block' : ''}`}
+              onClick={() => setShowAllPhotos(true)}
+            >
+              {/* Image Zoom Effect */}
+              <img 
+                src={url} 
+                alt={`apartment image ${index + 1}`} 
+                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" 
+              />
+              
+              {/* Black Hover Overlay & Message */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <p className="text-xl font-semibold text-white">Click to expand</p>
               </div>
             </div>
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[2]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-          </div>
-          <div className="hidden md:grid grid-cols-1 gap-3">
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[3]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative cursor-pointer group" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[4]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-          </div>
+          ))}
+
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -143,16 +131,6 @@ export default function ApartmentDetails(){
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
-                  <IconRender type={"bed"} />
-                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bedrooms</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment.bedrooms}</span>
-                </div>
-                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
-                  <IconRender type={"bath"} />
-                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bathrooms</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment.bathrooms}</span>
-                </div>
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"sofa"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">furnished</span>
@@ -199,33 +177,33 @@ export default function ApartmentDetails(){
             <div className="bg-white border-2 border-purple-600 rounded-3xl p-6 shadow-lg shadow-purple-500/5">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Rent per month</span>
-                <span className="text-3xl font-black text-gray-950">{apartment['monthly-expense-breakdown'].rent}</span>
+                <span className="text-3xl font-black text-gray-950">Ksh {apartment['monthly-expense-breakdown'].rent}</span>
               </div>
               <h2 className="text-md font-bold text-purple-700 mb-5">Estimated Monthly Cost</h2>
               
               <div className="space-y-3 mb-6 border-t border-b border-gray-100 py-5">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Base Rent</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].rent}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].rent}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Electricity (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].electricity}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].electricity}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Water (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].water}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].water}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Internet (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].internet}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].internet}</span>
                 </div>
                
               </div>
               
               <div className="flex justify-between items-baseline mb-3">
                 <span className="text-sm font-extrabold text-gray-900">Total Estimated Cost</span>
-                <span className="text-xl font-black text-gray-950">{Object.values(apartment['monthly-expense-breakdown']).reduce((acc, curr) => acc + curr, 0)}</span>
+                <span className="text-xl font-black text-gray-950">Ksh {Object.values(apartment['monthly-expense-breakdown']).reduce((acc, curr) => acc + curr, 0)}</span>
               </div>
               <p className="text-[11px] text-gray-400 font-medium mb-6 italic leading-relaxed">*Utilitiy costs are estimates based on average student usage metrics.</p>
 
