@@ -13,4 +13,10 @@ class Student(Base):
     email = Column(VARCHAR(30), nullable=False, unique=True)
     phone_number = Column(Integer, nullable=False, unique=True)
     dob = Column(DateTime, nullable=True)
+    institution = Column(String(20), nullable=True)
+    course = Column(String(20), nullable=True)
+    year_of_study=Column(Integer, nullable=True)
+    student_number = Column(Integer, nullable=True)
+    graduation_year = Column(Integer, nullable=True)
+    
 
