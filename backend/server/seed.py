@@ -1,3 +1,5 @@
+import json
+import os
 from app import app
 from models import db, UnitAmenity, UnitAmenityJoining, Unit
 
@@ -6,9 +8,16 @@ AMENITIES = [
     {"name": "Reliable Water", "description": "Consistent water supply, no rationing", "iconUrl": "droplet"},
     {"name": "Security Guard", "description": "24/7 on-site security personnel", "iconUrl": "shield"},
     {"name": "Furnished", "description": "Comes with basic furniture", "iconUrl": "sofa"},
-    {"name": "Parking", "description": "Dedicated parking space", "iconUrl": "car"},
-    {"name": "CCTV", "description": "Perimeter CCTV monitoring", "iconUrl": "camera"},
 ]
+
+# db.json sits one level up from backend/server/
+DB_JSON_PATH = os.path.join(os.path.dirname(__file__), "..", "db.json")
+
+
+def load_apartments():
+    with open(DB_JSON_PATH, "r") as f:
+        data = json.load(f)
+    return data["apartments"]
 
 
 def run():
@@ -29,23 +38,41 @@ def run():
             amenity_objects.append(amenity)
         db.session.commit()
 
-        print("Seeding placeholder units...")
-        unit_1 = Unit(category="bedsitter")
-        unit_2 = Unit(category="one bedroom")
-        db.session.add_all([unit_1, unit_2])
+        wifi, water, security, furnished = amenity_objects
+
+        print("Loading apartments from db.json...")
+        apartments = load_apartments()
+
+        print(f"Seeding {len(apartments)} units...")
+        units_by_apartment_id = {}
+        for apt in apartments:
+            unit = Unit(
+                apartmentId=apt["id"],
+                name=apt["name"],
+                category=apt["property_type"],
+            )
+            db.session.add(unit)
+            units_by_apartment_id[apt["id"]] = unit
         db.session.commit()
 
-        print("Linking units to amenities...")
-        links = [
-            UnitAmenityJoining(unitId=unit_1.id, amenityId=amenity_objects[0].id),
-            UnitAmenityJoining(unitId=unit_1.id, amenityId=amenity_objects[1].id),
-            UnitAmenityJoining(unitId=unit_2.id, amenityId=amenity_objects[2].id),
-            UnitAmenityJoining(unitId=unit_2.id, amenityId=amenity_objects[3].id),
-        ]
+        print("Linking units to amenities based on real listing data...")
+        links = []
+        for apt in apartments:
+            unit = units_by_apartment_id[apt["id"]]
+
+            if apt.get("WiFi included"):
+                links.append(UnitAmenityJoining(unitId=unit.id, amenityId=wifi.id))
+            if apt.get("Water reliable"):
+                links.append(UnitAmenityJoining(unitId=unit.id, amenityId=water.id))
+            if apt.get("Security Guard"):
+                links.append(UnitAmenityJoining(unitId=unit.id, amenityId=security.id))
+            if apt.get("furnished"):
+                links.append(UnitAmenityJoining(unitId=unit.id, amenityId=furnished.id))
+
         db.session.add_all(links)
         db.session.commit()
 
-        print(f"Seeded {len(amenity_objects)} amenities and {len(links)} unit links.")
+        print(f"Seeded {len(amenity_objects)} amenities, {len(apartments)} units, and {len(links)} links.")
 
 
 if __name__ == "__main__":
