@@ -1,5 +1,5 @@
 import './App.css'
-import Login from './pages/Login/Auth'
+import {AuthPage} from './pages/Login/Auth.jsx'
 import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
@@ -29,10 +29,10 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
         <Route path="/savedproperties" element={<SavedProperties />} />
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<AuthPage />} />
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
-        <Route path="/" element={<Login/>} />
+        <Route path="/" element={<AuthPage/>} />
     </Routes>
     </BrowserRouter>
 

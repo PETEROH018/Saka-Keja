@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getLocation from "../../utils/GetLocation"
 
-export default function AuthPage() {
+export function AuthPage() {
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
   const [loginFormData, setLoginFormData] = useState({
@@ -16,6 +16,7 @@ export default function AuthPage() {
     phone_number: "",
     email: "",
     password: "",
+    confirmPassword: "",
     user_type: "student",
   });
 
@@ -32,7 +33,14 @@ export default function AuthPage() {
   async function handleSubmit(event, formType) {
     event.preventDefault();
     const isLogin = formType === "login";
-    const formData = isLogin ? loginFormData : signUpFormData;
+
+    if (!isLogin && signUpFormData.password !== signUpFormData.confirmPassword) {
+      alert("Passwords do not match. Please try again.");
+      return;
+    }
+
+    const { confirmPassword, ...signUpPayload } = signUpFormData;
+    const formData = isLogin ? loginFormData : signUpPayload;
 
     try {
       const res = await fetch(
@@ -309,6 +317,27 @@ export default function AuthPage() {
                   onChange={handleSignUpChange}
                   value={signUpFormData.password}
                 />
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
+                  Confirm Password
+                </label>
+
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm your password"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.confirmPassword}
+                />
+                {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Passwords do not match
+                  </p>
+                )}
               </div>
 
               {/* Account type */}
