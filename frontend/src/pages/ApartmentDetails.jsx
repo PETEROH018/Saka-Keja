@@ -87,7 +87,7 @@ export default function ApartmentDetails(){
         </header>
 
         <main className="max-w-7xl mx-auto px-4 py-6">
-        <section className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3">
+        <section className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 mb-4">
           {apartment.image_Urls.slice(0, 5).map((url, index) => (
             <div
               key={index}
@@ -187,33 +187,33 @@ export default function ApartmentDetails(){
             <div className="bg-white border-2 border-purple-600 rounded-3xl p-6 shadow-lg shadow-purple-500/5">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Rent per month</span>
-                <span className="text-3xl font-black text-gray-950">{apartment['monthly-expense-breakdown'].rent}</span>
+                <span className="text-3xl font-black text-gray-950">Ksh {apartment['monthly-expense-breakdown'].rent}</span>
               </div>
               <h2 className="text-md font-bold text-purple-700 mb-5">Estimated Monthly Cost</h2>
               
               <div className="space-y-3 mb-6 border-t border-b border-gray-100 py-5">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Base Rent</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].rent}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].rent}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Electricity (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].electricity}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].electricity}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Water (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].water}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].water}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600 font-medium">Internet (Est.)</span>
-                  <span className="font-semibold text-gray-800">{apartment['monthly-expense-breakdown'].internet}</span>
+                  <span className="font-semibold text-gray-800">Ksh {apartment['monthly-expense-breakdown'].internet}</span>
                 </div>
                
               </div>
               
               <div className="flex justify-between items-baseline mb-3">
                 <span className="text-sm font-extrabold text-gray-900">Total Estimated Cost</span>
-                <span className="text-xl font-black text-gray-950">{Object.values(apartment['monthly-expense-breakdown']).reduce((acc, curr) => acc + curr, 0)}</span>
+                <span className="text-xl font-black text-gray-950">Ksh {Object.values(apartment['monthly-expense-breakdown']).reduce((acc, curr) => acc + curr, 0)}</span>
               </div>
               <p className="text-[11px] text-gray-400 font-medium mb-6 italic leading-relaxed">*Utilitiy costs are estimates based on average student usage metrics.</p>
 
