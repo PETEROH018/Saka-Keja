@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getLocation from "../../utils/GetLocation"
+import getLocation from "../../utils/GetLocation";
+import { Eye, EyeOff } from "lucide-react";
 
 export function AuthPage() {
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loginFormData, setLoginFormData] = useState({
     userName: "",
     password: "",
@@ -136,14 +140,28 @@ export function AuthPage() {
                   </button>
                 </div>
 
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                <div className="relative">
+                  <input
+                    type={showLoginPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Enter your password"
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                     onChange={handleLoginChange}
                     value={loginFormData.password}
-                />
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword((prev) => !prev)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface focus:outline-none"
+                    aria-label={showLoginPassword ? "Hide password" : "Show password"}
+                  >
+                    {showLoginPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* Login button */}
@@ -309,14 +327,28 @@ export function AuthPage() {
                   Password
                 </label>
 
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Create a password"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                  onChange={handleSignUpChange}
-                  value={signUpFormData.password}
-                />
+                <div className="relative">
+                  <input
+                    type={showSignUpPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Create a password"
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                    onChange={handleSignUpChange}
+                    value={signUpFormData.password}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignUpPassword((prev) => !prev)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface focus:outline-none"
+                    aria-label={showSignUpPassword ? "Hide password" : "Show password"}
+                  >
+                    {showSignUpPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* Confirm Password */}
@@ -325,14 +357,28 @@ export function AuthPage() {
                   Confirm Password
                 </label>
 
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm your password"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                  onChange={handleSignUpChange}
-                  value={signUpFormData.confirmPassword}
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm your password"
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                    onChange={handleSignUpChange}
+                    value={signUpFormData.confirmPassword}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface focus:outline-none"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
                 {signUpFormData.confirmPassword && signUpFormData.password !== signUpFormData.confirmPassword && (
                   <p className="mt-1 text-xs text-red-500">
                     Passwords do not match
