@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, VARCHAR, DateTime
 from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
+from flask_bcrypt import Bcrypt
 
 meta = MetaData()
 
@@ -20,8 +22,13 @@ class Student(Base):
     graduation_year = Column(Integer, nullable=True)
     location = Column(String(20), nullable=True)
     username = Column(VARCHAR(30), unique=True)
-    password_hash = Column(String, nullable=False)
+    _password_hash = Column(String, nullable=False)
 
-    
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Passwords may not be viewed')
+
+
+
 
 
