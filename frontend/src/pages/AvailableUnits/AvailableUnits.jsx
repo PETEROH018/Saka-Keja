@@ -264,10 +264,23 @@ export default function AvailableUnits() {
                       </div>
                     </div>
 
-                   
-            ))}
-          </div>
-        )}
+                    {/* Amenities Badges */}
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {unit.amenities.map((amenity, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1 rounded-lg bg-purple-50 px-2.5 py-1 text-[11px] font-medium text-[#59388f] border border-purple-100"
+                        >
+                          {amenity.includes("WiFi") && <Wifi className="h-3 w-3" />}
+                          {amenity.includes("Bathroom") && <Bath className="h-3 w-3" />}
+                          {amenity.includes("Security") && <ShieldCheck className="h-3 w-3" />}
+                          {amenity}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  
 
         <div id="modal-container" />
       </main>
