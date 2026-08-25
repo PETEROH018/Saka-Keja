@@ -1,5 +1,5 @@
 import './App.css'
-import Login from './pages/Login/Auth'
+import {AuthPage} from './pages/Login/Auth.jsx'
 import Home from '../src/pages/Home/Home'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
@@ -13,6 +13,7 @@ import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
 import SavedProperties from './pages/SavedProperties/SavedProperties';
 import About from "./pages/About/About.jsx";
 import EditProperty from './pages/EditProperty/EditProperty.jsx'
+import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 
 function App() {
   return (
@@ -29,10 +30,11 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
         <Route path="/savedproperties" element={<SavedProperties />} />
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<AuthPage />} />
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
-        <Route path="/" element={<Login/>} />
+        <Route path="/" element={<AuthPage/>} />
+        <Route path="/available-units" element={<AvailableUnits/>} />
     </Routes>
     </BrowserRouter>
 
