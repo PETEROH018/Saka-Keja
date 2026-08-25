@@ -21,7 +21,7 @@ Base = declarative_base(metadata=meta)
 db = SQLAlchemy(metadata=meta)
 
 class ApartmentOwner(Base):
-    __tablename__ = "aparment_owners"
+    __tablename__ = "apartment_owners"
 
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
@@ -31,7 +31,7 @@ class ApartmentOwner(Base):
     username = Column(VARCHAR(30), unique=True)
     _password_hash = Column(String, nullable=False)
     
-    apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
+    apartments = db.relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
     @hybrid_property
     def password_hash(self):
@@ -189,7 +189,3 @@ class StudentUnit(Base):
         back_populates="student_units"
     )
     
-=======
- 
-
->>>>>>> origin/dev
