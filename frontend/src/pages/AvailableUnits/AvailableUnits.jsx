@@ -202,11 +202,21 @@ export default function AvailableUnits() {
             </button>
           </div>
         ) : (
-          
-          </div>
-        )}
-
-        <div id="modal-container" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredUnits.map((unit) => (
+              <div
+                key={unit.id}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-purple-100/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-purple-200"
+              >
+                {/* Unit Image & Badges */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
+                  <img
+                    src={unit.imageUrl}
+                    alt={unit.unitName}
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  />
+                  
+                  
       </main>
 
       <Footer />
