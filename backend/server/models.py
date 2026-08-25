@@ -143,6 +143,11 @@ class Student(Base):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
         
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="student"
+    )
+        
 #=====================
 #STUDENT_UNIT MODEL
 #=====================
