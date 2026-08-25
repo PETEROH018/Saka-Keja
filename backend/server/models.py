@@ -46,9 +46,7 @@ class UnitAmenityJoining(db.Model):
         }
 
 
-# Minimal stub so the foreign key above resolves — replace with your team's
-# real Unit model once it's built from the rest of the ERD (units table
-# also has category, description, rent, deposit, etc.)
+
 class Unit(db.Model):
     __tablename__ = "units"
 
