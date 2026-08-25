@@ -73,7 +73,7 @@ export function AuthPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData.user_type==="property_manager"? {...formData, location: await getLocation()}: formData),
+          body: JSON.stringify(isSignup? {...formData, location: await getLocation()}: formData),
         },
       )
       if (!res.ok) {
