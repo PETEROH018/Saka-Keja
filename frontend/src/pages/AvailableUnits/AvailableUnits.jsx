@@ -236,7 +236,17 @@ export default function AvailableUnits() {
                   </div>
                 </div>
 
-        <div id="modal-container" />
+                {/* Card Body */}
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <div>
+                    {/* Unit Title */}
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#59388f] transition-colors">
+                      {unit.unitName}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                      <Layers className="h-3.5 w-3.5 text-gray-400" />
+                      {unit.floorLevel} • {unit.category}
+                    </p>
       </main>
 
       <Footer />
