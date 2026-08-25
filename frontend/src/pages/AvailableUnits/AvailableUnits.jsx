@@ -247,6 +247,29 @@ export default function AvailableUnits() {
                       <Layers className="h-3.5 w-3.5 text-gray-400" />
                       {unit.floorLevel} • {unit.category}
                     </p>
+
+                    {/* Pricing & Deposit */}
+                    <div className="mt-4 rounded-xl bg-[#FDF7FF] p-3 border border-purple-100">
+                      <div className="flex items-baseline justify-between">
+                        <div>
+                          <span className="text-xl font-extrabold text-[#59388f]">
+                            KSh {unit.rentAmount.toLocaleString()}
+                          </span>
+                          <span className="text-xs text-gray-500 font-normal"> / month</span>
+                        </div>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between text-xs text-gray-600 font-medium">
+                        <span>Deposit Required:</span>
+                        <span className="font-bold text-gray-900">KSh {unit.depositAmount.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                   
+            ))}
+          </div>
+        )}
+
+        <div id="modal-container" />
       </main>
 
       <Footer />
