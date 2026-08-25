@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getLocation from "../../utils/GetLocation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
+import validatePhoneNumber from "../../utils/ValidateNumber";
 
 export function AuthPage() {
   const navigate = useNavigate()
@@ -10,11 +11,7 @@ export function AuthPage() {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loginFormData, setLoginFormData] = useState({
-    userName: "",
-    password: "",
-  });
-
+  const [countryCode, setCountryCode] = useState("+254");
   const [signUpFormData, setSignUpFormData] = useState({
     name: "",
     user_name: "",
@@ -24,6 +21,12 @@ export function AuthPage() {
     confirmPassword: "",
     user_type: "student",
   });
+
+  const [loginFormData, setLoginFormData] = useState({
+    userName: "",
+    password: "",
+  });
+  const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);  
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -40,6 +43,11 @@ export function AuthPage() {
     const isLogin = formType === "login";
 
     if (!isLogin) {
+      const phoneCheck = validatePhoneNumber(signUpFormData.phone_number, countryCode);
+      if (!phoneCheck.isValid) {
+        alert("Please enter a valid phone number.");
+        return;
+      }
       if (!isPasswordStrong(signUpFormData.password)) {
         alert("Please ensure your password is at least 8 characters long and contains mixed characters (uppercase, lowercase, number, and special character).");
         return;
@@ -51,7 +59,13 @@ export function AuthPage() {
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
-    const formData = isLogin ? loginFormData : signUpPayload;
+    const cleanPhone = signUpFormData.phone_number.replace(/\D/g, "");
+    const formattedPhone = countryCode + (cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone);
+    const finalSignUpPayload = {
+      ...signUpPayload,
+      phone_number: formattedPhone,
+    };
+    const formData = isLogin ? loginFormData : finalSignUpPayload;
 
     try {
       const res = await fetch(
@@ -318,14 +332,56 @@ export function AuthPage() {
                   Phone number
                 </label>
 
-                <input
-                  type="number"
-                  name="phone_number"
-                  placeholder="Enter your phone number"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                  onChange={handleSignUpChange}
-                  value={signUpFormData.phone_number}
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="rounded-xl border border-outline-variant bg-surface-container-low px-2.5 py-2.5 sm:px-3 sm:py-3 text-xs sm:text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  >
+                    <option value="+254">🇰🇪 +254 (KE)</option>
+                    <option value="+256">🇺🇬 +256 (UG)</option>
+                    <option value="+255">🇹ℤ +255 (TZ)</option>
+                    <option value="+250">🇷🇼 +250 (RW)</option>
+                    <option value="+234">🇳🇬 +234 (NG)</option>
+                    <option value="+27">🇿🇦 +27 (ZA)</option>
+                    <option value="+44">🇬🇧 +44 (UK)</option>
+                    <option value="+1">🇺🇸 +1 (US)</option>
+                    <option value="+1">🇨🇦 +1 (CA)</option>
+                    <option value="+91">🇮🇳 +91 (IN)</option>
+                  </select>
+
+                  <div className="relative flex-1">
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      placeholder="712 345 678"
+                      className={`w-full rounded-xl border bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:ring-2 ${
+                        signUpFormData.phone_number
+                          ? phoneStatus.isValid
+                            ? "border-green-500 focus:border-green-500 focus:ring-green-200"
+                            : "border-red-500 focus:border-red-500 focus:ring-red-200"
+                          : "border-outline-variant focus:border-primary focus:ring-secondary-container"
+                      }`}
+                      onChange={handleSignUpChange}
+                      value={signUpFormData.phone_number}
+                    />
+                    {signUpFormData.phone_number && (
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                        {phoneStatus.isValid ? (
+                          <Check className="h-5 w-5 text-green-500" />
+                        ) : (
+                          <AlertCircle className="h-5 w-5 text-red-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {signUpFormData.phone_number && (
+                  <p className={`mt-1 text-xs ${phoneStatus.isValid ? "text-green-600 font-medium" : "text-red-500"}`}>
+                    {phoneStatus.message}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
