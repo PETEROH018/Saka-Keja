@@ -132,16 +132,6 @@ export default function ApartmentDetails(){
 
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
-                  <IconRender type={"bed"} />
-                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bedrooms</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment.bedrooms}</span>
-                </div>
-                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
-                  <IconRender type={"bath"} />
-                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">bathrooms</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment.bathrooms}</span>
-                </div>
-                <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"sofa"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">furnished</span>
                   <span className="text-sm font-bold text-gray-800">{apartment.furnished ? 'YES' : 'NO'}</span>
