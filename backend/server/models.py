@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, V
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
-from marshmallow import ValidationError, fields, validate, validates_schema, Schema
+
 
 meta = MetaData()
 bcrypt = Bcrypt()
@@ -17,7 +17,7 @@ class Student(Base):
 
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
-    email = Column(VARCHAR(30), nullable=False, unique=True)
+    email = Column(String(30), nullable=False, unique=True)
     phone_number = Column(Integer, nullable=False, unique=True)
     dob = Column(DateTime, nullable=True)
     institution = Column(String(20), nullable=True)
@@ -26,7 +26,7 @@ class Student(Base):
     student_number = Column(Integer, nullable=True)
     graduation_year = Column(Integer, nullable=True)
     location = Column(String(20), nullable=True)
-    username = Column(VARCHAR(30), unique=True)
+    username = Column(String(30), unique=True)
     _password_hash = Column(String, nullable=False)
 
     @hybrid_property
@@ -41,6 +41,8 @@ class Student(Base):
     def authenticate(self, password):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
+    
+    
 
 
 #=====================
