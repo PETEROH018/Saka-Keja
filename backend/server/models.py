@@ -45,12 +45,12 @@ class UnitAmenityJoining(db.Model):
             "amenity": self.amenity.to_dict() if self.amenity else None,
         }
 
-
-
 class Unit(db.Model):
     __tablename__ = "units"
 
     id = db.Column(db.Integer, primary_key=True)
+    apartmentId = db.Column(db.String(20))  # matches the "id" string in db.json apartments
+    name = db.Column(db.String(150))
     category = db.Column(db.String(80))
 
     amenity_links = db.relationship(
@@ -58,3 +58,13 @@ class Unit(db.Model):
         backref="unit",
         cascade="all, delete-orphan",
     )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "apartmentId": self.apartmentId,
+            "name": self.name,
+            "category": self.category,
+        }
+
+
