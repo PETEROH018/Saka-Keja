@@ -118,34 +118,19 @@ const CATEGORIES = ["All Units", "Studio", "1 Bedroom", "2 Bedroom", "3+ Bedroom
 export default function AvailableUnits() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("All Units");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const filteredUnits = useMemo(() => {
     return INITIAL_UNITS.filter((unit) => {
       const matchesCategory =
         activeTab === "All Units" || unit.category === activeTab;
-      const matchesSearch =
-        unit.unitName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        unit.floorLevel.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        unit.amenities.some((a) => a.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory
     });
-  }, [activeTab, searchQuery]);
+  }, [activeTab]);
 
   const handleBook = (unit) => {
     setSelectedUnit(unit);
     setBookingSuccess(false);
-  };
-
-  const confirmBooking = () => {
-    setBookingSuccess(true);
-    setTimeout(() => {
-      setBookingSuccess(false);
-      setSelectedUnit(null);
-    }, 2000);
   };
 
   return (
@@ -170,6 +155,32 @@ export default function AvailableUnits() {
               </h1>
             </div>
 
+          </div>
+        </div>
+
+        {/* ================= FILTER & TAB CONTROLS ================= */}
+        <div className="mb-8 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+            {CATEGORIES.map((category) => {
+              const isActive = activeTab === category;
+              return (
+                <button
+                  key={category}
+                  onClick={() => setActiveTab(category)}
+                  className={`rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-2 cursor-pointer ${
+                    isActive
+                      ? "bg-[#59388f] text-white shadow-md shadow-purple-200 scale-105"
+                      : "bg-white text-gray-700 hover:bg-purple-50 border border-purple-100 hover:border-purple-200"
+                  }`}
+                >
+                  {category === "Studio" && <Building2 className="h-3.5 w-3.5" />}
+                  {category === "1 Bedroom" && <Bed className="h-3.5 w-3.5" />}
+                  {category === "2 Bedroom" && <Bed className="h-3.5 w-3.5" />}
+                  {category === "3+ Bedrooms" && <Sparkles className="h-3.5 w-3.5" />}
+                  {category}
+                </button>
+              );
+            })}
           </div>
         </div>
 
