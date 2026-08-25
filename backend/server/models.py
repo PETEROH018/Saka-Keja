@@ -18,5 +18,10 @@ class Student(Base):
     year_of_study=Column(Integer, nullable=True)
     student_number = Column(Integer, nullable=True)
     graduation_year = Column(Integer, nullable=True)
+    location = Column(String(20), nullable=True)
+    username = Column(VARCHAR(30), unique=True)
+    password_hash = Column(String, nullable=False)
+
     
+
 
