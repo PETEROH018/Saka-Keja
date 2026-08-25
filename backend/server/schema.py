@@ -1,0 +1,2 @@
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
