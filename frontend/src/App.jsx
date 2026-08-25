@@ -12,6 +12,7 @@ import StudentProfile from "./components/StudentProfile/StudentProfile.jsx";
 import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
 import SavedProperties from './pages/SavedProperties/SavedProperties';
 import About from "./pages/About/About.jsx";
+import EditProperty from './pages/EditProperty/EditProperty.jsx'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/apartment-details" element={<ApartmentDetails />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/my-properties" element={<MyProperties />} />
+        <Route path="/edit-property/:id" element={<EditProperty />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
