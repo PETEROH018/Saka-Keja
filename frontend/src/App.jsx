@@ -23,7 +23,6 @@ function App() {
         <Route path="/apartment-details" element={<ApartmentDetails />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/my-properties" element={<MyProperties />} />
-        <Route path="/edit-property/:id" element={<EditProperty />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
