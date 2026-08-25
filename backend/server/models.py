@@ -7,6 +7,10 @@ meta = MetaData()
 bcrypt = Bcrypt()
 Base = declarative_base(metadata=meta)
 
+
+#===================
+#STUDENT MODEL
+#===================
 class Student(Base):
     __tablename__ = "students"
 
@@ -38,4 +42,14 @@ class Student(Base):
             self._password_hash, password.encode('utf-8'))
 
 
+#=====================
+#APARTMENT_OWNER MODEL
+#=====================
+class ApartmentOwner(Base):
+    __tablename__ = "apaerment_owners"
+
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String(100), nullable=False)
+    email = Column(VARCHAR(30), nullable=False, unique=True)
+    phone_number = Column(Integer, nullable=False, unique=True)
 
