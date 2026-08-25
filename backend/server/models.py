@@ -113,6 +113,11 @@ class Unit(db.Model):
         cascade="all, delete-orphan",
     )
     
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="unit"
+    )
+    
 class Student(Base):
     __tablename__ = "students"
 
@@ -162,9 +167,13 @@ class StudentUnit(Base):
         ForeignKey("students.id"),
         nullable=False
     )
-
-   # TODO: Add Unit model relationship once Unit table is implemented
-   
+    
+    unit_id = Column(
+        Integer,
+        ForeignKey("units.id"),
+        nullable=False
+    )
+        
     date_left = Column(DateTime, nullable=True)
 
     date_occupied = Column(
@@ -194,3 +203,7 @@ class StudentUnit(Base):
         back_populates="student_units"
     )
     
+    unit = relationship(
+    "Unit",
+    back_populates="student_units"
+    )
