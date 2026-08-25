@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import getLocation from "../../utils/GetLocation"
 
 export default function AuthPage() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ export default function AuthPage() {
     name: "",
     email: "",
     password: "",
-    accountType: "student",
+    user_type: "student",
   });
 
   function handleLoginChange(event) {
@@ -37,7 +38,7 @@ export default function AuthPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(formData.user_type==="property_manager"? {...formData, location: await getLocation()}: formData),
         },
       )
       if (!res.ok) {
@@ -58,34 +59,44 @@ export default function AuthPage() {
     
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface-container-low p-4 text-on-surface sm:p-6">
-      <div className="relative min-h-[680px] w-full max-w-5xl overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center bg-surface-container-low p-3 sm:p-6 text-on-surface">
+      <div className="relative min-h-[580px] sm:min-h-[640px] md:min-h-[680px] w-full max-w-5xl overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-2xl">
 
         {/* =========================
             LOGIN FORM
         ========================== */}
         <div
-          className={`absolute left-0 top-0 flex h-full w-full items-center justify-center p-6 sm:p-10 md:w-1/2 md:p-12
-            transition-transform duration-700 ease-in-out
-            ${isSignup ? "translate-x-full" : "translate-x-0"}
+          className={`absolute left-0 top-0 flex h-full w-full items-center justify-center overflow-y-auto p-5 sm:p-8 md:w-1/2 md:p-12
+            transition-all duration-700 ease-in-out
+            ${isSignup
+              ? "translate-x-full opacity-0 pointer-events-none md:pointer-events-auto md:opacity-100"
+              : "translate-x-0 opacity-100 pointer-events-auto"
+            }
           `}
         >
-          <div className="w-full max-w-md">
-            <h1 className="text-4xl font-bold text-primary">
+          <div className="w-full max-w-md my-auto">
+            {/* Mobile Brand Logo */}
+            <div className="mb-4 text-center md:hidden">
+              <span className="text-xl font-extrabold tracking-wider text-primary">
+                SAKA KEJA
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
               Welcome Back
             </h1>
 
-            <p className="mt-3 text-on-surface-variant">
+            <p className="mt-2 sm:mt-3 text-sm sm:text-base text-on-surface-variant">
               Sign in to continue finding your perfect home.
             </p>
             {/* ===============
             FORM
             ===================
              */}
-            <form className="mt-8 space-y-5" onSubmit={(event) => handleSubmit(event, "login")}>
+            <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-5" onSubmit={(event) => handleSubmit(event, "login")}>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-on-surface-variant">
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
                   Username
                 </label>
 
@@ -93,7 +104,7 @@ export default function AuthPage() {
                   type="text"
                   name="userName"
                   placeholder="Your username"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleLoginChange}
                   value={loginFormData.userName}
                 />
@@ -101,15 +112,15 @@ export default function AuthPage() {
 
               {/* Password */}
               <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <label className="text-sm font-medium text-on-surface-variant">
+                <div className="mb-1.5 sm:mb-2 flex items-center justify-between">
+                  <label className="text-xs sm:text-sm font-medium text-on-surface-variant">
                     Password
                   </label>
 
                   <button
                   onClick={()=>{alert("Sorry, we don't have password recovery at this moment")}}
                     type="button"
-                    className="text-sm font-medium text-primary hover:text-primary-container"
+                    className="text-xs sm:text-sm font-medium text-primary hover:text-primary-container"
                   >
                     Forgot password?
                   </button>
@@ -119,9 +130,7 @@ export default function AuthPage() {
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant
-                    outline-none transition
-                    focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                     onChange={handleLoginChange}
                     value={loginFormData.password}
                 />
@@ -130,8 +139,8 @@ export default function AuthPage() {
               {/* Login button */}
               <button
                 type="submit"
-                className="w-full rounded-xl bg-primary py-3.5
-                  font-semibold text-white
+                className="w-full rounded-xl bg-primary py-3 sm:py-3.5
+                  text-sm sm:text-base font-semibold text-white
                   transition hover:bg-primary-container
                   active:scale-[0.98]"
               >
@@ -139,21 +148,51 @@ export default function AuthPage() {
               </button>
             </form>
 
-            <div className="my-7 flex items-center gap-4">
+            <div className="my-5 sm:my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-outline-variant" />
-              <span className="text-sm text-on-surface-variant">OR</span>
+              <span className="text-xs sm:text-sm text-on-surface-variant">OR</span>
               <div className="h-px flex-1 bg-outline-variant" />
             </div>
 
             <button
               type="button"
               className="flex w-full items-center justify-center gap-3
-                rounded-xl border border-outline-variant py-3
-                font-medium text-on-surface-variant
+                rounded-xl border border-outline-variant py-2.5 sm:py-3
+                text-sm sm:text-base font-medium text-on-surface-variant
                 transition hover:bg-surface-container-low"
             >
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
               Continue with Google
             </button>
+
+            {/* Mobile Switch to Signup */}
+            <p className="mt-5 text-center text-sm text-on-surface-variant md:hidden">
+              Don&apos;t have an account?{" "}
+              <button
+                type="button"
+                onClick={() => setIsSignup(true)}
+                className="font-semibold text-primary hover:underline focus:outline-none"
+              >
+                Sign up
+              </button>
+            </p>
           </div>
         </div>
 
@@ -161,28 +200,38 @@ export default function AuthPage() {
             SIGNUP FORM
         ========================== */}
         <div
-          className={`absolute left-0 top-0 flex h-full w-full items-center justify-center p-6 sm:p-10 md:w-1/2 md:p-12
-            transition-transform duration-700 ease-in-out
-            ${isSignup ? "translate-x-0" : "-translate-x-full"}
+          className={`absolute left-0 top-0 flex h-full w-full items-center justify-center overflow-y-auto p-5 sm:p-8 md:w-1/2 md:p-12
+            transition-all duration-700 ease-in-out
+            ${isSignup
+              ? "translate-x-0 opacity-100 pointer-events-auto"
+              : "-translate-x-full opacity-0 pointer-events-none md:pointer-events-auto md:opacity-100"
+            }
           `}
         >
-          <div className="w-full max-w-md">
-            <h1 className="text-4xl font-bold text-primary">
+          <div className="w-full max-w-md my-auto">
+            {/* Mobile Brand Logo */}
+            <div className="mb-4 text-center md:hidden">
+              <span className="text-xl font-extrabold tracking-wider text-primary">
+                SAKA KEJA
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
               Create Account
             </h1>
 
-            <p className="mt-3 text-on-surface-variant">
+            <p className="mt-2 sm:mt-3 text-sm sm:text-base text-on-surface-variant">
               Create an account and start your search today.
             </p>
             {/* ===============
             FORM
             ===================
              */}
-            <form className="mt-8 space-y-4" onSubmit={(event) => handleSubmit(event, "signup")}>
+            <form className="mt-5 sm:mt-6 space-y-3.5 sm:space-y-4" onSubmit={(event) => handleSubmit(event, "signup")}>
 
               {/* Name */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-on-surface-variant">
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
                   Full Name
                 </label>
 
@@ -190,17 +239,15 @@ export default function AuthPage() {
                   type="text"
                   name="name"
                   placeholder="John Doe"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant
-                    outline-none transition
-                    focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                    onChange={handleSignUpChange}
-                    value={signUpFormData.name}
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.name}
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-on-surface-variant">
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
                   Email Address
                 </label>
 
@@ -208,17 +255,15 @@ export default function AuthPage() {
                   type="email"
                   name="email"
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant
-                    outline-none transition
-                    focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                    onChange={handleSignUpChange}
-                    value={signUpFormData.email}
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.email}
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-on-surface-variant">
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
                   Password
                 </label>
 
@@ -226,57 +271,87 @@ export default function AuthPage() {
                   type="password"
                   name="password"
                   placeholder="Create a password"
-                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant
-                    outline-none transition
-                    focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                    onChange={handleSignUpChange}
-                    value={signUpFormData.password}
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.password}
                 />
               </div>
 
               {/* Account type */}
               <div>
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
+                  Account Type
+                </label>
                 <select
-                    className="w-full rounded-xl border border-outline-variant
-                    bg-surface-container-low px-4 py-3 text-on-surface-variant
+                  className="w-full rounded-xl border border-outline-variant
+                    bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface-variant
                     outline-none transition
                     focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                    name="accountType"
-                    value={signUpFormData.accountType}
-                    onChange={handleSignUpChange}
+                  name="user_type"
+                  value={signUpFormData.user_type}
+                  onChange={handleSignUpChange}
                 >
-                  <option value="">Select account type</option>
                   <option value="student">Student</option>
-                  <option value="owner">Property Owner</option>
+                  <option value="property_manager">Property Manager</option>
                 </select>
               </div>
 
               {/* Signup button */}
               <button
                 type="submit"
-                className="w-full rounded-xl bg-primary py-3.5
-                  font-semibold text-white
+                className="w-full rounded-xl bg-primary py-3 sm:py-3.5
+                  text-sm sm:text-base font-semibold text-white
                   transition hover:bg-primary-container
                   active:scale-[0.98]"
               >
                 Sign up
               </button>
             </form>
-            <div className="my-7 flex items-center gap-4">
+            <div className="my-4 sm:my-6 flex items-center gap-4">
               <div className="h-px flex-1 bg-outline-variant" />
-              <span className="text-sm text-on-surface-variant">OR</span>
+              <span className="text-xs sm:text-sm text-on-surface-variant">OR</span>
               <div className="h-px flex-1 bg-outline-variant" />
             </div>
 
             <button
               type="button"
               className="flex w-full items-center justify-center gap-3
-                rounded-xl border border-outline-variant py-3
-                font-medium text-on-surface-variant
+                rounded-xl border border-outline-variant py-2.5 sm:py-3
+                text-sm sm:text-base font-medium text-on-surface-variant
                 transition hover:bg-surface-container-low"
             >
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
               Continue with Google
             </button>
+
+            {/* Mobile Switch to Sign In */}
+            <p className="mt-5 text-center text-sm text-on-surface-variant md:hidden">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => setIsSignup(false)}
+                className="font-semibold text-primary hover:underline focus:outline-none"
+              >
+                Sign in
+              </button>
+            </p>
           </div>
         </div>
 
