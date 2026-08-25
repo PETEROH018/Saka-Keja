@@ -87,41 +87,29 @@ export default function ApartmentDetails(){
         </header>
 
         <main className="max-w-7xl mx-auto px-4 py-6">
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">
-          <div className="md:col-span-2 aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-            <img src={apartment.image_Urls[0]} alt="apartment image" className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-            </div>
-          </div>
-          <div className="hidden md:grid grid-cols-1 gap-3">
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[1]} alt="apartment image" className="w-full h-full object-cover" />
+        <section className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3">
+          {apartment.image_Urls.slice(0, 5).map((url, index) => (
+            <div
+              key={index}
+              className={`aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer 
+                ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''} 
+                ${index > 0 ? 'hidden md:block' : ''}`}
+              onClick={() => setShowAllPhotos(true)}
+            >
+              {/* Image Zoom Effect */}
+              <img 
+                src={url} 
+                alt={`apartment image ${index + 1}`} 
+                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" 
+              />
+              
+              {/* Black Hover Overlay & Message */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <p className="text-xl font-semibold text-white">Click to expand</p>
               </div>
             </div>
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[2]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-          </div>
-          <div className="hidden md:grid grid-cols-1 gap-3">
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 cursor-pointer" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[3]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-            <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative cursor-pointer group" onClick={() => setShowAllPhotos(true)}>
-              <img src={apartment.image_Urls[4]} alt="apartment image" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-xl font-semibold text-white">Click to expand</p>
-              </div>
-            </div>
-          </div>
+          ))}
+
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
