@@ -7,5 +7,9 @@ class StudentSchema(Schema):
     id = fields.Int(dump_only=True)
     fullname = fields.Str(required=True)
     email = fields.Str(required=True)
-    
+    phone_number = fields.Str(required=True)
+    dob = fields.DateTime(required=False)
+    institution= fields.Str(required=False)
+    course = fields.Str(required=False)
+    year_of_study = fields.DateTime(required=False)
 
