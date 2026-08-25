@@ -13,6 +13,7 @@ import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
 import SavedProperties from './pages/SavedProperties/SavedProperties';
 import About from "./pages/About/About.jsx";
 import EditProperty from './pages/EditProperty/EditProperty.jsx'
+import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/" element={<AuthPage/>} />
+        <Route path="/available-units" element={<AvailableUnits/>} />
     </Routes>
     </BrowserRouter>
 

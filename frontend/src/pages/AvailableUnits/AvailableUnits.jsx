@@ -149,7 +149,38 @@ export default function AvailableUnits() {
   };
 
   return (
-    <>
-    </>
+    <div className="min-h-screen bg-[#FDF7FF] text-gray-900 font-sans flex flex-col justify-between">
+      <Navbar />
+
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
+        {/* ================= HEADER & NAVIGATION ================= */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#59388f] hover:text-[#452770] transition-colors mb-4 group cursor-pointer"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Back to Property
+          </button>
+
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+                Available Units
+              </h1>
+              <p className="mt-1.5 text-sm sm:text-base text-gray-600 font-normal flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-[#59388f] shrink-0" />
+                Modern 2 Bedroom / Studio Units available • Westlands, Nairobi
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        
+      </main>
+
+      <Footer />
+    </div>
   );
 }
