@@ -12,6 +12,8 @@ export default function AuthPage() {
 
   const [signUpFormData, setSignUpFormData] = useState({
     name: "",
+    user_name: "",
+    phone_number: "",
     email: "",
     password: "",
     user_type: "student",
@@ -245,6 +247,22 @@ export default function AuthPage() {
                 />
               </div>
 
+              {/* Username */}
+              <div>
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
+                  Username
+                </label>
+
+                <input
+                  type="number"
+                  name="phone_number"
+                  placeholder="username123"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.user_name}
+                />
+              </div>
+
               {/* Email */}
               <div>
                 <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
@@ -258,6 +276,22 @@ export default function AuthPage() {
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
                   value={signUpFormData.email}
+                />
+              </div>
+
+              {/* Phone number */}
+              <div>
+                <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-on-surface-variant">
+                  Phone number
+                </label>
+
+                <input
+                  type="number"
+                  name="phone_number"
+                  placeholder="Enter your phone number"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
+                  onChange={handleSignUpChange}
+                  value={signUpFormData.phone_number}
                 />
               </div>
 
