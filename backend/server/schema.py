@@ -1,4 +1,18 @@
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, fields, validate, validates_schema, Schema
+from models import *
+
+class ApartmentSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Apartment
+        load_instance = True  
+        include_fk = True 
+
+class UnitSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Unit
+        load_instance = True  
+        include_fk = True 
 
 class UnitAmenitySchema(Schema):
     id = fields.Int(dump_only=True)
@@ -10,6 +24,7 @@ class UnitAmenityJoiningSchema(Schema):
     id = fields.Int(dump_only=True)
     unitId = fields.Int(required=True)
     amenityId = fields.Int(required=True)
+    
     amenity = fields.Nested(UnitAmenitySchema, dump_only=True)
 
 class StudentSchema(Schema):
@@ -32,7 +47,7 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
-class StudentSchema(Schema):
+class ApartmentOwnerSchema(Schema):
     id = fields.Int(dump_only=True, validate=validate.Length(min=1))
     fullname = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))

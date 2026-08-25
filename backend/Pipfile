@@ -5,11 +5,14 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-migrate = "*"
 flask-sqlalchemy = "*"
-flask-cors = "*"
-sqlalchemy = "*"
-flask-bcrypt = "*"
+werkzeug = "*"
+importlib-metadata = "*"
+importlib-resources = "*"
+ipdb = "*"
 marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [dev-packages]
 
