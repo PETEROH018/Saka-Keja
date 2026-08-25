@@ -55,3 +55,7 @@ class ApartmentOwner(Base):
     location = Column(String(20), nullable=True)
     username = Column(VARCHAR(30), unique=True)
     _password_hash = Column(String, nullable=False)
+
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Passwords may not be viewed')
