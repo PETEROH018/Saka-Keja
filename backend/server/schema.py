@@ -23,3 +23,10 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
+
+#===========
+#OWNER SCHEMA
+#===========
+class StudentSchema(Schema):
+    
+
