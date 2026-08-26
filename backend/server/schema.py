@@ -67,3 +67,10 @@ class NearbyFacilitySchema(SQLAlchemyAutoSchema):
         model = NearbyFacility
         load_instance = True
         include_fk = True
+
+
+class PaymentSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Payment
+        load_instance = True
+        include_fk = True
