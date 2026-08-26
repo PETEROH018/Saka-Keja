@@ -105,3 +105,8 @@ class StudentSchema(Schema):
         attribute="password_hash",
         validate=validate.Length(min=1),
     )
+
+
+class ApartmentOwnerSchema(Schema):
+    id = fields.Int(dump_only=True)
+    fullname = fields.Str(required=True, validate=validate.Length(min=1))
