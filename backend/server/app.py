@@ -143,6 +143,12 @@ def get_manager_property_units(id):
 def get_manager_metrics(id):
     listing_query = select(func.count(Apartment.id)).where(Apartment.owner_id == id)
     views_query = select(func.sum(Apartment.total_views)).where(Apartment.owner_id == id)
+    favorites_query =  select(func.count(StudentUnit.id)).join(StudentUnit.unit).where(
+            Unit.apartment_id.in_(
+                select(Apartment.id).where(Apartment.owner_id == id)
+            ),
+            StudentUnit.favorite.is_(True),
+        )
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
