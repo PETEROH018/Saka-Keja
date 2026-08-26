@@ -124,6 +124,7 @@ export default function EditProfile() {
                   <textarea
                     name="bio"
                     rows={4}
+                    maxLength={500}
                     value={formData.bio}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
