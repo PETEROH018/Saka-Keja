@@ -9,6 +9,11 @@ export default function EditProfile() {
     bio: "Experienced property manager dedicated to providing safe and comfortable student housing around major universities in Nairobi. We prioritize maintenance and tenant satisfaction.",
   });
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Saving profile data:", formData);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
