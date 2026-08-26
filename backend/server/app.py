@@ -46,7 +46,7 @@ def add_apartment_owner():
         new_apartment_owner = apartment_owner_schema.load(data)
         db.session.add(new_apartment_owner)
         db.session.commit()
-        return jsonify("message", f"Added apartment with id {new_apartment_owner.id}"),201
+        return jsonify("message", f"Added apartment owner with id {new_apartment_owner.id}"),201
 
     except  ValidationError as err:
         return jsonify({"error": "Validation failed", "messages": err.messages}), 422
