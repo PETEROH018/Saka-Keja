@@ -10,16 +10,44 @@ import {
   Pencil,
   PlusCircle,
   Building2,
-  Users,
-  CheckCircle2,
-  Star
+  Eye,
+  Heart
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 
 
 function OwnerProfile() {
+  const managerId = 1
+  const performance = useFetch(`/manager/${managerId}/performance`)
+  const metrics = useFetch(`/manager/${managerId}/metrics`)
   const EXAMPLE_LISTINGS = useFetch('http://localhost:3000/apartments');
+  const stats = [
+    {
+      id: "active-listings",
+      title: "Active Listings",
+      value: metrics.data?.listings ?? 0,
+      icon: Building2,
+      iconBg: "bg-primary/10 text-primary",
+      badgeBg: "bg-primary/10 text-primary",
+    },
+    {
+      id: "total-views",
+      title: "Total Views",
+      value: metrics.data?.views ?? 0,
+      icon: Eye,
+      iconBg: "bg-amber-100 text-amber-700",
+      badgeBg: "bg-amber-100 text-amber-800",
+    },
+    {
+      id: "favorites",
+      title: "Favorites",
+      value: metrics.data?.favorites ?? 0,
+      icon: Heart,
+      iconBg: "bg-rose-100 text-rose-600",
+      badgeBg: "bg-rose-100 text-rose-700",
+    },
+  ]
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-surface font-sans text-on-surface">
@@ -103,60 +131,32 @@ function OwnerProfile() {
           </div>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                  Total Listings
-                </p>
-                <h3 className="text-2xl font-extrabold text-on-surface mt-1">3</h3>
-                <p className="text-xs font-medium text-emerald-600 mt-1">2 Active </p>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Building2 className="h-6 w-6" />
-              </div>
-            </div>
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          {stats.map((stat) => {
+            const IconComponent = stat.icon
+            return (
+              <div
+                key={stat.id}
+                className="group relative overflow-hidden rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg}`}>
+                    <IconComponent className="h-5 w-5" />
+                  </div>
+                </div>
 
-            <div className="rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                  Active Tenants
-                </p>
-                <h3 className="text-2xl font-extrabold text-on-surface mt-1">12</h3>
-                <p className="text-xs font-medium text-emerald-600 mt-1">100% Rent On-Time</p>
+                <div>
+                  <span className="block text-3xl font-extrabold tracking-tight text-on-surface mb-1">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">
+                    {stat.title}
+                  </span>
+                </div>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
-                <Users className="h-6 w-6" />
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                  Average Rating
-                </p>
-                <h3 className="text-2xl font-extrabold text-on-surface mt-1 flex items-center gap-1">
-                </h3>
-                <p className="text-xs font-medium text-on-surface-variant mt-1">From 34 reviews</p>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-            <Star/>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-outline-variant/60 bg-white p-5 shadow-2xs flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                  Response Rate
-                </p>
-                <h3 className="text-2xl font-extrabold text-on-surface mt-1">98%</h3>
-                <p className="text-xs font-medium text-emerald-600 mt-1">Avg response &lt; 2 hrs</p>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-                <CheckCircle2 className="h-6 w-6" />
-              </div>
-            </div>
-          </div>
+            )
+          })}
+        </section>
 
           <section>
             <div className="flex items-center justify-between border-b border-outline-variant/40 pb-4">
