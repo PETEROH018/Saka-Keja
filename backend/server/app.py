@@ -127,5 +127,9 @@ def get_manager_metrics(id):
         "favorites": favorites_count
     })
 
+
+#-------------get/properties for a particular manager------------------
+@app.route('/manager-properties/<int: id>')
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
