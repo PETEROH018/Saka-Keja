@@ -132,6 +132,7 @@ def get_manager_metrics(id):
 @app.route('/manager-properties/<int: id>')
 def get_manager_properties(id):
     apartment = Apartment.query.filter_by(owner_id=id).all()
+    return jsonify(ApartmentSchema(many=True).dump(apartment))
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
