@@ -123,11 +123,6 @@ export default function AvailableUnits() {
       return matchesCategory
     });
   }, [activeTab]);
-
-  const handleBook = (unit) => {
-    setSelectedUnit(unit);
-    setBookingSuccess(false);
-  };
   
   return (
     <div className="min-h-screen bg-[#FDF7FF] text-gray-900 font-sans flex flex-col justify-between">

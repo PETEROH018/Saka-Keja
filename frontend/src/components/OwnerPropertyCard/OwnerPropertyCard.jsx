@@ -128,7 +128,7 @@ export default function OwnerPropertyCard({ property }) {
                     <span>Edit</span>
                 </button>
                 <button
-                    onClick={()=>navigate(`available-units/${property.id}`)}
+                    onClick={()=>navigate(`/available-units/${property.id}`)}
                     type="button"
                     className="flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-violet-50 hover:text-violet-700 sm:flex-none sm:justify-start"
                 >
