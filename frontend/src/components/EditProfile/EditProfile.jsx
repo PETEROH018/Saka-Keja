@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function EditProfile() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "Samuel Kimani",
     companyName: "Kimani Properties Ltd",
