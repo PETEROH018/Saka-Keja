@@ -19,7 +19,6 @@ import useFetch from "../../hooks/useFetch";
 
 function OwnerProfile() {
   const managerId = 1
-  const performance = useFetch(`/manager/${managerId}/performance`)
   const metrics = useFetch(`/manager/${managerId}/metrics`)
   const EXAMPLE_LISTINGS = useFetch('http://localhost:3000/apartments');
   const stats = [
