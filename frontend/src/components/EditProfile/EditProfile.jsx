@@ -14,6 +14,10 @@ export default function EditProfile() {
           <nav className="space-y-1">
             <a href="#" className="flex items-center space-x-3 text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium">Dashboard</a>
             <a href="#" className="flex items-center space-x-3 text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium">My Properties</a>
+            <a href="#" className="flex items-center space-x-3 text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium">Add Property</a>
+            <a href="#" className="flex items-center space-x-3 text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium">Inquiries</a>
+            <a href="#" className="flex items-center space-x-3 text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium">Messages</a>
+            <a href="#" className="flex items-center space-x-3 bg-indigo-900 text-white px-3 py-2 rounded-lg text-sm font-medium">Profile</a>
           </nav>
         </div>
       </aside>
