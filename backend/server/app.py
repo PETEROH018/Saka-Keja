@@ -168,6 +168,7 @@ def add_payment():
         )
 
         db.session.add(new_payment)
+        student_unit.deposit_paid += data["amount"]
         db.session.commit()
 
         return jsonify({"message": f"Payment created with id {new_payment.id}"}), 201
