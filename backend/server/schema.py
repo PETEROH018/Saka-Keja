@@ -24,3 +24,10 @@ class UnitSchema(SQLAlchemyAutoSchema):
         model = Unit
         load_instance = True
         include_fk = True
+
+
+class UnitAmenitySchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = UnitAmenity
+        load_instance = True
+        include_fk = True
