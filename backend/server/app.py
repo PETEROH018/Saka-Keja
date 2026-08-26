@@ -1,4 +1,4 @@
-from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, Unit
+from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, Unit, StudentUnit
 from configs import *
 from schema import (
     unit_amenity_schema,
@@ -8,6 +8,7 @@ from schema import (
     ApartmentSchema,
     UnitSchema
 )
+from sqlalchemy import func, select
 
 # ---------- unit_amenities ----------
 
@@ -104,6 +105,13 @@ def get_manager_properties(id):
 def get_manager_property_units(id):
     units = Unit.query.filter_by(apartment_id=id).all()
     return jsonify(UnitSchema(many=True).dump(units))
+
+@app.route('/manager/<int: id>/metrics')
+def get_manager_metrics(id):
+    listing_query = select(func.count(Apartment.id)).where(Apartment.owner_id == id)
+    views_query = select(func.sum(Apartment.total_views)).where(Apartment.owner_id == id)
+    
+    return
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
