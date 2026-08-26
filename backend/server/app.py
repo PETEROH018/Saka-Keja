@@ -11,7 +11,7 @@ from models.UnitAmenity import UnitAmenity
 from models.UnitAmenityJoining import UnitAmenityJoining
 from models.StudentUnit import StudentUnit
 from models.Payment import Payment
-
+from sqlalchemy import select, func
 
 #-------------get/properties for a particular manager------------------
 @app.route('/manager-properties/<int: id>')
@@ -44,7 +44,8 @@ def get_manager_metrics(id):
     })
 @app.route('/manager/<int:id>/performance')
 def get_manager_performance(id):
-    
+    vacant = select(func.count(Apartment.id)).join(Unit, Unit.apartment_id ==  Apartment.id).where(Unit.status == "Vacant")
+    actual = select(func.count(Apartment.id)).join(Unit, Unit.apartment_id ==  Apartment.id)
     return
 
 
