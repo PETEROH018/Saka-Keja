@@ -90,6 +90,9 @@ export default function EditProfile() {
                   </div>
                 </div>
               </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200">
+                <h3 className="text-base font-semibold text-gray-900 mb-4">Professional Bio</h3>
+              </div>
             </div>
             <div className="space-y-6">Sidebar Column</div>
           </div>
