@@ -1,12 +1,14 @@
-import './App.css'
-import Login from './pages/Login/Auth'
-import Home from '../src/pages/Home/Home'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AdminDashboard from '../src/pages/AdminDashboard/Admindashboard'
 import ApartmentDetails from '../src/pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage";
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx";
+import EditProfile from "./components/EditProfile/EditProfile.jsx";
+
+// Import Home and Login components if not already imported above
+// import Home from './pages/Home';
+// import Login from './pages/Login';
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
         <Route path='/' element={<Login/>}/>
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/StudentProfile" element={<StudentProfile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
     </BrowserRouter>
   )
