@@ -38,3 +38,5 @@ class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
         model = UnitAmenityJoining
         load_instance = True
         include_fk = True
+
+    amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_links",))
