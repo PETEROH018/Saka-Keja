@@ -93,41 +93,6 @@ def get_units():
         result.append(unit_data)
     return jsonify(result)
 
-
-
-#-------------get/properties for a particular manager------------------
-@app.route('/manager-properties/<int: id>')
-def get_manager_properties(id):
-    apartment = Apartment.query.filter_by(owner_id=id).all()
-    return jsonify(ApartmentSchema(many=True).dump(apartment))
-
-@app.route('/apartment/<int:id>/units')
-def get_manager_property_units(id):
-    units = Unit.query.filter_by(apartment_id=id).all()
-    return jsonify(UnitSchema(many=True).dump(units))
-
-@app.route('/manager/<int:id>/metrics')
-def get_manager_metrics(id):
-    listing_query = select(func.count(Apartment.id)).where(Apartment.owner_id == id)
-    views_query = select(func.sum(Apartment.total_views)).where(Apartment.owner_id == id)
-    favorites_query =  select(func.count(StudentUnit.id)).join(StudentUnit.unit).where(
-            Unit.apartment_id.in_(
-                select(Apartment.id).where(Apartment.owner_id == id)
-            ),
-            StudentUnit.favorite.is_(True),
-        )
-
-    listing_count = db.session.scalar(listing_query) or 0
-    views_count = db.session.scalar(views_query) or 0
-    favorites_count = db.session.scalar(favorites_query) or 0
-
-    return jsonify({
-        "listings": listing_count,
-        "views": views_count,
-        "favorites": favorites_count
-    })
-
-
 #-------------get/properties for a particular manager------------------
 @app.route('/manager-properties/<int: id>')
 def get_manager_properties(id):
@@ -159,6 +124,7 @@ def get_manager_metrics(id):
     })
 @app.route('/manager/<int:id>/performance')
 def get_manager_performance(id):
+    
     return
 
 
