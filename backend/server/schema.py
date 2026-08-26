@@ -74,3 +74,10 @@ class PaymentSchema(SQLAlchemyAutoSchema):
         model = Payment
         load_instance = True
         include_fk = True
+
+
+class StudentUnitSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = StudentUnit
+        load_instance = True
+        include_fk = True
