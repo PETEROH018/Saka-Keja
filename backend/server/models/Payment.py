@@ -1,5 +1,6 @@
 from configs import *
 
+from sqlalchemy.orm import relationship
 class Payment(db.Model):
     __tablename__ = "payments"
 

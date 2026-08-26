@@ -1,5 +1,6 @@
 from configs import *
 
+from sqlalchemy.orm import relationship
 class StudentUnit(db.Model):
     __tablename__ = "student_units"
 

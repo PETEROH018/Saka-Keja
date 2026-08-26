@@ -1,7 +1,12 @@
 import os
-from flask import Flask, request, jsonify
+
+from datetime import datetime, timezone
+
+from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -11,17 +16,16 @@ from sqlalchemy import (
     MetaData,
     VARCHAR,
     DateTime,
+    Text,
+    JSON,
 )
-from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from flask_bcrypt import Bcrypt
-from datetime import datetime, timezone
 
 
 meta = MetaData()
-bcrypt = Bcrypt()
-Base = declarative_base(metadata=meta)
+
 db = SQLAlchemy(metadata=meta)
+bcrypt = Bcrypt()
 
 LOCAL_DB_URI = "postgresql+psycopg2://postgres:1234@localhost:5432/saka_keja"
 
@@ -37,4 +41,8 @@ else:
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db.init_app(app) # allows your Vite frontend on localhost:5173 to call this API
+db.init_app(app)
+
+bcrypt.init_app(app)
+
+CORS(app)

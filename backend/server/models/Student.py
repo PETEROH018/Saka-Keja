@@ -1,5 +1,5 @@
 from configs import *
-
+from sqlalchemy.orm import relationship
 class Student(db.Model):
     __tablename__ = "students"
 
@@ -17,10 +17,10 @@ class Student(db.Model):
     username = Column(String(30), unique=True)
     _password_hash = Column(String, nullable=False)
     student_units = relationship(
-    "StudentUnit",
-    back_populates="student",
-    cascade="all, delete-orphan"
-)
+        "StudentUnit",
+        back_populates="student",
+        cascade="all, delete-orphan"
+    )
 
     @hybrid_property
     def password_hash(self):
