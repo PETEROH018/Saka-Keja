@@ -20,6 +20,7 @@ export default function EditProfile() {
             <a href="#" className="flex items-center space-x-3 bg-indigo-900 text-white px-3 py-2 rounded-lg text-sm font-medium">Profile</a>
           </nav>
         </div>
+        <button className="w-full bg-indigo-900 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-800 transition">List New Property</button>
       </aside>
       <main className="flex-1 p-8">Edit Profile Content</main>
     </div>
