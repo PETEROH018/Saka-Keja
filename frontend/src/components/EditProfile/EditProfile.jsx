@@ -50,6 +50,15 @@ export default function EditProfile() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Company Name (Optional)</label>
+                    <input
+                      type="text"
+                      name="companyName"
+                      value={formData.companyName}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
