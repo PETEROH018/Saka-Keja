@@ -10,7 +10,8 @@ import ComparePage from './pages/Compare/ComparePage.jsx';
 
 // Components used as routes
 import StudentProfile from './components/StudentProfile/StudentProfile.jsx';
-import EditProfile from './components/EditProfile/EditProfile.jsx';
+import StudentEditProfile from './components/EditProfile/StudentEditProfile.jsx';
+import ManagerEditProfile from './components/EditProfile/ManagerEditProfile.jsx';
 
 function App() {
   return (
@@ -22,7 +23,17 @@ function App() {
       <Route path='/search' element={<SearchResults />} />
       <Route path='/compare' element={<ComparePage />} />
       <Route path='/StudentProfile' element={<StudentProfile />} />
-      <Route path='/EditProfile' element={<EditProfile />} />
+
+      {/* Role-Specific Profile Editing Routes */}
+      <Route path='/student/edit-profile' element={<StudentEditProfile />} />
+      <Route path='/manager/edit-profile' element={<ManagerEditProfile />} />
+
+      {/* Matches URL paths from your navigation links */}
+      <Route path='/StudentEditProfile' element={<StudentEditProfile />} />
+      <Route path='/ManagerEditProfile' element={<ManagerEditProfile />} />
+
+      {/* Default/Legacy Fallback Route */}
+      <Route path='/EditProfile' element={<StudentEditProfile />} />
     </Routes>
   );
 }

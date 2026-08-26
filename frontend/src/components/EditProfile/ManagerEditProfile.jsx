@@ -48,9 +48,9 @@ export default function EditProfile() {
               className="w-10 h-10 rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold text-sm">Sonia Wangare</p>
+              <p className="font-semibold text-sm"> Lucy Gitau </p>
               <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
-                Student
+                Manager
               </span>
             </div>
           </div>
