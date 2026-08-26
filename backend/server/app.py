@@ -20,8 +20,14 @@ def add_apartment():
 
     if not data:
             return jsonify({"error":"No input data provided"}),400
-    
-        
+
+    try:
+        new_apartment = apartment_schema.load(data)
+        db.session.add(new_apartment)
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()       
     
     
 
