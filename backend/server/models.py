@@ -24,6 +24,9 @@ class ApartmentOwner(Base):
     
     apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
+    class NearbyFacility(db.Model):
+    __tablename__ = "nearby_facilities"
+
     @hybrid_property
     def password_hash(self):
         raise AttributeError('Passwords may not be viewed')
