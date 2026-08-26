@@ -149,6 +149,9 @@ def get_manager_metrics(id):
             ),
             StudentUnit.favorite.is_(True),
         )
+    listing_count = db.session.scalar(listing_query) or 0
+    views_count = db.session.scalar(views_query) or 0
+    favorites_count = db.session.scalar(favorites_query) or 0
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
