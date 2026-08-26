@@ -20,10 +20,18 @@ export default function EditProfile() {
         <div>
           <h1 className="text-xl font-bold text-gray-900 mb-6">Makazi</h1>
           <div className="flex items-center space-x-3 mb-8">
-            <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden" />
+            <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div>
               <p className="text-sm font-semibold">Property Manager</p>
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Verified Owner</span>
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                Verified Owner
+              </span>
             </div>
           </div>
           <nav className="space-y-1">
