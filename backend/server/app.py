@@ -63,6 +63,16 @@ def get_manager_performance(id):
         .group_by(Unit.apartment_id)
     ).all()
 
+    result = []
+    for apartment_id, total_units, vacant_units in rows:
+        vacancy_rate = (vacant_units or 0) / (total_units or 1) * 100
+        result.append({
+            "apartment_id": apartment_id,
+            "total_units": total_units,
+            "vacant_units": vacant_units or 0,
+            "vacancy_rate": round(vacancy_rate, 2)
+        })
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
