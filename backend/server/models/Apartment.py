@@ -17,3 +17,8 @@ class Apartment(db.Model):
     
     units = db.relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
     nearby_facilities = db.relationship('NearbyFacility', backpopulates='apartment', cascade='all, delete-orphan')
+    amenity_links = db.relationship(
+            "ApartmentAmenityJoining",
+            backref="apartment",
+            cascade="all, delete-orphan",
+        )
