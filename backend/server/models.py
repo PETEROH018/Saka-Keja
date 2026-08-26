@@ -24,17 +24,6 @@ class ApartmentOwner(Base):
     
     apartments = db.relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
-class NearbyFacility(db.Model):
-    __tablename__ = "nearby_facilities"
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
-    distance = db.Column(db.String(80), nullable=False)
-    apartmentId = db.Column(db.Integer, db.ForeignKey('apartments.id'), nullable=False)
-
-    # Relationship back to Apartment
-    apartment = db.relationship("Apartment", back_populates="nearby_facilities")
-
     @hybrid_property
     def password_hash(self):
         raise AttributeError('Passwords may not be viewed')
@@ -48,6 +37,17 @@ class NearbyFacility(db.Model):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
 
+class NearbyFacility(db.Model):
+    __tablename__ = "nearby_facilities"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    distance = db.Column(db.String(80), nullable=False)
+    apartmentId = db.Column(db.Integer, db.ForeignKey('apartments.id'), nullable=False)
+
+    # Relationship back to Apartment
+    apartment = db.relationship("Apartment", back_populates="nearby_facilities")
+    
 class Apartment(db.Model):
     __tablename__ = 'apartments'
 
