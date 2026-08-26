@@ -12,7 +12,15 @@ from models.UnitAmenityJoining import UnitAmenityJoining
 from models.StudentUnit import StudentUnit
 from models.Payment import Payment
 
+apartment_schema=ApartmentSchema()
 
+@app.route('/apartment',methods=['POST'])
+def add_apartment():
+    data = request.get_json()
+
+    
+    
+    
 
 
 
