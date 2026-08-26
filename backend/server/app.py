@@ -158,5 +158,7 @@ def get_manager_metrics(id):
         "favorites": favorites_count
     })
 
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
