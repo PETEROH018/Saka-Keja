@@ -141,6 +141,8 @@ def get_manager_property_units(id):
 
 @app.route('/manager/<int:id>/metrics')
 def get_manager_metrics(id):
+    listing_query = select(func.count(Apartment.id)).where(Apartment.owner_id == id)
+    views_query = select(func.sum(Apartment.total_views)).where(Apartment.owner_id == id)
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
