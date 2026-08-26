@@ -120,6 +120,13 @@ export default function EditProfile() {
             </div>
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-xl border border-gray-200 text-center flex flex-col items-center">
+                <div className="relative w-24 h-24 mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
+                    alt="Profile"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
                 <h4 className="font-semibold text-gray-900">Profile Picture</h4>
               </div>
             </div>
