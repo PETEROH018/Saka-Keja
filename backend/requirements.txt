@@ -7,3 +7,4 @@ importlib-resources
 ipdb
 marshmallow
 marshmallow-sqlalchemy
+psycopg2-binary
