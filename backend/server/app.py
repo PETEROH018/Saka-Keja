@@ -157,7 +157,9 @@ def get_manager_metrics(id):
         "views": views_count,
         "favorites": favorites_count
     })
-
+@app.route('/manager/<int:id>/performance')
+def get_manager_performance(id):
+    return
 
 
 if __name__ == "__main__":
