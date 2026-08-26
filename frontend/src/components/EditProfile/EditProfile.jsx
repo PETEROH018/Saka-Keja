@@ -73,6 +73,18 @@ export default function EditProfile() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Phone Number</label>
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 border border-r-0 border-gray-300 bg-gray-50 text-gray-500 rounded-l-lg text-sm">+254</span>
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-r-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
