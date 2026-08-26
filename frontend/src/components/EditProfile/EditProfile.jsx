@@ -118,7 +118,11 @@ export default function EditProfile() {
                 <button type="button" className="px-5 py-2 bg-indigo-900 text-white rounded-lg text-sm font-medium hover:bg-indigo-800">Save Changes</button>
               </div>
             </div>
-            <div className="space-y-6">Sidebar Column</div>
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 text-center flex flex-col items-center">
+                <h4 className="font-semibold text-gray-900">Profile Picture</h4>
+              </div>
+            </div>
           </div>
         </div>
       </main>
