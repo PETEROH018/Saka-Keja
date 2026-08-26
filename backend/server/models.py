@@ -1,18 +1,27 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
-from datetime import datetime,timezone
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, MetaData, VARCHAR, DateTime
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Boolean,
+    ForeignKey,
+    MetaData,
+    VARCHAR,
+    DateTime,
+)
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
+from datetime import datetime, timezone
 
-metadata = MetaData()
-Base = declarative_base(metadata=meta)
+
+meta = MetaData()
 bcrypt = Bcrypt()
-db = SQLAlchemy(metadata=metadata)
+Base = declarative_base(metadata=meta)
+db = SQLAlchemy(metadata=meta)
 
 class ApartmentOwner(Base):
-    __tablename__ = "aparment_owners"
+    __tablename__ = "apartment_owners"
 
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
@@ -22,7 +31,7 @@ class ApartmentOwner(Base):
     username = Column(VARCHAR(30), unique=True)
     _password_hash = Column(String, nullable=False)
     
-    apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
+    apartments = db.relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
     @hybrid_property
     def password_hash(self):
@@ -104,6 +113,12 @@ class Unit(db.Model):
         cascade="all, delete-orphan",
     )
     
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="unit",
+    cascade="all, delete-orphan"
+)
+    
 class Student(Base):
     __tablename__ = "students"
 
@@ -133,5 +148,65 @@ class Student(Base):
     def authenticate(self, password):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
- 
+        
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="student"
+    )
+    
+    
+        
+#=====================
+#STUDENT_UNIT MODEL
+#=====================
 
+class StudentUnit(Base):
+    __tablename__ = "student_units"
+
+    id = Column(Integer, primary_key=True)
+
+    student_id = Column(
+        Integer,
+        ForeignKey("students.id"),
+        nullable=False
+    )
+    
+    unit_id = Column(
+        Integer,
+        ForeignKey("units.id"),
+        nullable=False
+    )
+        
+    date_left = Column(DateTime, nullable=True)
+
+    date_occupied = Column(
+        DateTime,
+        nullable=False
+    )
+
+    favorite = Column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    repairs = Column(
+        String,
+        nullable=True
+    )
+
+    deposit_paid = Column(
+        Integer,
+        default=0,
+        nullable=False
+    )
+    
+    student = relationship(
+        "Student",
+        back_populates="student_units"
+    )
+    
+    unit = relationship(
+    "Unit",
+    back_populates="student_units"
+    )
