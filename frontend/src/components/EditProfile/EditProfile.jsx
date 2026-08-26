@@ -9,6 +9,11 @@ export default function EditProfile() {
     bio: "Experienced property manager dedicated to providing safe and comfortable student housing around major universities in Nairobi. We prioritize maintenance and tenant satisfaction.",
   });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100 text-gray-800">
       <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
@@ -47,6 +52,7 @@ export default function EditProfile() {
                       type="text"
                       name="fullName"
                       value={formData.fullName}
+                      onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
@@ -56,6 +62,7 @@ export default function EditProfile() {
                       type="text"
                       name="companyName"
                       value={formData.companyName}
+                      onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
@@ -70,6 +77,7 @@ export default function EditProfile() {
                       type="email"
                       name="email"
                       value={formData.email}
+                      onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
@@ -84,6 +92,7 @@ export default function EditProfile() {
                         type="text"
                         name="phone"
                         value={formData.phone}
+                        onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-r-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
@@ -98,6 +107,7 @@ export default function EditProfile() {
                     name="bio"
                     rows={4}
                     value={formData.bio}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <p className="text-right text-xs text-gray-400 mt-1">{formData.bio.length}/500 characters</p>
