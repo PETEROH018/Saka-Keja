@@ -10,6 +10,10 @@ export default function EditProfile() {
     bio: "Experienced property manager dedicated to providing safe and comfortable student housing around major universities in Nairobi. We prioritize maintenance and tenant satisfaction.",
   });
 
+  const handleCancel = () => {
+    console.log("Canceling edit operations");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Saving profile data:", formData);
@@ -128,7 +132,7 @@ export default function EditProfile() {
                 </div>
               </div>
               <div className="flex justify-end space-x-3 pt-2">
-                <button type="button" className="px-5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button type="button" onClick={handleCancel} className="px-5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
                 <button type="button" className="px-5 py-2 bg-indigo-900 text-white rounded-lg text-sm font-medium hover:bg-indigo-800">Save Changes</button>
               </div>
             </div>
