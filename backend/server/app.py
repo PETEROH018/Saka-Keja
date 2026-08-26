@@ -1,11 +1,12 @@
-from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment
+from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, Unit
 from configs import *
 from schema import (
     unit_amenity_schema,
     unit_amenities_schema,
     unit_amenity_joining_schema,
     unit_amenities_joining_schema,
-    ApartmentSchema
+    ApartmentSchema,
+    UnitSchema
 )
 
 # ---------- unit_amenities ----------
@@ -98,6 +99,11 @@ def get_units():
 def get_manager_properties(id):
     apartment = Apartment.query.filter_by(owner_id=id).all()
     return jsonify(ApartmentSchema(many=True).dump(apartment))
+
+@app.route('/apartment/<int:id>/units')
+def get_manager_property_units(id):
+    units = Unit.query.filter_by(apartment_id=id).all()
+    return jsonify(UnitSchema(many=True).dump(units))
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
