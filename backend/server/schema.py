@@ -81,3 +81,5 @@ class StudentUnitSchema(SQLAlchemyAutoSchema):
         model = StudentUnit
         load_instance = True
         include_fk = True
+
+    student = fields.Nested("StudentSchema", exclude=("student_units",))
