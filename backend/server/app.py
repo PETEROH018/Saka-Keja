@@ -118,7 +118,6 @@ def get_manager_performance(id):
 
     return jsonify(result)
 
-# 1. Get all apartments from the apartments table
 @app.route('/apartments', methods=['GET'])
 def get_all_apartments():
     try:
@@ -127,7 +126,6 @@ def get_all_apartments():
     except Exception as e:
         return jsonify({"error": f"Could not retrieve apartments due to this error: {str(e)}"}), 500
 
-# 2. Get one apartment from the apartment table by id
 @app.route('/apartments/<int:id>', methods=['GET'])
 def get_apartment_by_id(id):
     apartment = Apartment.query.get(id)
