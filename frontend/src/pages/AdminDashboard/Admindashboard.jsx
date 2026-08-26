@@ -22,15 +22,6 @@ export default function AdminDashboard() {
       badgeBg: "bg-amber-100 text-amber-800",
     },
     {
-      id: "new-inquiries",
-      title: "New Inquiries",
-      value: "17",
-      change: "+5 today",
-      icon: MessageSquare,
-      iconBg: "bg-indigo-100 text-indigo-700",
-      badgeBg: "bg-indigo-100 text-indigo-800",
-    },
-    {
       id: "favorites",
       title: "Favorites",
       value: "43",
@@ -41,16 +32,10 @@ export default function AdminDashboard() {
     },
   ]
 
-  const recentInquiries = [
-    { id: 1, name: "Brian Kipchumba", property: "Kilimani Deluxe Studio", message: "Is the apartment available for rent starting next month?", time: "2h ago", status: "New", avatar: "BK" },
-    { id: 2, name: "Amina Mohamed", property: "Westlands Cozy Bedsitter", message: "Does the rent include high-speed Wi-Fi and water?", time: "5h ago", status: "New", avatar: "AM" },
-    { id: 3, name: "Kevin Ochieng", property: "Parklands Student 1-Bed", message: "Can I schedule a physical viewing this Saturday?", time: "1d ago", status: "Pending", avatar: "KO" },
-  ]
-
   const propertyOverview = [
-    { id: 1, name: "Kilimani Deluxe Studio", location: "Kilimani", rent: "KSh 25,000", status: "Available", views: 482, inquiries: 7 },
-    { id: 2, name: "Westlands Cozy Bedsitter", location: "Westlands", rent: "KSh 18,000", status: "Available", views: 340, inquiries: 5 },
-    { id: 3, name: "Parklands Student 1-Bed", location: "Parklands", rent: "KSh 30,000", status: "Occupied", views: 295, inquiries: 3 },
+    { id: 1, name: "Kilimani Deluxe Studio", location: "Kilimani", rent: "KSh 25,000", status: "Available", views: 482 },
+    { id: 2, name: "Westlands Cozy Bedsitter", location: "Westlands", rent: "KSh 18,000", status: "Available", views: 340},
+    { id: 3, name: "Parklands Student 1-Bed", location: "Parklands", rent: "KSh 30,000", status: "Occupied"},
   ]
 
   return (
@@ -104,60 +89,7 @@ export default function AdminDashboard() {
 
         {/* Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Recent Inquiries */}
-          <section className="lg:col-span-7 flex flex-col rounded-2xl border border-outline-variant/60 bg-white p-6 shadow-2xs">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant/40">
-              <div>
-                <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5 text-primary" />
-                  Recent Inquiries
-                </h2>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  17 new inquiries received
-                </p>
-              </div>
-              <button className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
-                View All (17)
-                <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            <div className="space-y-4 flex-1">
-              {recentInquiries.map((inquiry) => (
-                <div
-                  key={inquiry.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-outline-variant/40 p-4 transition-all hover:bg-surface-container-low hover:border-primary/30"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-on-secondary-container">
-                      {inquiry.avatar}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-on-surface">{inquiry.name}</span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${inquiry.status === "New" ? "bg-indigo-100 text-indigo-700" : "bg-amber-100 text-amber-800"}`}>
-                          {inquiry.status}
-                        </span>
-                      </div>
-                      <p className="text-xs font-medium text-primary mt-0.5">{inquiry.property}</p>
-                      <p className="text-xs text-on-surface-variant line-clamp-1 mt-1">&quot;{inquiry.message}&quot;</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-outline-variant/30">
-                    <span className="flex items-center gap-1 text-[11px] text-on-surface-variant">
-                      <Clock className="h-3 w-3" />
-                      {inquiry.time}
-                    </span>
-                    <button className="rounded-lg bg-surface-container-low px-3 py-1 text-xs font-semibold text-primary border border-outline-variant/60 hover:bg-primary hover:text-white transition-colors">
-                      Reply
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
+          
           {/* Listings Performance */}
           <section className="lg:col-span-5 flex flex-col gap-6">
             <div className="rounded-2xl border border-outline-variant/60 bg-white p-6 shadow-2xs">
@@ -195,8 +127,6 @@ export default function AdminDashboard() {
                       </span>
                       <div className="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1.5">
                         <span>{property.views} views</span>
-                        <span>•</span>
-                        <span>{property.inquiries} inq.</span>
                       </div>
                     </div>
                   </div>
