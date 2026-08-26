@@ -11,7 +11,7 @@ from models.UnitAmenity import UnitAmenity
 from models.UnitAmenityJoining import UnitAmenityJoining
 from models.StudentUnit import StudentUnit
 from models.Payment import Payment
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case
 
 apartment_schema=ApartmentSchema()
 apartment_owner_schema=ApartmentOwnerSchema()
