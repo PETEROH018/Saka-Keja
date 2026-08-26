@@ -19,6 +19,7 @@ backend/*.sqlite3
 backend/.flaskenv
 backend/server/Pipfile.lock
 
+
 # --- frontend/ (Node / React) ---
 frontend/node_modules/
 frontend/build/
@@ -50,3 +51,6 @@ Thumbs.db
 # --- Misc ---
 *.bak
 *.swpbackend/server/instance/
+
+Pipfile
+Pipfile.lock
