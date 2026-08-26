@@ -135,6 +135,12 @@ export default function EditProfile() {
                   <span>Identity Verified</span>
                 </div>
               </div>
+              <div className="bg-indigo-50 p-5 rounded-xl border border-indigo-100 flex items-start space-x-3">
+                <span className="text-indigo-600 text-lg">💡</span>
+                <div>
+                  <h4 className="font-semibold text-indigo-950 text-xs">Pro Tip</h4>
+                </div>
+              </div>
             </div>
           </div>
         </div>
