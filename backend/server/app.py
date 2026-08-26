@@ -127,6 +127,23 @@ def get_all_apartments():
     except Exception as e:
         return jsonify({"error": f"Could not retrieve apartments due to this error: {str(e)}"}), 500
 
+# 2. Get one apartment from the apartment table by id
+@app.route('/apartments/<int:id>', methods=['GET'])
+def get_apartment_by_id(id):
+    apartment = Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
+    try:
+        # Increment view count
+        apartment.total_views = (apartment.total_views or 0) + 1
+        db.session.commit()
+        
+        return jsonify(ApartmentSchema().dump(apartment)), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not retrieve apartment due to this error: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
