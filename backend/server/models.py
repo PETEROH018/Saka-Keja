@@ -22,7 +22,7 @@ class ApartmentOwner(Base):
     username = Column(VARCHAR(30), unique=True)
     _password_hash = Column(String, nullable=False)
     
-    apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
+    apartments = db.relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
 class NearbyFacility(db.Model):
     __tablename__ = "nearby_facilities"
@@ -63,7 +63,8 @@ class Apartment(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     
-    units = db.Relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
+    units = db.relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
+    nearby_facilities = db.relationship('NearbyFacility', backpopulates='apartment', cascade='all, delete-orphan')
     
 class UnitAmenity(db.Model):
     __tablename__ = "unit_amenities"
