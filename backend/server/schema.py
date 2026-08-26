@@ -47,3 +47,7 @@ class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
         model = ApartmentAmenity
         load_instance = True
         include_fk = True
+
+    apartment_links = fields.Nested(
+        "ApartmentAmenityJoiningSchema", many=True, exclude=("amenity",)
+    )
