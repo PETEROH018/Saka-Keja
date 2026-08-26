@@ -154,7 +154,50 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    return jsonify({"message": "Student endpoint working"}), 201
+    try:
+        new_student = Student(
+            full_name=data["full_name"],
+            email=data["email"],
+            phone_number=data["phone_number"],
+            dob=data.get("dob"),
+            institution=data.get("institution"),
+            course=data.get("course"),
+            year_of_study=data.get("year_of_study"),
+            student_number=data.get("student_number"),
+            graduation_year=data.get("graduation_year"),
+            location=data.get("location"),
+            username=data["username"],
+        )
+
+        new_student.password_hash = data["password"]
+
+        db.session.add(new_student)
+        db.session.commit()
+
+        return (
+            jsonify(
+                {
+                    "message": "Student created successfully",
+                    "student": {
+                        "id": new_student.id,
+                        "full_name": new_student.full_name,
+                        "email": new_student.email,
+                        "username": new_student.username,
+                    },
+                }
+            ),
+            201,
+        )
+
+    except KeyError as e:
+        db.session.rollback()
+
+        return jsonify({"error": f"Missing required field: {str(e)}"}), 400
+
+    except Exception as e:
+        db.session.rollback()
+
+        return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
