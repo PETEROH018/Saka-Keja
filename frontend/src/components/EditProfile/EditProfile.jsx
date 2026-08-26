@@ -55,7 +55,7 @@ export default function EditProfile() {
           <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
           <p className="text-sm text-gray-500 mb-6">Update your professional details to build trust with potential tenants.</p>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+            <form onSubmit={handleSubmit} className="lg:col-span-2 space-y-6">
               <div className="bg-white p-6 rounded-xl border border-gray-200">
                 <h3 className="text-base font-semibold text-gray-900 mb-4">Personal Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
