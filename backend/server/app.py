@@ -13,6 +13,7 @@ from models.StudentUnit import StudentUnit
 from models.Payment import Payment
 
 apartment_schema=ApartmentSchema()
+apartment_owner_schema=ApartmentOwnerSchema()
 
 @app.route('/apartment',methods=['POST'])
 def add_apartment():
@@ -36,9 +37,10 @@ def add_apartment():
 
 @app.route('/apartment-owners', methods=['POST']) 
 def add_apartment_owner():
-     data = request.get_json()
+    data = request.get_json()
     
-    
+    if not data:
+        return jsonify({"error":"No input data provided"}),400
 
 
 
