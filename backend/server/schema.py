@@ -7,3 +7,4 @@ from models.UnitAmenity import UnitAmenity
 from models.UnitAmenityJoining import UnitAmenityJoining
 from models.ApartmentAmenity import ApartmentAmenity
 from models.ApartmentAmenityJoining import ApartmentAmenityJoining
+from models.NearbyFacility import NearbyFacility
