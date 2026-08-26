@@ -16,7 +16,7 @@ class Apartment(db.Model):
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     
     units = db.relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
-    nearby_facilities = db.relationship('NearbyFacility', backpopulates='apartment', cascade='all, delete-orphan')
+    nearby_facilities = db.relationship('NearbyFacility', back_populates='apartment', cascade='all, delete-orphan')
     amenity_links = db.relationship(
             "ApartmentAmenityJoining",
             backref="apartment",

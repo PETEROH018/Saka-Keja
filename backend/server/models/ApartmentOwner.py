@@ -1,6 +1,6 @@
 from configs import *
 
-class ApartmentOwner(Base):
+class ApartmentOwner(db.Model):
     __tablename__ = "apartment_owners"
 
     id = Column(Integer, primary_key=True)

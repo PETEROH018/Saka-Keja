@@ -24,9 +24,17 @@ Base = declarative_base(metadata=meta)
 db = SQLAlchemy(metadata=meta)
 
 LOCAL_DB_URI = "postgresql+psycopg2://postgres:1234@localhost:5432/saka_keja"
+
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", LOCAL_DB_URI)
+
+if os.getenv("TESTING") == "1":
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL",
+        LOCAL_DB_URI
+    )
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db.init_app(app)
-CORS(app)  # allows your Vite frontend on localhost:5173 to call this API
+db.init_app(app) # allows your Vite frontend on localhost:5173 to call this API
