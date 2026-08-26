@@ -12,6 +12,7 @@ from models.UnitAmenityJoining import UnitAmenityJoining
 from models.StudentUnit import StudentUnit
 from models.Payment import Payment
 from sqlalchemy import select, func, case
+from sqlalchemy.exc import IntegrityError
 
 apartment_schema = ApartmentSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
@@ -154,8 +155,21 @@ def add_payment():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
+    required_fields = ["student_unit_id", "amount", "payment_method"]
+
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return (
+            jsonify({"error": "Missing required fields", "fields": missing_fields}),
+            400,
+        )
+
+    if data["amount"] <= 0:
+        return jsonify({"error": "Amount must be greater than zero"}), 400
+
     try:
-        student_unit = StudentUnit.query.get(data.get("student_unit_id"))
+        student_unit = StudentUnit.query.get(data["student_unit_id"])
 
         if not student_unit:
             return jsonify({"error": "Student unit not found"}), 404
@@ -168,10 +182,32 @@ def add_payment():
         )
 
         db.session.add(new_payment)
+
         student_unit.deposit_paid += data["amount"]
+
         db.session.commit()
 
-        return jsonify({"message": f"Payment created with id {new_payment.id}"}), 201
+        return (
+            jsonify(
+                {
+                    "message": "Payment created successfully",
+                    "payment": {
+                        "id": new_payment.id,
+                        "student_unit_id": new_payment.student_unit_id,
+                        "amount": new_payment.amount,
+                        "payment_method": new_payment.payment_method,
+                        "payment_status": new_payment.payment_status,
+                        "transaction_reference": new_payment.transaction_reference,
+                    },
+                }
+            ),
+            201,
+        )
+
+    except IntegrityError:
+        db.session.rollback()
+
+        return jsonify({"error": "Transaction reference already exists"}), 400
 
     except Exception as e:
         db.session.rollback()
