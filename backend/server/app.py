@@ -44,9 +44,15 @@ def get_manager_metrics(id):
     })
 @app.route('/manager/<int:id>/performance')
 def get_manager_performance(id):
-    vacant = select(func.count(Apartment.id)).join(Unit, Unit.apartment_id ==  Apartment.id).where(Unit.status == "Vacant")
-    actual = select(func.count(Apartment.id)).join(Unit, Unit.apartment_id ==  Apartment.id)
-    return
+    vacant_apartments = db.session.scalar(
+    select(func.count(func.distinct(Apartment.id)))
+    .join(Unit, Unit.apartment_id == Apartment.id)
+    .where(Apartment.owner_id == id, Unit.status == "Vacant")
+    ) or 0
+    total_apartments = db.session.scalar(
+    select(func.count(func.distinct(Apartment.id))).where(Apartment.owner_id == id)
+    ) or 0
+    vacancy_rate = (vacant_apartments/total_apartments) * 100
 
 
 if __name__ == "__main__":
