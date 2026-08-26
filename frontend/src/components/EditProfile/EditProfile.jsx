@@ -103,6 +103,10 @@ export default function EditProfile() {
                   <p className="text-right text-xs text-gray-400 mt-1">{formData.bio.length}/500 characters</p>
                 </div>
               </div>
+              <div className="flex justify-end space-x-3 pt-2">
+                <button type="button" className="px-5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button type="button" className="px-5 py-2 bg-indigo-900 text-white rounded-lg text-sm font-medium hover:bg-indigo-800">Save Changes</button>
+              </div>
             </div>
             <div className="space-y-6">Sidebar Column</div>
           </div>
