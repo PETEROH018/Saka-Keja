@@ -5,6 +5,7 @@ from schema import (
     unit_amenities_schema,
     unit_amenity_joining_schema,
     unit_amenities_joining_schema,
+    ApartmentSchema
 )
 
 # ---------- unit_amenities ----------
@@ -96,7 +97,7 @@ def get_units():
 @app.route('/manager-properties/<int: id>')
 def get_manager_properties(id):
     apartment = Apartment.query.filter_by(owner_id=id).all()
-    return
+    return jsonify(ApartmentSchema(many=True).dump(apartment))
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
