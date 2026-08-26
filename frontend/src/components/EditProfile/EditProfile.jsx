@@ -145,7 +145,7 @@ export default function EditProfile() {
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
                   />
-                  <button className="absolute bottom-0 right-0 bg-indigo-900 text-white p-1.5 rounded-full border-2 border-white text-xs">✏️</button>
+                  <button aria-label="Change profile picture" className="absolute bottom-0 right-0 bg-indigo-900 text-white p-1.5 rounded-full border-2 border-white text-xs">✏️</button>
                 </div>
                 <h4 className="font-semibold text-gray-900">Profile Picture</h4>
                 <p className="text-xs text-gray-500 mt-1 mb-4">A clear, professional photo helps build trust with students looking for housing.</p>
