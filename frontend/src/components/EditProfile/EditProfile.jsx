@@ -26,6 +26,10 @@ export default function EditProfile() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
           <p className="text-sm text-gray-500 mb-6">Update your professional details to build trust with potential tenants.</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">Form Column</div>
+            <div className="space-y-6">Sidebar Column</div>
+          </div>
         </div>
       </main>
     </div>
