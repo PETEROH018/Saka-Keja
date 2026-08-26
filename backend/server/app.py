@@ -42,6 +42,21 @@ def add_apartment_owner():
     if not data:
         return jsonify({"error":"No input data provided"}),400
 
+    try:
+        new_apartment_owner = apartment_owner_schema.load(data)
+        db.session.add(new_apartment_owner)
+        db.session.commit()
+        return jsonify("message", f"Added apartment with id {new_apartment_owner.id}"),201
+
+    except  ValidationError as err:
+        return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+    
+    except Exception as e:
+        db.session.rollback()    
+        return jsonify({"error", f"Could not add the apartment owner due to this error, {str(e)}"}),500
+         
+
+
 
 
 if __name__ == "__main__":
