@@ -41,5 +41,10 @@ class Payment(Base):
     back_populates="student"
     )
     
+    student_unit = relationship(
+        "StudentUnit",
+        back_populates="payments"
+    )
+    
     
         
