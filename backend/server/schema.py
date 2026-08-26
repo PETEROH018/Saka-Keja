@@ -91,3 +91,6 @@ class StudentSchema(Schema):
     fullname = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     phone_number = fields.Str(required=True, validate=validate.Length(min=1))
+    dob = fields.DateTime(required=False)
+    institution = fields.Str(required=False)
+    course = fields.Str(required=False)
