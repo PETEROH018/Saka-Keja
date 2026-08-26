@@ -139,5 +139,8 @@ def get_manager_property_units(id):
     units = Unit.query.filter_by(apartment_id=id).all()
     return jsonify(UnitSchema(many=True).dump(units))
 
+@app.route('/manager/<int:id>/metrics')
+def get_manager_metrics(id):
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
