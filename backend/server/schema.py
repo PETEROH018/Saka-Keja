@@ -11,7 +11,7 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
         load_instance = True  
         include_fk = True 
 
-    units = Nested('UnitsSchema', many=True)
+    units = Nested('UnitSchema', many=True)
 
 class UnitSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -66,3 +66,4 @@ class ApartmentOwnerSchema(Schema):
         validate=validate.Length(min=1),
     )
 
+    apartments = Nested('ApartmentSchema', many=True)
