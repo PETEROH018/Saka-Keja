@@ -24,8 +24,16 @@ class ApartmentOwner(Base):
     
     apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
-    class NearbyFacility(db.Model):
+class NearbyFacility(db.Model):
     __tablename__ = "nearby_facilities"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    distance = db.Column(db.String(80), nullable=False)
+    apartmentId = db.Column(db.Integer, db.ForeignKey('apartments.id'), nullable=False)
+
+    # Relationship back to Apartment
+    apartment = db.relationship("Apartment", back_populates="nearby_facilities")
 
     @hybrid_property
     def password_hash(self):
