@@ -21,7 +21,7 @@ Base = declarative_base(metadata=meta)
 db = SQLAlchemy(metadata=meta)
 
 class ApartmentOwner(Base):
-    __tablename__ = "aparment_owners"
+    __tablename__ = "apartment_owners"
 
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
@@ -31,7 +31,7 @@ class ApartmentOwner(Base):
     username = Column(VARCHAR(30), unique=True)
     _password_hash = Column(String, nullable=False)
     
-    apartments = db.Relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
+    apartments = db.relationship('Apartment',backref='apartment_owner', cascade='all, delete-orphan')
 
     @hybrid_property
     def password_hash(self):
@@ -113,6 +113,12 @@ class Unit(db.Model):
         cascade="all, delete-orphan",
     )
     
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="unit",
+    cascade="all, delete-orphan"
+)
+    
 class Student(Base):
     __tablename__ = "students"
 
@@ -181,4 +187,66 @@ class Payment(Base):
         DateTime,
         default=lambda: datetime.now(timezone.utc),
         nullable=False
+    )
+        
+    student_units = relationship(
+    "StudentUnit",
+    back_populates="student"
+    )
+    
+    
+        
+#=====================
+#STUDENT_UNIT MODEL
+#=====================
+
+class StudentUnit(Base):
+    __tablename__ = "student_units"
+
+    id = Column(Integer, primary_key=True)
+
+    student_id = Column(
+        Integer,
+        ForeignKey("students.id"),
+        nullable=False
+    )
+    
+    unit_id = Column(
+        Integer,
+        ForeignKey("units.id"),
+        nullable=False
+    )
+        
+    date_left = Column(DateTime, nullable=True)
+
+    date_occupied = Column(
+        DateTime,
+        nullable=False
+    )
+
+    favorite = Column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    repairs = Column(
+        String,
+        nullable=True
+    )
+
+    deposit_paid = Column(
+        Integer,
+        default=0,
+        nullable=False
+    )
+    
+    student = relationship(
+        "Student",
+        back_populates="student_units"
+    )
+    
+    unit = relationship(
+    "Unit",
+    back_populates="student_units"
     )
