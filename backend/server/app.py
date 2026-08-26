@@ -1,4 +1,4 @@
-from models import db, UnitAmenity, UnitAmenityJoining, Unit
+from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment
 from configs import *
 from schema import (
     unit_amenity_schema,
@@ -95,7 +95,7 @@ def get_units():
 #-------------get/properties for a particular manager------------------
 @app.route('/manager-properties/<int: id>')
 def get_manager_properties(id):
-
+    apartment = Apartment.query.filter_by(owner_id=id).all()
     return
 
 if __name__ == "__main__":
