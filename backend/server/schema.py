@@ -9,3 +9,4 @@ from models.ApartmentAmenity import ApartmentAmenity
 from models.ApartmentAmenityJoining import ApartmentAmenityJoining
 from models.NearbyFacility import NearbyFacility
 from models.Payment import Payment
+from models.StudentUnit import StudentUnit
