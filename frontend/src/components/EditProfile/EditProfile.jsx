@@ -1,4 +1,14 @@
+import { useState } from "react";
+
 export default function EditProfile() {
+  const [formData, setFormData] = useState({
+    fullName: "Samuel Kimani",
+    companyName: "Kimani Properties Ltd",
+    email: "samuel.k@example.com",
+    phone: "712 345 678",
+    bio: "",
+  });
+
   return (
     <div className="flex min-h-screen bg-gray-100 text-gray-800">
       <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
