@@ -22,7 +22,12 @@ export default function EditProfile() {
         </div>
         <button className="w-full bg-indigo-900 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-800 transition">List New Property</button>
       </aside>
-      <main className="flex-1 p-8">Edit Profile Content</main>
+      <main className="flex-1 p-8">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
+          <p className="text-sm text-gray-500 mb-6">Update your professional details to build trust with potential tenants.</p>
+        </div>
+      </main>
     </div>
   );
 }
