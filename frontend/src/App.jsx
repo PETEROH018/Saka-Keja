@@ -33,8 +33,7 @@ function App() {
         <Route path="/" element={<AuthPage />} />
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
-        <Route path="/" element={<AuthPage/>} />
-        <Route path="/available-units" element={<AvailableUnits/>} />
+        <Route path="/available-units/:id" element={<AvailableUnits/>} />
     </Routes>
     </BrowserRouter>
 
