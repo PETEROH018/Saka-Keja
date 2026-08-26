@@ -27,9 +27,12 @@ def add_apartment():
         db.session.commit()
         return jsonify("message", f"Added apartment with id {new_apartment.id} and its units"),201
 
+    except  ValidationError as err:
+        return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+
     except Exception as e:
         db.session.rollback()    
-        return jsonify({"error", f"Could not add the apartment due to this error, {str(e)}"})   
+        return jsonify({"error", f"Could not add the apartment due to this error, {str(e)}"}),500   
     
     
 
