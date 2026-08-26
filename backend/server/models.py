@@ -46,6 +46,17 @@ class ApartmentOwner(Base):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
 
+class NearbyFacility(db.Model):
+    __tablename__ = "nearby_facilities"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    distance = db.Column(db.String(80), nullable=False)
+    apartmentId = db.Column(db.Integer, db.ForeignKey('apartments.id'), nullable=False)
+
+    # Relationship back to Apartment
+    apartment = db.relationship("Apartment", back_populates="nearby_facilities")
+    
 class Apartment(db.Model):
     __tablename__ = 'apartments'
 
@@ -61,7 +72,8 @@ class Apartment(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     
-    units = db.Relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
+    units = db.relationship('Unit',backref='apartment',cascade='all, delete-orphan') 
+    nearby_facilities = db.relationship('NearbyFacility', backpopulates='apartment', cascade='all, delete-orphan')
     
 class UnitAmenity(db.Model):
     __tablename__ = "unit_amenities"
