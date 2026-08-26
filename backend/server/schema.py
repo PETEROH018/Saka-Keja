@@ -31,3 +31,10 @@ class UnitAmenitySchema(SQLAlchemyAutoSchema):
         model = UnitAmenity
         load_instance = True
         include_fk = True
+
+
+class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = UnitAmenityJoining
+        load_instance = True
+        include_fk = True
