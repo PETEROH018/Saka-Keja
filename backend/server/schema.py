@@ -84,3 +84,8 @@ class StudentUnitSchema(SQLAlchemyAutoSchema):
 
     student = fields.Nested("StudentSchema", exclude=("student_units",))
     unit = fields.Nested(UnitSchema, exclude=("student_units",))
+
+
+class StudentSchema(Schema):
+    id = fields.Int(dump_only=True)
+    fullname = fields.Str(required=True, validate=validate.Length(min=1))
