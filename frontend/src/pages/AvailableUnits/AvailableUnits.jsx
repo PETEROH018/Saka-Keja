@@ -4,17 +4,13 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import {
   ArrowLeft,
-  Check,
   ShieldCheck,
   Wifi,
   Bed,
   Bath,
   Layers,
-  Search,
-  X,
   Building2,
   Sparkles,
-  MapPin,
   Info
 } from "lucide-react";
 
@@ -127,11 +123,6 @@ export default function AvailableUnits() {
       return matchesCategory
     });
   }, [activeTab]);
-
-  const handleBook = (unit) => {
-    setSelectedUnit(unit);
-    setBookingSuccess(false);
-  };
   
   return (
     <div className="min-h-screen bg-[#FDF7FF] text-gray-900 font-sans flex flex-col justify-between">
@@ -229,11 +220,6 @@ export default function AvailableUnits() {
                       {unit.isAvailable ? "Available" : "Occupied"}
                     </span>
                   </div>
-
-                  {/* Floor Badge */}
-                  <div className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-800 shadow-xs backdrop-blur-md">
-                    {unit.floorLevel}
-                  </div>
                 </div>
 
                 {/* Card Body */}
@@ -283,28 +269,31 @@ export default function AvailableUnits() {
                   {/* Call to Action Button */}
                   
                   <div className="mt-6 pt-2">
-                    {unit.isAvailable? (
-                        <button
-                      onClick={navigate("/unit-details")}
-                      className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
-                        unit.isAvailable
-                          ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
-                          : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-                      }`}
-                    >
-                      Deatails
-                    </button>
-                    ):
-                    <button
-                      disabled={true}
-                      className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
-                        unit.isAvailable
-                          ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
-                          : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-                      }`}
-                    >
-                      Currently Occupied
-                    </button>}
+                    {unit.isAvailable ? (
+                      <button
+                        type="button"
+                        onClick={() => navigate("/unit-details")}
+                        className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+                          unit.isAvailable
+                            ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
+                            : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                        }`}
+                      >
+                        Details
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={true}
+                        className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+                          unit.isAvailable
+                            ? "bg-[#59388f] text-white hover:bg-[#452770] shadow-md shadow-purple-200"
+                            : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                        }`}
+                      >
+                        Currently Occupied
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
