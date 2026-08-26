@@ -154,7 +154,28 @@ def add_payment():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    return jsonify({"message": "Payment endpoint working"}), 201
+    try:
+        student_unit = StudentUnit.query.get(data.get("student_unit_id"))
+
+        if not student_unit:
+            return jsonify({"error": "Student unit not found"}), 404
+
+        new_payment = Payment(
+            student_unit_id=data["student_unit_id"],
+            amount=data["amount"],
+            payment_method=data["payment_method"],
+            transaction_reference=data.get("transaction_reference"),
+        )
+
+        db.session.add(new_payment)
+        db.session.commit()
+
+        return jsonify({"message": f"Payment created with id {new_payment.id}"}), 201
+
+    except Exception as e:
+        db.session.rollback()
+
+        return jsonify({"error": f"Could not create payment: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
