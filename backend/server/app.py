@@ -32,7 +32,11 @@ def add_apartment():
 
     except Exception as e:
         db.session.rollback()    
-        return jsonify({"error", f"Could not add the apartment due to this error, {str(e)}"}),500   
+        return jsonify({"error", f"Could not add the apartment due to this error, {str(e)}"}),500  
+
+@app.route('/apartment-owners', methods=['POST']) 
+def add_apartment_owner():
+     data = request.get_json()
     
     
 
