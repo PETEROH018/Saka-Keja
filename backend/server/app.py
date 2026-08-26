@@ -144,6 +144,13 @@ def get_apartment_by_id(id):
         db.session.rollback()
         return jsonify({"error": f"Could not retrieve apartment due to this error: {str(e)}"}), 500
 
+# 3. Get units associated with a particular apartment
+@app.route('/apartments/<int:id>/units', methods=['GET'])
+def get_apartment_units(id):
+    apartment = Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
