@@ -4,17 +4,13 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import {
   ArrowLeft,
-  Check,
   ShieldCheck,
   Wifi,
   Bed,
   Bath,
   Layers,
-  Search,
-  X,
   Building2,
   Sparkles,
-  MapPin,
   Info
 } from "lucide-react";
 
@@ -228,11 +224,6 @@ export default function AvailableUnits() {
                       <span className={`h-1.5 w-1.5 rounded-full ${unit.isAvailable ? "bg-white animate-pulse" : "bg-gray-300"}`} />
                       {unit.isAvailable ? "Available" : "Occupied"}
                     </span>
-                  </div>
-
-                  {/* Floor Badge */}
-                  <div className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-800 shadow-xs backdrop-blur-md">
-                    {unit.floorLevel}
                   </div>
                 </div>
 
