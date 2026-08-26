@@ -40,3 +40,10 @@ class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_links",))
+
+
+class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ApartmentAmenity
+        load_instance = True
+        include_fk = True
