@@ -10,3 +10,10 @@ from models.ApartmentAmenityJoining import ApartmentAmenityJoining
 from models.NearbyFacility import NearbyFacility
 from models.Payment import Payment
 from models.StudentUnit import StudentUnit
+
+
+class ApartmentSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Apartment
+        load_instance = True
+        include_fk = True
