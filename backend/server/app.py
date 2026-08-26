@@ -18,7 +18,10 @@ apartment_schema=ApartmentSchema()
 def add_apartment():
     data = request.get_json()
 
+    if not data:
+            return jsonify({"error":"No input data provided"}),400
     
+        
     
     
 
