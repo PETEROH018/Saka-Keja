@@ -139,6 +139,9 @@ export default function EditProfile() {
                 <span className="text-indigo-600 text-lg">💡</span>
                 <div>
                   <h4 className="font-semibold text-indigo-950 text-xs">Pro Tip</h4>
+                  <p className="text-xs text-indigo-800 mt-1 leading-relaxed">
+                    Profiles with a complete bio and verified phone number receive <strong>40% more inquiries</strong> from students.
+                  </p>
                 </div>
               </div>
             </div>
