@@ -1,6 +1,7 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, fields, validate, validates_schema, Schema
-from models import *
+from models.Apartment import Apartment
+from models.Unit import Unit
 
 class ApartmentSchema(SQLAlchemyAutoSchema):
     class Meta:
