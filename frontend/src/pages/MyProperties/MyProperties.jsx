@@ -6,6 +6,7 @@ import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 
 export default function MyProperties() {
 
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const {
