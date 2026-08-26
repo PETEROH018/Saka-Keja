@@ -17,3 +17,10 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
         model = Apartment
         load_instance = True
         include_fk = True
+
+
+class UnitSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Unit
+        load_instance = True
+        include_fk = True
