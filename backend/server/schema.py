@@ -110,3 +110,6 @@ class StudentSchema(Schema):
 class ApartmentOwnerSchema(Schema):
     id = fields.Int(dump_only=True)
     fullname = fields.Str(required=True, validate=validate.Length(min=1))
+    email = fields.Str(required=True, validate=validate.Length(min=1))
+    phone_number = fields.Str(required=True, validate=validate.Length(min=1))
+    location = fields.Str(required=False)
