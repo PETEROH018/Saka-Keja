@@ -1,14 +1,11 @@
-from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, Unit, StudentUnit
+from models import db, UnitAmenity, UnitAmenityJoining, Unit
 from configs import *
 from schema import (
     unit_amenity_schema,
     unit_amenities_schema,
     unit_amenity_joining_schema,
     unit_amenities_joining_schema,
-    ApartmentSchema,
-    UnitSchema
 )
-from sqlalchemy import func, select
 
 # ---------- unit_amenities ----------
 
