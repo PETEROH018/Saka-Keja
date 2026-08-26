@@ -25,9 +25,11 @@ def add_apartment():
         new_apartment = apartment_schema.load(data)
         db.session.add(new_apartment)
         db.session.commit()
+        return jsonify("message", f"Added apartment with id {new_apartment.id} and its units"),201
 
     except Exception as e:
-        db.session.rollback()       
+        db.session.rollback()    
+        return jsonify({"error", f"Could not add the apartment due to this error, {str(e)}"})   
     
     
 
