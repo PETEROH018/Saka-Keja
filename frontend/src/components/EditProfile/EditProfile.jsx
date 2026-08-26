@@ -130,6 +130,10 @@ export default function EditProfile() {
                 </div>
                 <h4 className="font-semibold text-gray-900">Profile Picture</h4>
                 <p className="text-xs text-gray-500 mt-1 mb-4">A clear, professional photo helps build trust with students looking for housing.</p>
+                <div className="inline-flex items-center space-x-1 border border-gray-200 px-3 py-1 rounded-full text-xs text-gray-600">
+                  <span>🛡️</span>
+                  <span>Identity Verified</span>
+                </div>
               </div>
             </div>
           </div>
