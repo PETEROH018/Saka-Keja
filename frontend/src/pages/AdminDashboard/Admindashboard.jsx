@@ -1,13 +1,15 @@
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar"
 import { Building2, Eye, MessageSquare, Heart, TrendingUp, Plus, Search, Bell, Clock, MapPin, ChevronRight, ArrowUpRight } from "lucide-react"
+import useFetch from "../../hooks/useFetch"
+
 
 export default function AdminDashboard() {
+  const metrics = useFetch("/manager/id/metrics")
   const stats = [
     {
       id: "active-listings",
       title: "Active Listings",
-      value: "4",
-      change: "+1 this week",
+      value: metrics.listings || "0",
       icon: Building2,
       iconBg: "bg-primary/10 text-primary",
       badgeBg: "bg-primary/10 text-primary",
@@ -15,8 +17,7 @@ export default function AdminDashboard() {
     {
       id: "total-views",
       title: "Total Views",
-      value: "1,245",
-      change: "+124 this week",
+      value: metrics.views || "0",
       icon: Eye,
       iconBg: "bg-amber-100 text-amber-700",
       badgeBg: "bg-amber-100 text-amber-800",
@@ -24,13 +25,13 @@ export default function AdminDashboard() {
     {
       id: "favorites",
       title: "Favorites",
-      value: "43",
-      change: "+8 this week",
+      value: metrics.favorites || "0",
       icon: Heart,
       iconBg: "bg-rose-100 text-rose-600",
       badgeBg: "bg-rose-100 text-rose-700",
     },
   ]
+
 
   const propertyOverview = [
     { id: 1, name: "Kilimani Deluxe Studio", location: "Kilimani", rent: "KSh 25,000", status: "Available", views: 482 },
@@ -68,10 +69,6 @@ export default function AdminDashboard() {
                   <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg}`}>
                     <IconComponent className="h-5 w-5" />
                   </div>
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${stat.badgeBg}`}>
-                    <TrendingUp className="h-3 w-3" />
-                    {stat.change}
-                  </span>
                 </div>
 
                 <div>
