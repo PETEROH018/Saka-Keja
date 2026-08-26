@@ -92,7 +92,11 @@ def get_units():
 
 
 
+#-------------get/properties for a particular manager------------------
+@app.route('/manager-properties/<int: id>')
+def get_manager_properties(id):
 
+    return
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
