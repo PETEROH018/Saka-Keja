@@ -73,6 +73,8 @@ def get_manager_performance(id):
             "vacancy_rate": round(vacancy_rate, 2)
         })
 
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
