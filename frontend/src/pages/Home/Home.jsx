@@ -1,7 +1,7 @@
-import Navbar from "../../components/Navbar/Navbar"
+import Navbar from "../../components/Navbar/Navbar";
 import WhySakaKeja from "../../components/WhySakaKeja";
-import Footer from "../../components/Footer/Footer"
-import UnitsGrid from "../../components/UnitssGrid/UnitsGrid"
+import Footer from "../../components/Footer/Footer";
+import UnitsGrid from "../../components/UnitssGrid/UnitsGrid";
 import useFetch from "../../hooks/useFetch";
 import Filter from "../../components/FilterComponent/Filter";
 import { useState } from "react";
@@ -21,10 +21,9 @@ export default function Home() {
     setEndpoint("http://localhost:3000/apartments");
   }
 
-  // Filter logic is complex because of limitations of filtering using the mock json data, the logic below should be simplified after implementing our Flask backend
-
-  const filteredUnits = activeFilters 
-    ? units.filter((unit) => {
+  // Safe filter logic with null checks while data is fetching
+  const filteredUnits = activeFilters
+    ? (units?.filter((unit) => {
         const locationMatches = activeFilters.location
           ? unit.location?.toLowerCase().includes(activeFilters.location.trim().toLowerCase())
           : true;
@@ -41,20 +40,18 @@ export default function Home() {
           : true;
 
         return locationMatches && rentMatches && bedroomsMatches;
-      })
-    : units;
+      }) ?? [])
+    : (units ?? []);
 
   return (
     <>
-      {/* Main navigation for the student home page */}
       <Navbar showSearch={false} />
-      <Filter onSearch={onSearch} onFilter={onFilter}/>
+      <Filter onSearch={onSearch} onFilter={onFilter} />
       <main className="bg-surface text-on-surface font-sans min-h-screen flex flex-col justify-center items-center py-16">
-      <UnitsGrid units={filteredUnits} loading={loading} error={error}/>
-      <WhySakaKeja />
+        <UnitsGrid units={filteredUnits} loading={loading} error={error} />
+        <WhySakaKeja />
       </main>
       <Footer />
     </>
   );
 }
-
