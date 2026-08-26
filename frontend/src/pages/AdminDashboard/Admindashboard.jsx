@@ -4,12 +4,15 @@ import useFetch from "../../hooks/useFetch"
 
 
 export default function AdminDashboard() {
-  const metrics = useFetch("/manager/id/metrics")
+  const managerId = 1
+  const metrics = useFetch(`/manager/${managerId}/metrics`)
+  const performance = useFetch(`/manager/${managerId}/performance`)
+
   const stats = [
     {
       id: "active-listings",
       title: "Active Listings",
-      value: metrics.listings || "0",
+      value: metrics.data?.listings ?? 0,
       icon: Building2,
       iconBg: "bg-primary/10 text-primary",
       badgeBg: "bg-primary/10 text-primary",
@@ -17,7 +20,7 @@ export default function AdminDashboard() {
     {
       id: "total-views",
       title: "Total Views",
-      value: metrics.views || "0",
+      value: metrics.data?.views ?? 0,
       icon: Eye,
       iconBg: "bg-amber-100 text-amber-700",
       badgeBg: "bg-amber-100 text-amber-800",
@@ -25,19 +28,14 @@ export default function AdminDashboard() {
     {
       id: "favorites",
       title: "Favorites",
-      value: metrics.favorites || "0",
+      value: metrics.data?.favorites ?? 0,
       icon: Heart,
       iconBg: "bg-rose-100 text-rose-600",
       badgeBg: "bg-rose-100 text-rose-700",
     },
   ]
 
-
-  const propertyOverview = [
-    { id: 1, name: "Kilimani Deluxe Studio", location: "Kilimani", rent: "KSh 25,000", status: "Available", views: 482 },
-    { id: 2, name: "Westlands Cozy Bedsitter", location: "Westlands", rent: "KSh 18,000", status: "Available", views: 340},
-    { id: 3, name: "Parklands Student 1-Bed", location: "Parklands", rent: "KSh 30,000", status: "Occupied"},
-  ]
+  const propertyOverview = Array.isArray(performance.data) ? performance.data : []
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-surface font-sans text-on-surface">
@@ -101,33 +99,44 @@ export default function AdminDashboard() {
               </div>
 
               <div className="space-y-3">
-                {propertyOverview.map((property) => (
-                  <div
-                    key={property.id}
-                    className="flex items-center justify-between rounded-xl border border-outline-variant/40 p-3.5 hover:bg-surface-container-low transition-colors"
-                  >
-                    <div>
-                      <h4 className="text-sm font-bold text-on-surface">{property.name}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-semibold text-primary">{property.rent}</span>
-                        <span className="text-gray-300">•</span>
-                        <span className="flex items-center gap-1 text-xs text-on-surface-variant">
-                          <MapPin className="h-3 w-3" />
-                          {property.location}
-                        </span>
-                      </div>
-                    </div>
+                {performance.loading ? (
+                  <p className="text-sm text-on-surface-variant">Loading performance...</p>
+                ) : propertyOverview.length === 0 ? (
+                  <p className="text-sm text-on-surface-variant">No apartment performance data available yet.</p>
+                ) : (
+                  propertyOverview.map((property) => {
+                    const statusText = property.vacant_units > 0 ? `${property.vacant_units} vacant` : "Fully occupied"
+                    const statusClass = property.vacant_units > 0 ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"
 
-                    <div className="text-right">
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${property.status === "Available" ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-700"}`}>
-                        {property.status}
-                      </span>
-                      <div className="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1.5">
-                        <span>{property.views} views</span>
+                    return (
+                      <div
+                        key={property.apartment_id}
+                        className="flex items-center justify-between rounded-xl border border-outline-variant/40 p-3.5 hover:bg-surface-container-low transition-colors"
+                      >
+                        <div>
+                          <h4 className="text-sm font-bold text-on-surface">Apartment {property.apartment_id}</h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs font-semibold text-primary">{property.total_units} units</span>
+                            <span className="text-gray-300">•</span>
+                            <span className="flex items-center gap-1 text-xs text-on-surface-variant">
+                              <MapPin className="h-3 w-3" />
+                              Vacancy {property.vacancy_rate}%
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="text-right">
+                          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusClass}`}>
+                            {statusText}
+                          </span>
+                          <div className="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1.5">
+                            <span>{property.vacancy_rate}% vacancy</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    )
+                  })
+                )}
               </div>
             </div>
           </section>
