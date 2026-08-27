@@ -151,3 +151,52 @@ return (
               </div>
             </div>
 
+{/* DESCRIPTION */}
+            <article className="description-box">
+              <h2>About this Unit</h2>
+              <p>{unit.description}</p>
+            </article>
+          </section>
+
+          {/* RIGHT PRICING & BOOKING SIDEBAR */}
+          <aside className="booking-card">
+            <div className="price-header">
+              <span className="price-label">Rent (Per Person)</span>
+              <div className="price-value">
+                <strong>KES {Number(unit.rent).toLocaleString()}</strong>
+                <span>/ mo</span>
+              </div>
+            </div>
+
+            <div className="deposit-row">
+              <span>Security Deposit</span>
+              <strong>KES {Number(unit.deposit).toLocaleString()}</strong>
+            </div>
+
+            <div className="availability-row">
+              <span>Availability</span>
+              <strong className="occupied-tag">📅 {unit.status}</strong>
+            </div>
+
+            {unit.shared && (
+              <div className="roommate-box">
+                <small>ROOMMATE MATCHING</small>
+                <p>
+                  {unit.maximum_occupants - unit.current_occupants} spot available in shared bedroom. Join existing verified students.
+                </p>
+              </div>
+            )}
+
+            <button className="primary-booking-btn">
+              {unit.current_occupants >= unit.maximum_occupants ? 'Join Waitlist' : 'Book Now'}
+            </button>
+
+            <p className="no-charge-note">You won't be charged yet</p>
+          </aside>
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
