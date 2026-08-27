@@ -92,3 +92,22 @@ return (
           </div>
         </header>
 
+{/* IMAGE GALLERY GRID */}
+        <section className="gallery-grid">
+          <div className="main-image">
+            <img src={images[0]} alt="Main Living Area" />
+            <button className="video-btn">▶ Play Video</button>
+          </div>
+          <div className="side-images">
+            {images.slice(1, 3).map((imgUrl, index) => (
+              <div key={index} className="side-img-wrapper">
+                <img src={imgUrl} alt={`Unit View ${index + 1}`} />
+                {index === 1 && images.length > 3 && (
+                  <button className="view-all-btn">
+                    📷 View All {images.length} Photos
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
