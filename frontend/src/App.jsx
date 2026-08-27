@@ -14,6 +14,7 @@ import SavedProperties from './pages/SavedProperties/SavedProperties'
 import About from "./pages/About/About.jsx"
 import EditProperty from './pages/EditProperty/EditProperty.jsx'
 import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
+import UnitDetails from './pages/UnitDetails/UnitDetails';
 
 function App() {
   return (
@@ -28,13 +29,12 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
-        <Route path="/savedproperties" element={<SavedProperties />} />
+        <Route path="/saved-properties" element={<SavedProperties />} />
         <Route path="/" element={<AuthPage />} />
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
-        <Route path="/units/:id" element={<UnitDetails />} />
-      </Routes>
+        <Route path="/apartments/:apartmentId/units/:unitId" element={<UnitDetails />} />      </Routes>
     </HashRouter>
   )
 }
