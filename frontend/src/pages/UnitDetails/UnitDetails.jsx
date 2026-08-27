@@ -55,3 +55,28 @@ export default function UnitDetails() {
   const images = unit.imageURLS && unit.imageURLS.length > 0
     ? unit.imageURLS
     : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
+
+return (
+    <>
+      <Navbar showSearch={true} />
+
+      <main className="unit-details-container">
+        {/* BREADCRUMB NAVIGATION */}
+        <nav className="breadcrumb">
+          <Link to="/home">Properties</Link> &gt; <span>{unit.apartment_name || 'Apartment'}</span> &gt; <span className="current">Unit {unit.id}</span>
+        </nav>
+
+        {/* HEADER TITLE & ACTIONS */}
+        <header className="unit-header">
+          <div>
+            <h1>{unit.category} - Unit {unit.id}</h1>
+            <div className="badge-group">
+              <span className="unit-badge category">{unit.category}</span>
+              <span className={`unit-badge status ${unit.status.toLowerCase()}`}>
+                👥 Shared: {unit.status}
+              </span>
+              <span className="unit-badge occupancy">
+                {unit.current_occupants >= unit.maximum_occupants ? 'Occupied (Waitlist)' : 'Available'}
+              </span>
+            </div>
+          </div>
