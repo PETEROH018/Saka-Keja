@@ -63,6 +63,10 @@ export function AuthPage() {
     }
   }
 
+  // Login as a Manager (property owner)
+  async function loginAsManager(userName, password) {
+    
+  }
 
   async function handleSubmit(event, formType) {
     event.preventDefault();
