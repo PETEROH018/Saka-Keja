@@ -1,5 +1,5 @@
 from configs import *
-
+from sqlalchemy.orm import relationship
 class Unit(db.Model):
     __tablename__ = 'units'
 
@@ -27,7 +27,12 @@ class Unit(db.Model):
     )
     
     student_units = relationship(
-    "StudentUnit",
-    back_populates="unit",
-    cascade="all, delete-orphan"
-)
+        "StudentUnit",
+        back_populates="unit",
+        cascade="all, delete-orphan"
+    )
+
+    apartment = relationship(
+        "Apartment",
+        back_populates="units"
+    )

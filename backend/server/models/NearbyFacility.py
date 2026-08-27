@@ -1,5 +1,6 @@
 from configs import *
 
+from sqlalchemy.orm import relationship
 class NearbyFacility(db.Model):
     __tablename__ = "nearby_facilities"
 

@@ -1,6 +1,7 @@
 from configs import *
 
-class Payment(Base):
+from sqlalchemy.orm import relationship
+class Payment(db.Model):
     __tablename__ = "payments"
 
     id = Column(
@@ -36,10 +37,17 @@ class Payment(Base):
         nullable=False
     )
         
-    student_units = relationship(
-    "StudentUnit",
-    back_populates="student"
+    student_unit_id = Column(
+        Integer, 
+        ForeignKey("student_units.id"), 
+        nullable=False
     )
+
+    student_unit = relationship(
+        "StudentUnit", 
+        back_populates="payments"
+    )
+
     
     student_unit = relationship(
         "StudentUnit",

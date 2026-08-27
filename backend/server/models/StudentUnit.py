@@ -1,6 +1,7 @@
 from configs import *
 
-class StudentUnit(Base):
+from sqlalchemy.orm import relationship
+class StudentUnit(db.Model):
     __tablename__ = "student_units"
 
     id = Column(Integer, primary_key=True)

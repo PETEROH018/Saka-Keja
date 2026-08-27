@@ -13,9 +13,13 @@ importlib-resources = "*"
 ipdb = "*"
 marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+flask-bcrypt = "*"
 psycopg2-binary = "*"
+flask-cors = "*"
+sqlalchemy = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.12"
