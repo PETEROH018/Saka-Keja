@@ -12,6 +12,7 @@ from models.UnitAmenityJoining import UnitAmenityJoining
 from models.StudentUnit import StudentUnit
 from models.Payment import Payment
 from sqlalchemy import select, func, case
+from sqlalchemy.exc import IntegrityError
 
 apartment_schema = ApartmentSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
@@ -154,7 +155,33 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
+    required_fields = ["full_name", "email", "phone_number", "username", "password"]
+
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return (
+            jsonify({"error": "Missing required fields", "fields": missing_fields}),
+            400,
+        )
+
     try:
+        existing_student = Student.query.filter(
+            (Student.email == data["email"])
+            | (Student.username == data["username"])
+            | (Student.phone_number == data["phone_number"])
+        ).first()
+
+        if existing_student:
+            return (
+                jsonify(
+                    {
+                        "error": "Student with this email, username, or phone number already exists"
+                    }
+                ),
+                409,
+            )
+
         new_student = Student(
             full_name=data["full_name"],
             email=data["email"],
@@ -169,6 +196,7 @@ def add_student():
             username=data["username"],
         )
 
+        # Automatically hashes password using Student model setter
         new_student.password_hash = data["password"]
 
         db.session.add(new_student)
@@ -189,10 +217,10 @@ def add_student():
             201,
         )
 
-    except KeyError as e:
+    except IntegrityError:
         db.session.rollback()
 
-        return jsonify({"error": f"Missing required field: {str(e)}"}), 400
+        return jsonify({"error": "Student already exists"}), 409
 
     except Exception as e:
         db.session.rollback()
