@@ -65,7 +65,13 @@ export function AuthPage() {
 
   // Login as a Manager (property owner)
   async function loginAsManager(userName, password) {
-    
+    try {
+      
+    } catch (err) {
+      console.error("Manager login error:", err);
+      alert(err.message);
+      return { success: false, message: err.message };
+    }
   }
 
   async function handleSubmit(event, formType) {
