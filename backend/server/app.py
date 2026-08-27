@@ -373,6 +373,16 @@ def manager_login():
         return jsonify({"error": "No input data provided"}), 400
 
     try:
+        manager = ApartmentOwner.query.filter_by(username=data["userName"]).first()
+
+        if not manager:
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        if not manager.authenticate(data["password"]):
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        
+
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
