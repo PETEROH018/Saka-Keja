@@ -109,6 +109,8 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
+    student_units = Nested('StudentUnitSchema',many=True)
+
 
 class ApartmentOwnerSchema(Schema):
     id = fields.Int(dump_only=True)
