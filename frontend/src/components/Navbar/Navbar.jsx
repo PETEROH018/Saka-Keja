@@ -2,9 +2,11 @@
 import { useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { Menu } from "lucide-react"
+import { useAuth } from "../../context/useAuth"
 
 export default function Navbar({ showSearch = false }) {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const handleSearchSubmit = (e) => {
@@ -106,14 +108,35 @@ export default function Navbar({ showSearch = false }) {
             Find a Home
           </button>
 
-          {/* Temporary placeholder until profile data is connected */}
-          <NavLink
-            to={"/student-profile"}
-            aria-label="User profile"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
-          >
-            U
-          </NavLink>
+          {user ? (
+            <NavLink
+              to={
+                user.role === "student"
+                  ? "/student-profile"
+                  : "/owner-profile"
+              }
+              aria-label="User profile"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+            >
+              {user.name.charAt(0)}
+            </NavLink>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/login")}
+                className="text-sm font-medium text-gray-700 hover:text-violet-700"
+              >
+                Login
+              </button>
+
+              <button
+                onClick={() => navigate("/signup")}
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
 
         <button
@@ -173,16 +196,49 @@ export default function Navbar({ showSearch = false }) {
               Find a Home
             </button>
 
-            <div className="flex items-center gap-3">
-              <div
-                aria-label="User profile"
+            {user ? (
+              <NavLink
+                to={
+                  user.role === "student"
+                    ? "/student-profile"
+                    : "/owner-profile"
+                }
                 onClick={closeMenu}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+                className="flex items-center gap-3"
               >
-                U
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+                >
+                  {user.name.charAt(0)}
+                </div>
+
+                <span className="text-sm text-gray-700">
+                  Profile
+                </span>
+              </NavLink>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    navigate("/login")
+                    closeMenu()
+                  }}
+                  className="text-left text-sm font-medium text-gray-700"
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/signup")
+                    closeMenu()
+                  }}
+                  className="rounded-lg bg-violet-700 px-5 py-2.5 text-left text-sm font-medium text-white"
+                >
+                  Sign Up
+                </button>
               </div>
-              <span className="text-sm text-gray-700" onClick={closeMenu}>Profile</span>
-            </div>
+            )}
           </div>
         </div>
       )}
