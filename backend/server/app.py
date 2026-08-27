@@ -340,7 +340,15 @@ def student_login():
         return jsonify({"error": "No input data provided"}), 400
 
     try:
-      
+        student = Student.query.filter_by(username=data["userName"]).first()
+
+        if not student:
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        if not student.authenticate(data["password"]):
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
