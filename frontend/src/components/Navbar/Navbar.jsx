@@ -2,9 +2,11 @@
 import { useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { Menu } from "lucide-react"
+import { useAuth } from "../../context/useAuth"
 
 export default function Navbar({ showSearch = false }) {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const handleSearchSubmit = (e) => {
@@ -98,22 +100,47 @@ export default function Navbar({ showSearch = false }) {
         </div>
 
         <div className="hidden items-center gap-4 md:flex">
-          <button
-            type="button"
-            className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
-            onClick={() => navigate('/search')}
-          >
-            Find a Home
-          </button>
 
-          {/* Temporary placeholder until profile data is connected */}
-          <NavLink
-            to={"/student-profile"}
-            aria-label="User profile"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
-          >
-            U
-          </NavLink>
+          {user ? (
+            <>
+              <button
+                type="button"
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+                onClick={() => navigate('/search')}
+              >
+                Find a Home
+              </button>
+
+              <NavLink
+                to={
+                  user.role === "student"
+                    ? "/student-profile"
+                    : "/owner-profile"
+                }
+                aria-label="User profile"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+              >
+                {user.name.charAt(0)}
+              </NavLink>
+            </>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/login")}
+                className="text-sm font-medium text-gray-700 hover:text-violet-700"
+              >
+                Login
+              </button>
+
+              <button
+                onClick={() => navigate("/signup")}
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
+
         </div>
 
         <button
@@ -152,7 +179,7 @@ export default function Navbar({ showSearch = false }) {
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
             } >Discover</NavLink>
-            <NavLink to="/favorites" onClick={closeMenu} className={({ isActive }) =>
+            <NavLink to="/savedproperties" onClick={closeMenu} className={({ isActive }) =>
               `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
                 ? "bg-violet-50 text-violet-700"
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
@@ -165,24 +192,62 @@ export default function Navbar({ showSearch = false }) {
               }`
             }>About Us</NavLink>
 
-            <button
-              type="button"
-              onClick={closeMenu}
-              className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
-            >
-              Find a Home
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div
-                aria-label="User profile"
-                onClick={closeMenu}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+            {user && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigate("/search")
+                  closeMenu()
+                }}
+                className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
               >
-                U
+                Find a Home
+              </button>
+            )}
+
+            {user ? (
+              <NavLink
+                to={
+                  user.role === "student"
+                    ? "/student-profile"
+                    : "/owner-profile"
+                }
+                onClick={closeMenu}
+                className="flex items-center gap-3"
+              >
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+                >
+                  {user.name.charAt(0)}
+                </div>
+
+                <span className="text-sm text-gray-700">
+                  Profile
+                </span>
+              </NavLink>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    navigate("/login")
+                    closeMenu()
+                  }}
+                  className="text-left text-sm font-medium text-gray-700"
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate("/signup")
+                    closeMenu()
+                  }}
+                  className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
+                >
+                  Sign Up
+                </button>
               </div>
-              <span className="text-sm text-gray-700" onClick={closeMenu}>Profile</span>
-            </div>
+            )}
           </div>
         </div>
       )}

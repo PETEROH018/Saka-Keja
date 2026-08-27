@@ -19,77 +19,20 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-
-        <Route
-          path="/home"
-          element={<Home />}
-        />
-
-        <Route
-          path="/admin-dash"
-          element={<AdminDashboard />}
-        />
-
-        <Route
-          path="/apartment-details"
-          element={<ApartmentDetails />}
-        />
-
-        <Route
-          path="/search"
-          element={<SearchResults />}
-        />
-
-        <Route
-          path="/my-properties"
-          element={<MyProperties />}
-        />
-
-        <Route
-          path="/edit-property/:id"
-          element={<EditProperty />}
-        />
-
-        <Route
-          path="/compare"
-          element={<ComparePage />}
-        />
-
-        <Route
-          path="/student-profile"
-          element={<StudentProfile />}
-        />
-
-        <Route
-          path="/owner-profile"
-          element={<OwnerProfile />}
-        />
-
-        <Route
-          path="/savedproperties"
-          element={<SavedProperties />}
-        />
-
-        <Route
-          path="/"
-          element={<AuthPage />}
-        />
-
-        <Route
-          path="/add-apartment"
-          element={<AddApartment />}
-        />
-
-        <Route
-          path="/about"
-          element={<About />}
-        />
-
-        <Route
-          path="/available-units/:id"
-          element={<AvailableUnits />}
-        />
-
+        <Route path="/home" element={<Home />} />
+        <Route path="/admin-dash" element={<AdminDashboard />} />
+        <Route path="/apartment-details" element={<ApartmentDetails />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/my-properties" element={<MyProperties />} />
+        <Route path="/edit-property/:id" element={<EditProperty />} />
+        <Route path="/compare" element={<ComparePage />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
+        <Route path="/owner-profile" element={<OwnerProfile />} />
+        <Route path="/savedproperties" element={<SavedProperties />} />
+        <Route path="/" element={<AuthPage />} />
+        <Route path='/add-apartment' element={<AddApartment />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/available-units/:id" element={<AvailableUnits />} />
       </Routes>
     </HashRouter>
   )
