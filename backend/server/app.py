@@ -118,6 +118,40 @@ def get_manager_performance(id):
 
     return jsonify(result)
 
+@app.route('/apartments', methods=['GET'])
+def get_all_apartments():
+    try:
+        apartments = Apartment.query.all()
+        return jsonify(ApartmentSchema(many=True).dump(apartments)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve apartments due to this error: {str(e)}"}), 500
+
+@app.route('/apartments/<int:id>', methods=['GET'])
+def get_apartment_by_id(id):
+    apartment = Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
+    try:
+        apartment.total_views = (apartment.total_views or 0) + 1
+        db.session.commit()
+        
+        return jsonify(ApartmentSchema().dump(apartment)), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not retrieve apartment due to this error: {str(e)}"}), 500
+
+@app.route('/apartments/<int:id>/units', methods=['GET'])
+def get_apartment_units(id):
+    apartment = Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
+    try:
+        units = Unit.query.filter_by(apartment_id=id).all()
+        return jsonify(UnitSchema(many=True).dump(units)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
