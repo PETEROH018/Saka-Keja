@@ -126,17 +126,10 @@ export default function Navbar({ showSearch = false }) {
           ) : (
             <div className="flex items-center gap-3">
               <button
-                onClick={() => navigate("/login")}
-                className="text-sm font-medium text-gray-700 hover:text-violet-700"
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/auth")}
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
               >
-                Sign Up
+                Login/Sign Up
               </button>
             </div>
           )}
