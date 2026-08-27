@@ -331,5 +331,15 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
+# Student login endpoint
+@app.route("/api/students/login", methods=["POST"])
+def student_login():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
+
+    
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
