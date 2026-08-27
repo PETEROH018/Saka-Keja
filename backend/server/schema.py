@@ -21,6 +21,8 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
 
 
     units = Nested('UnitSchema', many=True)
+    apartment_amenity_links = fields.Nested("ApartmentAmenityJoiningSchema", many=True, exclude=("apartment",))
+    nearby_facilities = Nested('NearbyFacilitySchema', many=True)
 
 class UnitSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -28,6 +30,8 @@ class UnitSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+    student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
+    unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
 
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -35,6 +39,7 @@ class UnitAmenitySchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+    unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('amenity',))
 
 class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -42,7 +47,8 @@ class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-    amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_links",))
+    amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_amenity_links",))
+    unit = fields.Nested('UnitSchema',exclude=('unit_amenity_links',))
 
 
 class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
@@ -51,9 +57,7 @@ class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-    apartment_links = fields.Nested(
-        "ApartmentAmenityJoiningSchema", many=True, exclude=("amenity",)
-    )
+    apartment_amenity_links = fields.Nested("ApartmentAmenityJoiningSchema", many=True, exclude=("amenity",))
 
 
 class ApartmentAmenityJoiningSchema(SQLAlchemyAutoSchema):
@@ -62,7 +66,8 @@ class ApartmentAmenityJoiningSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-    amenity = fields.Nested(ApartmentAmenitySchema, exclude=("apartment_links",))
+    amenity = fields.Nested(ApartmentAmenitySchema, exclude=("apartment_amenity_links",))
+    apartment = fields.Nested('ApartmentSchema', exclude=('apartment_amenity_links',))
 
 
 class NearbyFacilitySchema(SQLAlchemyAutoSchema):
@@ -87,6 +92,7 @@ class StudentUnitSchema(SQLAlchemyAutoSchema):
 
     student = fields.Nested("StudentSchema", exclude=("student_units",))
     unit = fields.Nested(UnitSchema, exclude=("student_units",))
+    payments = Nested('PaymentSchema', many=True)
 
 
 class StudentSchema(Schema):
@@ -108,6 +114,8 @@ class StudentSchema(Schema):
         attribute="password_hash",
         validate=validate.Length(min=1),
     )
+
+    student_units = Nested('StudentUnitSchema',many=True, exclude=('student',))
 
 
 class ApartmentOwnerSchema(Schema):
