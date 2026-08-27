@@ -80,3 +80,15 @@ return (
               </span>
             </div>
           </div>
+
+<div className="header-actions">
+            <button className="action-btn share-btn">🔗 Share</button>
+            <button 
+              className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
+              onClick={handleToggleSave}
+            >
+              {isSaved ? '💜 Saved' : '🤍 Save'}
+            </button>
+          </div>
+        </header>
+
