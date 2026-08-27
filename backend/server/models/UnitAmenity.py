@@ -1,5 +1,6 @@
 from configs import *
 
+from sqlalchemy.orm import relationship
 class UnitAmenity(db.Model):
     __tablename__ = "unit_amenities"
 

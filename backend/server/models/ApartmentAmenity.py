@@ -1,5 +1,6 @@
 from configs import *
 
+from sqlalchemy.orm import relationship
 class ApartmentAmenity(db.Model):
     __tablename__ = "apartment_amenities"
 

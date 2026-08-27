@@ -1,6 +1,7 @@
 from configs import *
 
-class StudentUnit(Base):
+from sqlalchemy.orm import relationship
+class StudentUnit(db.Model):
     __tablename__ = "student_units"
 
     id = Column(Integer, primary_key=True)
@@ -49,4 +50,9 @@ class StudentUnit(Base):
     unit = relationship(
     "Unit",
     back_populates="student_units"
+    )
+
+    payments = relationship(
+        "Payment", 
+        back_populates="student_unit"
     )

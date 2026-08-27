@@ -1,6 +1,10 @@
+import os
+
+from datetime import datetime, timezone
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 from models import db
 from sqlalchemy import (
     Column,
@@ -11,11 +15,10 @@ from sqlalchemy import (
     MetaData,
     VARCHAR,
     DateTime,
+    Text,
+    JSON,
 )
-from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from flask_bcrypt import Bcrypt
-from datetime import datetime, timezone
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///saka_keja.db"
@@ -25,14 +28,26 @@ db.init_app(app)
 CORS(app)  # allows your Vite frontend on localhost:5173 to call this API
 
 meta = MetaData()
-bcrypt = Bcrypt()
-Base = declarative_base(metadata=meta)
+
 db = SQLAlchemy(metadata=meta)
+bcrypt = Bcrypt()
 
 LOCAL_DB_URI = "postgresql+psycopg2://postgres:1234@localhost:5432/saka_keja"
+
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", LOCAL_DB_URI)
+
+if os.getenv("TESTING") == "1":
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL",
+        LOCAL_DB_URI
+    )
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
-CORS(app)  # allows your Vite frontend on localhost:5173 to call this API
+
+bcrypt.init_app(app)
+
+CORS(app)
