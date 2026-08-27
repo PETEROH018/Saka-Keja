@@ -111,3 +111,43 @@ return (
             ))}
           </div>
         </section>
+
+{/* CONTENT & SIDEBAR CARD GRID */}
+        <div className="unit-content-grid">
+          {/* LEFT CONTENT AREA */}
+          <section className="main-info">
+            {/* SPECS BAR */}
+            <div className="specs-bar">
+              <div className="spec-item">
+                <span className="icon">🛏️</span>
+                <div>
+                  <strong>{unit.bedrooms}</strong>
+                  <p>Bedrooms</p>
+                </div>
+              </div>
+
+              <div className="spec-item">
+                <span className="icon">🚿</span>
+                <div>
+                  <strong>{unit.bathrooms}</strong>
+                  <p>Bathrooms</p>
+                </div>
+              </div>
+
+              <div className="spec-item">
+                <span className="icon">📐</span>
+                <div>
+                  <strong>{unit.size || 'N/A'}</strong>
+                  <p>Sq Ft</p>
+                </div>
+              </div>
+
+              <div className="spec-item">
+                <span className="icon">👤</span>
+                <div>
+                  <strong>{unit.current_occupants} of {unit.maximum_occupants}</strong>
+                  <p>Spots Filled</p>
+                </div>
+              </div>
+            </div>
+
