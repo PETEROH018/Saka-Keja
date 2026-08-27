@@ -1,5 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from marshmallow import fields, validate, Schema
+from marshmallow import ValidationError, fields, validate, validates_schema, Schema
+from marshmallow_sqlalchemy.fields import Nested
 
 from models.Apartment import Apartment
 from models.Unit import Unit
@@ -18,6 +19,8 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+
+    units = Nested('UnitSchema', many=True)
 
 class UnitSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -120,3 +123,5 @@ class ApartmentOwnerSchema(Schema):
         attribute="password_hash",
         validate=validate.Length(min=1),
     )
+
+    apartments = Nested('ApartmentSchema', many=True)

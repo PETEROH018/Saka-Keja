@@ -1,12 +1,11 @@
 import os
 
 from datetime import datetime, timezone
-
-from flask import Flask
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from models import db
 from sqlalchemy import (
     Column,
     Integer,
@@ -21,6 +20,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.hybrid import hybrid_property
 
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///saka_keja.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+CORS(app)  # allows your Vite frontend on localhost:5173 to call this API
 
 meta = MetaData()
 
