@@ -6,7 +6,7 @@ import ApartmentDetails from '../src/pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
 import AddApartment from './pages/AddApartment/AddApartment'
 import MyProperties from './pages/MyProperties/MyProperties.jsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage";
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx";
 import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
@@ -18,7 +18,7 @@ import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 function App() {
   return (
 
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
@@ -35,7 +35,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits/>} />
     </Routes>
-    </BrowserRouter>
+    </HashRouter>
 
   )
 }
