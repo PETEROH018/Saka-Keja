@@ -165,6 +165,15 @@ def get_apartment_units(id):
     except Exception as e:
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
+@app.route("/units", methods=["GET"])
+def get_all_units():
+    try:
+        units = Unit.query.all()
+        return jsonify(UnitSchema(many=True).dump(units)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
+
+
 # ========================
 # STUDENT ENDPOINTS
 # ========================
