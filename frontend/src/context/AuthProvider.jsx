@@ -25,6 +25,15 @@ export function AuthProvider({ children }) {
         });
     };
 
+    const loginAsOwner = () => {
+        setUser({
+            id: 2,
+            name: "Mary Owner",
+            role: "owner",
+            profile: "owner"
+        });
+    };
+
 
     return (
         <AuthContext.Provider
@@ -32,7 +41,8 @@ export function AuthProvider({ children }) {
                 user,
                 login,
                 logout,
-                loginAsStudent
+                loginAsStudent,
+                loginAsOwner
             }}
         >
             {children}
