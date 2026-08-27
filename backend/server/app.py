@@ -348,7 +348,17 @@ def student_login():
         if not student.authenticate(data["password"]):
             return jsonify({"error": "Invalid credentials"}), 401
 
-        
+        import secrets
+        token = secrets.token_urlsafe(32)
+
+        return jsonify({
+            "token": token,
+            "user": {
+                "id": student.id,
+                "full_name": student.full_name,
+                "username": student.username,
+            }
+        }), 200
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
