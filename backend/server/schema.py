@@ -29,6 +29,7 @@ class UnitSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
+    unit_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit'))
 
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -44,6 +45,7 @@ class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_links",))
+    unit = fields.Nested('UnitSchema',exclude=('unit_links',))
 
 
 class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
