@@ -16,13 +16,23 @@ export function AuthProvider({ children }) {
         setUser(null);
     };
 
+    const loginAsStudent = () => {
+        setUser({
+            id: 1,
+            name: "Alex Student",
+            role: "student",
+            profile: "student"
+        });
+    };
+
 
     return (
         <AuthContext.Provider
             value={{
                 user,
                 login,
-                logout
+                logout,
+                loginAsStudent
             }}
         >
             {children}
