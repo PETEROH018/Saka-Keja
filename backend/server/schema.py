@@ -28,6 +28,7 @@ class UnitSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+    student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
 
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -109,7 +110,7 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
-    student_units = Nested('StudentUnitSchema',many=True)
+    student_units = Nested('StudentUnitSchema',many=True, exclude=('student',))
 
 
 class ApartmentOwnerSchema(Schema):
