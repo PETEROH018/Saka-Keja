@@ -1,12 +1,11 @@
-from configs import db
-from sqlalchemy_serializer import SerializerMixin
+from configs import *
 
-class UnitAmenityJoining(db.Model, SerializerMixin):
-    __tablename__ = 'unit_amenity_joinings'
+from sqlalchemy.orm import relationship
+class UnitAmenityJoining(db.Model):
+    __tablename__ = "unit_amenities_joining"
 
     id = db.Column(db.Integer, primary_key=True)
-    unit_id = db.Column(db.Integer, db.ForeignKey('units.id'))
-    unit_amenity_id = db.Column(db.Integer, db.ForeignKey('unit_amenities.id'))
+    unitId = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
+    amenityId = db.Column(db.Integer, db.ForeignKey("unit_amenities.id"), nullable=False)
 
-    def __repr__(self):
-        return f'<UnitAmenityJoining {self.id}>'
+    amenity = db.relationship("UnitAmenity", back_populates="unit_links")

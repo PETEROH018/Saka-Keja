@@ -17,6 +17,8 @@ backend/*.log
 backend/*.db
 backend/*.sqlite3
 backend/.flaskenv
+backend/server/Pipfile.lock
+
 
 # --- frontend/ (Node / React) ---
 frontend/node_modules/
@@ -29,6 +31,7 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 frontend/coverage/
+
 
 # --- Environment variables (both) ---
 .env
@@ -47,4 +50,7 @@ Thumbs.db
 
 # --- Misc ---
 *.bak
-*.swp
+*.swpbackend/server/instance/
+
+Pipfile
+Pipfile.lock

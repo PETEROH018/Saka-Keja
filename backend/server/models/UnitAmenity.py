@@ -1,12 +1,17 @@
-from configs import db
-from sqlalchemy_serializer import SerializerMixin
+from configs import *
 
-class UnitAmenity(db.Model, SerializerMixin):
-    __tablename__ = 'unit_amenities'
+from sqlalchemy.orm import relationship
+class UnitAmenity(db.Model):
+    __tablename__ = "unit_amenities"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    description = db.Column(db.String)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(255))
+    iconUrl = db.Column(db.String(255))
 
-    def __repr__(self):
-        return f'<UnitAmenity {self.name}>'
+    # Relationship to the join table
+    unit_links = db.relationship(
+        "UnitAmenityJoining",
+        back_populates="amenity",
+        cascade="all, delete-orphan",
+    )

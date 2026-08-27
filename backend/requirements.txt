@@ -1,0 +1,10 @@
+Flask
+Flask-Migrate
+flask-sqlalchemy
+Werkzeug
+importlib-metadata
+importlib-resources
+ipdb
+marshmallow
+marshmallow-sqlalchemy
+psycopg2-binary

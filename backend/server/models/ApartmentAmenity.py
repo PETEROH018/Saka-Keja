@@ -1,7 +1,17 @@
-from configs import db
+from configs import *
 
+from sqlalchemy.orm import relationship
 class ApartmentAmenity(db.Model):
-    __tablename__ = 'apartment_amenities'
+    __tablename__ = "apartment_amenities"
+
     id = db.Column(db.Integer, primary_key=True)
-    apartment_id = db.Column(db.Integer, nullable=False)
-    amenity_id = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text)
+    iconUrl = db.Column(db.String(255))
+
+    # Relationship to the join table
+    apartment_links = db.relationship(
+        "ApartmentAmenityJoining",
+        back_populates="amenity",
+        cascade="all, delete-orphan",
+    )

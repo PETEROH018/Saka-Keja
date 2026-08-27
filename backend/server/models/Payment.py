@@ -1,14 +1,58 @@
-from configs import db
-from sqlalchemy_serializer import SerializerMixin
+from configs import *
 
-class Payment(db.Model, SerializerMixin):
-    __tablename__ = 'payments'
+from sqlalchemy.orm import relationship
+class Payment(db.Model):
+    __tablename__ = "payments"
 
-    id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Float, nullable=False)
-    payment_status = db.Column(db.String, default='Pending')
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    unit_id = db.Column(db.Integer, db.ForeignKey('units.id'))
+    id = Column(
+        Integer,
+        primary_key=True
+    )
 
-    def __repr__(self):
-        return f'<Payment {self.id} - {self.amount}>'
+    amount = Column(
+        Integer,
+        nullable=False
+    )
+
+    payment_method = Column(
+        String(30),
+        nullable=False
+    )
+
+    payment_status = Column(
+        String(30),
+        default="Pending",
+        nullable=False
+    )
+
+    transaction_reference = Column(
+        String(100),
+        nullable=True,
+        unique=True
+    )
+
+    payment_date = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
+        
+    student_unit_id = Column(
+        Integer, 
+        ForeignKey("student_units.id"), 
+        nullable=False
+    )
+
+    student_unit = relationship(
+        "StudentUnit", 
+        back_populates="payments"
+    )
+
+    
+    student_unit = relationship(
+        "StudentUnit",
+        back_populates="payments"
+    )
+    
+    
+        
