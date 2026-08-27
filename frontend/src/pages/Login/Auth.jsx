@@ -66,7 +66,20 @@ export function AuthPage() {
   // Login as a Manager (property owner)
   async function loginAsManager(userName, password) {
     try {
-      
+      const res = await fetch("/api/managers/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid manager credentials. Please try again.");
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", "manager");
+      navigate("/owner-profile");
+      return { success: true };
     } catch (err) {
       console.error("Manager login error:", err);
       alert(err.message);
