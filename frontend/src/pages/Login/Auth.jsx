@@ -8,6 +8,7 @@ import validatePhoneNumber from "../../utils/ValidateNumber";
 export function AuthPage() {
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
+  const [userRole, setUserRole] = useState("student");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,7 +27,7 @@ export function AuthPage() {
     userName: "",
     password: "",
   });
-  const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);  
+  const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -36,6 +37,54 @@ export function AuthPage() {
   function handleSignUpChange(event) {
     const { name, value } = event.target;
     setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
+  }
+
+  // Login as a Student
+  async function loginAsStudent(userName, password) {
+    try {
+      const res = await fetch("/api/students/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid student credentials. Please try again.");
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", "student");
+      navigate("/home");
+      return { success: true };
+    } catch (err) {
+      console.error("Student login error:", err);
+      alert(err.message);
+      return { success: false, message: err.message };
+    }
+  }
+
+  // Login as a Manager (property owner)
+  async function loginAsManager(userName, password) {
+    try {
+      const res = await fetch("/api/managers/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid manager credentials. Please try again.");
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", "manager");
+      navigate("/owner-profile");
+      return { success: true };
+    } catch (err) {
+      console.error("Manager login error:", err);
+      alert(err.message);
+      return { success: false, message: err.message };
+    }
   }
 
   async function handleSubmit(event, formType) {
@@ -56,6 +105,20 @@ export function AuthPage() {
         alert("Passwords do not match. Please try again.");
         return;
       }
+    }
+
+    // Handle login submission: route to the correct endpoint based on selected role
+    if (isLogin) {
+      if (!loginFormData.userName || !loginFormData.password) {
+        alert("Please enter both your username and password to log in.");
+        return;
+      }
+      if (userRole === "manager") {
+        await loginAsManager(loginFormData.userName, loginFormData.password);
+      } else {
+        await loginAsStudent(loginFormData.userName, loginFormData.password);
+      }
+      return;
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
@@ -124,6 +187,38 @@ export function AuthPage() {
             <p className="mt-2 sm:mt-3 text-sm sm:text-base text-on-surface-variant">
               Sign in to continue finding your perfect home.
             </p>
+{/* Role Selector */}
+            <div className="mb-6 mt-4 flex items-center gap-3">
+              <label className="text-sm font-medium text-on-surface-variant">
+                Login as:
+              </label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setUserRole("student")}
+                  className={`rounded-xl border-2 px-4 py-2 text-sm font-medium transition
+                    ${
+                      userRole === "student"
+                        ? "border-primary bg-primary text-white"
+                        : "border-outline-variant bg-white text-on-surface-variant hover:bg-surface-container-low"
+                    }`}
+                >
+                  Student
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUserRole("manager")}
+                  className={`rounded-xl border-2 px-4 py-2 text-sm font-medium transition
+                    ${
+                      userRole === "manager"
+                        ? "border-primary bg-primary text-white"
+                        : "border-outline-variant bg-white text-on-surface-variant hover:bg-surface-container-low"
+                    }`}
+                >
+                  Manager
+                </button>
+              </div>
+            </div>
             {/* ===============
             FORM
             ===================
