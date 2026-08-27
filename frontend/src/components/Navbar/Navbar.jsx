@@ -100,26 +100,29 @@ export default function Navbar({ showSearch = false }) {
         </div>
 
         <div className="hidden items-center gap-4 md:flex">
-          <button
-            type="button"
-            className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
-            onClick={() => navigate('/search')}
-          >
-            Find a Home
-          </button>
 
           {user ? (
-            <NavLink
-              to={
-                user.role === "student"
-                  ? "/student-profile"
-                  : "/owner-profile"
-              }
-              aria-label="User profile"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
-            >
-              {user.name.charAt(0)}
-            </NavLink>
+            <>
+              <button
+                type="button"
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+                onClick={() => navigate('/search')}
+              >
+                Find a Home
+              </button>
+
+              <NavLink
+                to={
+                  user.role === "student"
+                    ? "/student-profile"
+                    : "/owner-profile"
+                }
+                aria-label="User profile"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+              >
+                {user.name.charAt(0)}
+              </NavLink>
+            </>
           ) : (
             <div className="flex items-center gap-3">
               <button
@@ -137,6 +140,7 @@ export default function Navbar({ showSearch = false }) {
               </button>
             </div>
           )}
+
         </div>
 
         <button
@@ -175,7 +179,7 @@ export default function Navbar({ showSearch = false }) {
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
             } >Discover</NavLink>
-            <NavLink to="/favorites" onClick={closeMenu} className={({ isActive }) =>
+            <NavLink to="/savedproperties" onClick={closeMenu} className={({ isActive }) =>
               `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
                 ? "bg-violet-50 text-violet-700"
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
@@ -188,13 +192,18 @@ export default function Navbar({ showSearch = false }) {
               }`
             }>About Us</NavLink>
 
-            <button
-              type="button"
-              onClick={closeMenu}
-              className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
-            >
-              Find a Home
-            </button>
+            {user && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigate("/search")
+                  closeMenu()
+                }}
+                className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
+              >
+                Find a Home
+              </button>
+            )}
 
             {user ? (
               <NavLink
@@ -233,7 +242,7 @@ export default function Navbar({ showSearch = false }) {
                     navigate("/signup")
                     closeMenu()
                   }}
-                  className="rounded-lg bg-violet-700 px-5 py-2.5 text-left text-sm font-medium text-white"
+                  className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
                 >
                   Sign Up
                 </button>
