@@ -49,5 +49,10 @@ class Payment(db.Model):
     )
 
     
+    student_unit = relationship(
+        "StudentUnit",
+        back_populates="payments"
+    )
+    
     
         

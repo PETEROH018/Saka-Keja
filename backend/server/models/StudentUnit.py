@@ -51,8 +51,9 @@ class StudentUnit(db.Model):
     "Unit",
     back_populates="student_units"
     )
-
+    
     payments = relationship(
-        "Payment", 
-        back_populates="student_unit"
+    "Payment",
+    back_populates="student_unit",
+    cascade="all, delete-orphan"
     )
