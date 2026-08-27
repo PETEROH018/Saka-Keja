@@ -18,7 +18,7 @@ backend/*.db
 backend/*.sqlite3
 backend/.flaskenv
 backend/server/Pipfile.lock
-backend/migrations
+backend/server/migrations
 
 
 # --- frontend/ (Node / React) ---
