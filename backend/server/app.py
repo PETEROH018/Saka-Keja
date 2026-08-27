@@ -381,7 +381,18 @@ def manager_login():
         if not manager.authenticate(data["password"]):
             return jsonify({"error": "Invalid credentials"}), 401
 
-        
+        # Generate a simple token 
+        import secrets
+        token = secrets.token_urlsafe(32)
+
+        return jsonify({
+            "token": token,
+            "user": {
+                "id": manager.id,
+                "full_name": manager.full_name,
+                "username": manager.username,
+            }
+        }), 200
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
