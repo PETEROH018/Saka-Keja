@@ -372,7 +372,9 @@ def manager_login():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    
+    try:
+    except Exception as e:
+        return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
