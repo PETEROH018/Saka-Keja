@@ -367,6 +367,11 @@ def student_login():
     # Manager login endpoint
 @app.route("/api/managers/login", methods=["POST"])
 def manager_login():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
+
     
 
 
