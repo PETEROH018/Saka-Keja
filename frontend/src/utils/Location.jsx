@@ -15,6 +15,16 @@ const Location = async (locationName) => {
       },
     });
 
+    if (!response.ok) {
+      throw new Error(`Network response was not ok (Status: ${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data || data.length === 0) {
+      throw new Error(`No coordinates found for location: "${locationName}"`);
+    }
+
     
   } catch (error) {
     console.error('Error fetching location coordinates:', error.message);
