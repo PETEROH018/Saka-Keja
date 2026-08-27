@@ -22,6 +22,7 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
 
     units = Nested('UnitSchema', many=True)
     apartment_amenity_links = fields.Nested("ApartmentAmenityJoiningSchema", many=True, exclude=("apartment",))
+    nearby_facilities = Nested('NearbyFacilitySchema', many=True)
 
 class UnitSchema(SQLAlchemyAutoSchema):
     class Meta:
