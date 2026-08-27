@@ -331,5 +331,72 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
+# Student login endpoint
+@app.route("/api/students/login", methods=["POST"])
+def student_login():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
+
+    try:
+        student = Student.query.filter_by(username=data["userName"]).first()
+
+        if not student:
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        if not student.authenticate(data["password"]):
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        import secrets
+        token = secrets.token_urlsafe(32)
+
+        return jsonify({
+            "token": token,
+            "user": {
+                "id": student.id,
+                "full_name": student.full_name,
+                "username": student.username,
+            }
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Login failed: {str(e)}"}), 500
+
+
+    # Manager login endpoint
+@app.route("/api/managers/login", methods=["POST"])
+def manager_login():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
+
+    try:
+        manager = ApartmentOwner.query.filter_by(username=data["userName"]).first()
+
+        if not manager:
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        if not manager.authenticate(data["password"]):
+            return jsonify({"error": "Invalid credentials"}), 401
+
+        # Generate a simple token 
+        import secrets
+        token = secrets.token_urlsafe(32)
+
+        return jsonify({
+            "token": token,
+            "user": {
+                "id": manager.id,
+                "full_name": manager.full_name,
+                "username": manager.username,
+            }
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Login failed: {str(e)}"}), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
