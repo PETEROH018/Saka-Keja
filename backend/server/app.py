@@ -363,5 +363,12 @@ def student_login():
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
+
+    # Manager login endpoint
+@app.route("/api/managers/login", methods=["POST"])
+def manager_login():
+    
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
