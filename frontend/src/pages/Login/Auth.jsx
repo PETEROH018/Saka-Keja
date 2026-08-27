@@ -396,8 +396,8 @@ export function AuthPage() {
                 </label>
 
                 <input
-                  type="number"
-                  name="phone_number"
+                  type="text"
+                  name="user_name"
                   placeholder="username123"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
