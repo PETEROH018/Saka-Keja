@@ -19,7 +19,7 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
         <Route path="/apartment-details" element={<ApartmentDetails />} />
         <Route path="/search" element={<SearchResults />} />
@@ -29,7 +29,7 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/owner-profile" element={<OwnerProfile />} />
         <Route path="/savedproperties" element={<SavedProperties />} />
-        <Route path="/" element={<AuthPage />} />
+        <Route path="/auth" element={<AuthPage />} />
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
