@@ -5,41 +5,52 @@ import Footer from '../../components/Footer/Footer';
 import './UnitDetails.css';
 
 export default function UnitDetails() {
-  const { id } = useParams();
+  // Extract both route parameters
+  const { apartmentId, unitId } = useParams();
+
   const [unit, setUnit] = useState(null);
+  const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Fetch specific unit details from Flask API
   useEffect(() => {
-    fetch(`http://localhost:5000/units/${id}`)
-      .then((res) => {
+    setLoading(true);
+
+    // Fetch Unit details and Parent Apartment details in parallel
+    Promise.all([
+      fetch(`http://localhost:5000/units/${unitId}`).then((res) => {
         if (!res.ok) throw new Error('Unit not found');
         return res.json();
+      }),
+      fetch(`http://localhost:5000/apartments/${apartmentId}`).then((res) => {
+        if (!res.ok) throw new Error('Apartment not found');
+        return res.json();
       })
-      .then((data) => {
-        setUnit(data);
+    ])
+      .then(([unitData, apartmentData]) => {
+        setUnit(unitData);
+        setApartment(apartmentData);
         setLoading(false);
-        
-        // Check local storage for saved state
+
+        // Sync with local storage favorites
         const saved = JSON.parse(localStorage.getItem('favorites')) || [];
-        setIsSaved(saved.some(item => item.id === data.id));
+        setIsSaved(saved.some((item) => item.id === unitData.id));
       })
       .catch((err) => {
+        console.error('Fetch error:', err);
         setError(err.message);
         setLoading(false);
       });
-  }, [id]);
+  }, [apartmentId, unitId]);
 
-  // Handle Save / Favorite Toggle
   const handleToggleSave = () => {
     if (!unit) return;
     const existing = JSON.parse(localStorage.getItem('favorites')) || [];
     let updated;
 
     if (isSaved) {
-      updated = existing.filter(item => item.id !== unit.id);
+      updated = existing.filter((item) => item.id !== unit.id);
     } else {
       updated = [...existing, unit];
     }
@@ -51,25 +62,33 @@ export default function UnitDetails() {
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
   if (error || !unit) return <div className="unit-error">Error: {error || 'Unit not found'}</div>;
 
-  // Image fallback handling
   const images = unit.imageURLS && unit.imageURLS.length > 0
     ? unit.imageURLS
     : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
 
-return (
+  return (
     <>
       <Navbar showSearch={true} />
 
       <main className="unit-details-container">
-        {/* BREADCRUMB NAVIGATION */}
+        {/* BREADCRUMB WITH DIRECT LINK BACK TO PARENT APARTMENT */}
         <nav className="breadcrumb">
-          <Link to="/home">Properties</Link> &gt; <span>{unit.apartment_name || 'Apartment'}</span> &gt; <span className="current">Unit {unit.id}</span>
+          <Link to="/search">Properties</Link> &gt;{' '}
+          <Link to={`/available-units/${apartmentId}`}>
+            {apartment?.name || `Apartment ${apartmentId}`}
+          </Link>{' '}
+          &gt; <span className="current">Unit {unit.id}</span>
         </nav>
 
         {/* HEADER TITLE & ACTIONS */}
         <header className="unit-header">
           <div>
-            <h1>{unit.category} - Unit {unit.id}</h1>
+            <h1>
+              {unit.category} - Unit {unit.id}
+            </h1>
+            <p className="apartment-location-subtext">
+              📍 Located in <strong>{apartment?.name}</strong>, {apartment?.location}
+            </p>
             <div className="badge-group">
               <span className="unit-badge category">{unit.category}</span>
               <span className={`unit-badge status ${unit.status.toLowerCase()}`}>
@@ -81,7 +100,7 @@ return (
             </div>
           </div>
 
-<div className="header-actions">
+          <div className="header-actions">
             <button className="action-btn share-btn">🔗 Share</button>
             <button 
               className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
@@ -92,7 +111,7 @@ return (
           </div>
         </header>
 
-{/* IMAGE GALLERY GRID */}
+        {/* GALLERY */}
         <section className="gallery-grid">
           <div className="main-image">
             <img src={images[0]} alt="Main Living Area" />
@@ -102,21 +121,14 @@ return (
             {images.slice(1, 3).map((imgUrl, index) => (
               <div key={index} className="side-img-wrapper">
                 <img src={imgUrl} alt={`Unit View ${index + 1}`} />
-                {index === 1 && images.length > 3 && (
-                  <button className="view-all-btn">
-                    📷 View All {images.length} Photos
-                  </button>
-                )}
               </div>
             ))}
           </div>
         </section>
 
-{/* CONTENT & SIDEBAR CARD GRID */}
+        {/* DETAILS GRID */}
         <div className="unit-content-grid">
-          {/* LEFT CONTENT AREA */}
           <section className="main-info">
-            {/* SPECS BAR */}
             <div className="specs-bar">
               <div className="spec-item">
                 <span className="icon">🛏️</span>
@@ -151,14 +163,13 @@ return (
               </div>
             </div>
 
-{/* DESCRIPTION */}
             <article className="description-box">
               <h2>About this Unit</h2>
               <p>{unit.description}</p>
             </article>
           </section>
 
-          {/* RIGHT PRICING & BOOKING SIDEBAR */}
+          {/* BOOKING CARD */}
           <aside className="booking-card">
             <div className="price-header">
               <span className="price-label">Rent (Per Person)</span>
@@ -178,20 +189,9 @@ return (
               <strong className="occupied-tag">📅 {unit.status}</strong>
             </div>
 
-            {unit.shared && (
-              <div className="roommate-box">
-                <small>ROOMMATE MATCHING</small>
-                <p>
-                  {unit.maximum_occupants - unit.current_occupants} spot available in shared bedroom. Join existing verified students.
-                </p>
-              </div>
-            )}
-
             <button className="primary-booking-btn">
               {unit.current_occupants >= unit.maximum_occupants ? 'Join Waitlist' : 'Book Now'}
             </button>
-
-            <p className="no-charge-note">You won't be charged yet</p>
           </aside>
         </div>
       </main>
