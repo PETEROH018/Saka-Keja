@@ -25,7 +25,13 @@ const Location = async (locationName) => {
       throw new Error(`No coordinates found for location: "${locationName}"`);
     }
 
-    
+    const result = data[0];
+
+    return {
+      lat: parseFloat(result.lat),
+      lon: parseFloat(result.lon),
+      displayName: result.display_name,
+    };
   } catch (error) {
     console.error('Error fetching location coordinates:', error.message);
     throw error;
