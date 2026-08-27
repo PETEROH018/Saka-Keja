@@ -92,6 +92,7 @@ class StudentUnitSchema(SQLAlchemyAutoSchema):
 
     student = fields.Nested("StudentSchema", exclude=("student_units",))
     unit = fields.Nested(UnitSchema, exclude=("student_units",))
+    payments = Nested('PaymentSchema', many=True)
 
 
 class StudentSchema(Schema):
