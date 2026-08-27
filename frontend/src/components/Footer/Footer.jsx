@@ -67,7 +67,7 @@ export default function Footer() {
                         </h3>
 
                         <div className="mt-4 flex flex-col gap-3 text-sm text-gray-600">
-                            <NavLink to="/home" className="hover:text-violet-700">
+                            <NavLink to="/" className="hover:text-violet-700">
                                 Discover
                             </NavLink>
 
