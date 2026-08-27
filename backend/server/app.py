@@ -1,16 +1,6 @@
 from configs import *
 from schema import *
-from models.Unit import Unit
-from models.Apartment import Apartment
-from models.ApartmentAmenity import ApartmentAmenity
-from models.ApartmentAmenityJoining import ApartmentAmenityJoining
-from models.ApartmentOwner import ApartmentOwner
-from models.Student import Student
-from models.NearbyFacility import NearbyFacility
-from models.UnitAmenity import UnitAmenity
-from models.UnitAmenityJoining import UnitAmenityJoining
-from models.StudentUnit import StudentUnit
-from models.Payment import Payment
+from models import Unit,Apartment,ApartmentAmenity,ApartmentAmenityJoining,ApartmentOwner,Student,NearbyFacility,UnitAmenity,UnitAmenityJoining,StudentUnit,Payment
 from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
 
@@ -84,16 +74,10 @@ def add_apartment_owner():
 
 
 # get/properties for a particular manager
-@app.route("/manager-properties/<int: id>")
+@app.route("/manager-properties/<int:id>")
 def get_manager_properties(id):
     apartment = Apartment.query.filter_by(owner_id=id).all()
     return jsonify(ApartmentSchema(many=True).dump(apartment))
-
-
-@app.route("/apartment/<int:id>/units")
-def get_manager_property_units(id):
-    units = Unit.query.filter_by(apartment_id=id).all()
-    return jsonify(UnitSchema(many=True).dump(units))
 
 
 @app.route("/manager/<int:id>/metrics")
@@ -226,11 +210,10 @@ def add_payment():
         if not student_unit:
             return jsonify({"error": "Student unit not found"}), 404
 
-        new_payment = Payment(
-            student_unit_id=data["student_unit_id"],
+        new_payment = StudentUnit(
+            student_id = data["student_id"],
+            unit_id = data["unit_id"],
             amount=data["amount"],
-            payment_method=data["payment_method"],
-            transaction_reference=data.get("transaction_reference"),
         )
 
         db.session.add(new_payment)
