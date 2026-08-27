@@ -29,7 +29,7 @@ class UnitSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
-    unit_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit'))
+    unit_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
 
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -37,6 +37,7 @@ class UnitAmenitySchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+    unit_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('amenity',))
 
 class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
     class Meta:
