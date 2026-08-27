@@ -1,19 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const StudentEditProfile = () => {
+const StudentEditProfile = ({ studentId = 1, onSaveSuccess }) => {
   const [activeTab, setActiveTab] = useState('personal');
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
-  // Form State
+  // Form state structure
   const [formData, setFormData] = useState({
-    fullName: 'David Ochieng',
+    fullName: '',
+    email: '',
     phone: '+254 712 345 678',
     university: 'Strathmore University',
     yearOfStudy: '3rd Year',
-    email: 'david.ochieng@example.com',
     studentNumber: '123456',
     expectedGraduation: 'December 2025',
     profileImage: 'https://via.placeholder.com/80'
   });
+
+  // Fetch student details dynamically on component mount
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5000/students/${studentId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch profile details');
+        return res.json();
+      })
+      .then((data) => {
+        setFormData((prev) => ({
+          ...prev,
+          fullName: data.name || '',
+          email: data.email || ''
+        }));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching student data:', err);
+        setLoading(false);
+      });
+  }, [studentId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,9 +54,50 @@ const StudentEditProfile = () => {
     }
   };
 
+  // Submit PATCH request to Flask backend
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setStatusMessage('');
+
+    const payload = {
+      name: formData.fullName,
+      email: formData.email
+    };
+
+    fetch(`http://127.0.0.1:5000/students/${studentId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to update profile');
+        return res.json();
+      })
+      .then((data) => {
+        setIsSubmitting(false);
+        setStatusMessage('Profile updated successfully!');
+        if (onSaveSuccess) onSaveSuccess(data);
+      })
+      .catch((err) => {
+        setIsSubmitting(false);
+        setStatusMessage(`Error: ${err.message}`);
+      });
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '60px', fontFamily: 'sans-serif', color: '#64748b' }}>
+        <p>Loading profile details...</p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ backgroundColor: '#f4f5f7', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-      {/* Top Navbar */}
+      {/* Navbar */}
       <header style={{
         display: 'flex',
         alignItems: 'center',
@@ -53,7 +118,7 @@ const StudentEditProfile = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <img
             src={formData.profileImage}
-            alt="Profile"
+            alt="Profile Avatar"
             style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
           />
           <button style={{
@@ -70,7 +135,7 @@ const StudentEditProfile = () => {
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Container */}
       <main style={{ maxWidth: '1100px', margin: '30px auto', padding: '0 20px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0', color: '#0f172a' }}>
           Edit Profile
@@ -82,9 +147,10 @@ const StudentEditProfile = () => {
         {/* Layout Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '24px', alignItems: 'start' }}>
           
-          {/* Sidebar Navigation */}
+          {/* Navigation Sidebar */}
           <aside style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <button
+              type="button"
               onClick={() => setActiveTab('personal')}
               style={{
                 textAlign: 'left',
@@ -100,6 +166,7 @@ const StudentEditProfile = () => {
               👤 Personal Info
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('housing')}
               style={{
                 textAlign: 'left',
@@ -115,6 +182,7 @@ const StudentEditProfile = () => {
               🏢 Housing Preferences
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('account')}
               style={{
                 textAlign: 'left',
@@ -131,7 +199,7 @@ const StudentEditProfile = () => {
             </button>
           </aside>
 
-          {/* Form Card */}
+          {/* Form Content Card */}
           <section style={{
             backgroundColor: '#ffffff',
             borderRadius: '12px',
@@ -182,8 +250,8 @@ const StudentEditProfile = () => {
               </div>
             </div>
 
-            {/* Input Form Fields */}
-            <form style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            {/* Main Form Fields */}
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
                   Full Name
@@ -223,6 +291,7 @@ const StudentEditProfile = () => {
                   <option value="Strathmore University">Strathmore University</option>
                   <option value="University of Nairobi">University of Nairobi</option>
                   <option value="Kenyatta University">Kenyatta University</option>
+                  <option value="JKUAT">JKUAT</option>
                 </select>
               </div>
 
@@ -269,7 +338,7 @@ const StudentEditProfile = () => {
                 />
               </div>
 
-              <div>
+              <div style={{ gridColumn: 'span 2' }}>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
                   Expected Graduation Date
                 </label>
@@ -280,6 +349,32 @@ const StudentEditProfile = () => {
                   onChange={handleChange}
                   style={inputStyle}
                 />
+              </div>
+
+              {/* Action Area */}
+              <div style={{ gridColumn: 'span 2', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  style={{
+                    backgroundColor: '#2b3674',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '10px 24px',
+                    borderRadius: '8px',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                    opacity: isSubmitting ? 0.7 : 1
+                  }}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                </button>
+                {statusMessage && (
+                  <span style={{ fontSize: '14px', color: statusMessage.startsWith('Error') ? '#ef4444' : '#10b981' }}>
+                    {statusMessage}
+                  </span>
+                )}
               </div>
             </form>
           </section>
