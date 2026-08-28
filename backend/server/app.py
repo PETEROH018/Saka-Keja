@@ -181,6 +181,9 @@ def update_owner():
 
         for key,value in validated_owner_data.items():
             setattr(owner,key,value)
+        db.session.commit()
+
+        
 
     except Exception as e:
         db.session.rollback()
