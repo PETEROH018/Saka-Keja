@@ -171,6 +171,8 @@ def update_owner():
     if not owner:
         return jsonify({"error": "Apartment owner not found"}), 404
 
+    data = request.get_json()
+
 
 @app.route("/units", methods=["GET"])
 def get_all_units():
