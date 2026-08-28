@@ -179,6 +179,9 @@ def update_owner():
         schema = ApartmentOwnerSchema(partial=True)
         validated_owner_data = schema.load(data)
 
+        for key,value in validated_owner_data.items():
+            setattr(owner,key,value)
+
     except Exception as e:
         db.session.rollback()
 
