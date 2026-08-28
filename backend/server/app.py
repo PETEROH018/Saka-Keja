@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
 
 apartment_schema = ApartmentSchema()
+unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
-
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -213,7 +213,7 @@ def update_apartment(id):
         if new_image_urls is not None:
             existing_image_urls = apartment.imageURLs or []
             apartment.imageURLs = existing_image_urls + new_image_urls
-            flag_modified(apartment, "imageURLS")
+            flag_modified(apartment, "imageURLs")
         db.session.commit()
         return jsonify({ "message": "Apartment updated successfully", "data": apartment_schema.dump(apartment) }), 200
 
@@ -235,8 +235,17 @@ def update_unit(id):
             return jsonify({"error": "No data provided"}), 400
 
     new_image_urls = data.pop("imageURLs", None)
-    
 
+    try:
+        unit_schema.load( data, instance=unit, partial=True )
+        if new_image_urls is not None:
+            existing_image_urls = unit.imageURLS or []
+            unit.imageURLs = existing_image_urls + new_image_urls
+            flag_modified(unit, "imageURLS")
+        db.session.commit()
+        return jsonify({ "message": "Unit updated successfully", "data": apartment_schema.dump(unit) }), 200
+    except Exception as e:
+        db.session.rollback()
 
 
 @app.route("/units", methods=["GET"])
