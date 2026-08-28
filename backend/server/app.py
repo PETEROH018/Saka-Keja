@@ -205,6 +205,7 @@ def update_apartment(id):
     if not data:
         return jsonify({"error": "No data provided"}), 400
 
+    new_image_urls = data.pop("imageURLs", None)
     
 
 
