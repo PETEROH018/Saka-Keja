@@ -166,7 +166,7 @@ def get_apartment_units(id):
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
 @app.route('/owners/<int:id>', methods=['PATCH','PUT'])
-def update_owner():
+def update_owner(id):
     owner = ApartmentOwner.query.get(id)
     if not owner:
         return jsonify({"error": "Apartment owner not found"}), 404
@@ -194,6 +194,13 @@ def update_owner():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
+
+@app.route("/apartments/<int:id>", methods=['PATCH','PUT'])
+def update_apartment(id):
+    apartment=Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
 
 @app.route("/units", methods=["GET"])
 def get_all_units():
