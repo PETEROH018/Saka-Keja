@@ -174,6 +174,13 @@ def update_owner():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
+    
+    try:
+        schema = ApartmentOwnerSchema(partial=True)
+        validated_owner_data = schema.load(data)
+
+    except Exception as e:
+        db.session.rollback()
 
 
 @app.route("/units", methods=["GET"])
