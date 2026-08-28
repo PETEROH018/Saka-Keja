@@ -228,6 +228,11 @@ def update_apartment(id):
 def update_unit(id):
     unit=Unit.query.get(id)
 
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+    
+
+
 
 @app.route("/units", methods=["GET"])
 def get_all_units():
