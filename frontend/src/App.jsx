@@ -20,7 +20,7 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
         <Route path="/apartment-details" element={<ApartmentDetails />} />
         <Route path="/search" element={<SearchResults />} />

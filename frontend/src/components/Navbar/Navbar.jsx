@@ -6,7 +6,7 @@ import { useAuth } from "../../context/useAuth"
 
 export default function Navbar({ showSearch = false }) {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user,logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const handleSearchSubmit = (e) => {
@@ -51,7 +51,7 @@ export default function Navbar({ showSearch = false }) {
 
         <div className="hidden h-full items-center gap-8 md:flex">
           <NavLink
-            to="/home"
+            to="/"
             className={({ isActive }) =>
               `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
                 ? "border-violet-700 text-violet-700"
@@ -104,6 +104,12 @@ export default function Navbar({ showSearch = false }) {
           {user ? (
             <>
               <button
+                onClick={() => {logout();navigate('/auth')}}
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+              >
+                Logout
+              </button>
+              <button
                 type="button"
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
                 onClick={() => navigate('/search')}
@@ -126,17 +132,10 @@ export default function Navbar({ showSearch = false }) {
           ) : (
             <div className="flex items-center gap-3">
               <button
-                onClick={() => navigate("/login")}
-                className="text-sm font-medium text-gray-700 hover:text-violet-700"
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/auth")}
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
               >
-                Sign Up
+                Login/Sign Up
               </button>
             </div>
           )}

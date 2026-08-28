@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Home, LayoutDashboard, Building2, PlusCircle, HelpCircle, User, ShieldCheck, Menu, X } from "lucide-react"
+import { Home, LayoutDashboard, Building2, PlusCircle, HelpCircle, User, ShieldCheck, Menu, X ,SquareArrowLeft} from "lucide-react"
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 
 export default function AdminSideBar() {
+    const { user,logout } = useAuth()
     const [isOpen, setIsOpen] = useState(false);
-
     const toggleSidebar = () => setIsOpen((prev) => !prev);
     const closeSidebar = () => setIsOpen(false);
 
@@ -14,6 +15,7 @@ export default function AdminSideBar() {
         {to: "/my-properties", label: "My Properties", icon: Building2},
         {to: "/add-apartment", label: "Add Property", icon: PlusCircle},
         {to: "/owner-profile", label: "Profile", icon: User},
+        {to: "/auth", label: "Logout", icon: SquareArrowLeft},
     ]
 
     const linkClass = ({ isActive }) =>

@@ -4,8 +4,10 @@ import getLocation from "../../utils/GetLocation";
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
 import validatePhoneNumber from "../../utils/ValidateNumber";
+import { useAuth } from "../../context/useAuth"
 
 export function AuthPage() {
+  const { user,setUser } = useAuth()
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
   const [userRole, setUserRole] = useState("student");
@@ -29,6 +31,46 @@ export function AuthPage() {
   });
   const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
 
+  const loginAsStudent = () => {
+        if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
+          setUser({
+              id: 1,
+              name: "Ben",
+              role: "student",
+              profile: "student",
+          });
+          navigate('/')
+        }
+        else{
+          alert("Wrong username or password!")
+        }
+      };
+
+  const loginAsOwner = () => {
+      if(loginFormData['userName'] === 'ann' && loginFormData['password'] === '1234'){
+          setUser({
+              id: 2,
+              name: "Ann",
+              role: "owner",
+              profile: "owner"
+          });
+          navigate('/admin-dash')
+        }
+      else{
+          alert("Wrong username or password!")
+        }
+      };
+  
+
+  function handleLoginSimulation(event){
+    if (userRole == 'student'){
+      loginAsStudent()
+    }
+    else{
+      loginAsOwner()
+    }
+  }
+
   function handleLoginChange(event) {
     const { name, value } = event.target;
     setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
@@ -40,52 +82,52 @@ export function AuthPage() {
   }
 
   // Login as a Student
-  async function loginAsStudent(userName, password) {
-    try {
-      const res = await fetch("/api/students/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, password }),
-      });
-      if (!res.ok) {
-        throw new Error("Invalid student credentials. Please try again.");
-      }
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("role", "student");
-      navigate("/home");
-      return { success: true };
-    } catch (err) {
-      console.error("Student login error:", err);
-      alert(err.message);
-      return { success: false, message: err.message };
-    }
-  }
+  // async function loginAsStudent(userName, password) {
+  //   try {
+  //     const res = await fetch("/api/students/login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ userName, password }),
+  //     });
+  //     if (!res.ok) {
+  //       throw new Error("Invalid student credentials. Please try again.");
+  //     }
+  //     const data = await res.json();
+  //     localStorage.setItem("token", data.token);
+  //     localStorage.setItem("user", JSON.stringify(data.user));
+  //     localStorage.setItem("role", "student");
+  //     navigate("/home");
+  //     return { success: true };
+  //   } catch (err) {
+  //     console.error("Student login error:", err);
+  //     alert(err.message);
+  //     return { success: false, message: err.message };
+  //   }
+  // }
 
-  // Login as a Manager (property owner)
-  async function loginAsManager(userName, password) {
-    try {
-      const res = await fetch("/api/managers/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, password }),
-      });
-      if (!res.ok) {
-        throw new Error("Invalid manager credentials. Please try again.");
-      }
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("role", "manager");
-      navigate("/owner-profile");
-      return { success: true };
-    } catch (err) {
-      console.error("Manager login error:", err);
-      alert(err.message);
-      return { success: false, message: err.message };
-    }
-  }
+  // // Login as a Manager (property owner)
+  // async function loginAsManager(userName, password) {
+  //   try {
+  //     const res = await fetch("/api/managers/login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ userName, password }),
+  //     });
+  //     if (!res.ok) {
+  //       throw new Error("Invalid manager credentials. Please try again.");
+  //     }
+  //     const data = await res.json();
+  //     localStorage.setItem("token", data.token);
+  //     localStorage.setItem("user", JSON.stringify(data.user));
+  //     localStorage.setItem("role", "manager");
+  //     navigate("/owner-profile");
+  //     return { success: true };
+  //   } catch (err) {
+  //     console.error("Manager login error:", err);
+  //     alert(err.message);
+  //     return { success: false, message: err.message };
+  //   }
+  // }
 
   async function handleSubmit(event, formType) {
     event.preventDefault();
@@ -287,6 +329,7 @@ export function AuthPage() {
                   text-sm sm:text-base font-semibold text-white
                   transition hover:bg-primary-container
                   active:scale-[0.98]"
+                onClick={()=>{handleLoginSimulation()}}
               >
                 Login
               </button>
@@ -396,8 +439,8 @@ export function AuthPage() {
                 </label>
 
                 <input
-                  type="number"
-                  name="phone_number"
+                  type="text"
+                  name="user_name"
                   placeholder="username123"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
