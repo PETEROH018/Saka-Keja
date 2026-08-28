@@ -165,6 +165,11 @@ def get_apartment_units(id):
     except Exception as e:
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
+@app.route('/owners/<int:id>', methods=['PATCH','PUT'])
+def update_owner():
+    owner = ApartmentOwner.query.get(id)
+
+
 @app.route("/units", methods=["GET"])
 def get_all_units():
     try:
