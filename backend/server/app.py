@@ -188,10 +188,12 @@ def update_owner():
             "owner": schema.dump(owner)
         }), 200
 
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
 
     except Exception as e:
         db.session.rollback()
-
+        return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
 
 @app.route("/units", methods=["GET"])
 def get_all_units():
