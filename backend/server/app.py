@@ -3,6 +3,7 @@ from schema import *
 from models import Unit,Apartment,ApartmentAmenity,ApartmentAmenityJoining,ApartmentOwner,Student,NearbyFacility,UnitAmenity,UnitAmenityJoining,StudentUnit,Payment
 from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.attributes import flag_modified
 
 apartment_schema = ApartmentSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
@@ -206,7 +207,22 @@ def update_apartment(id):
         return jsonify({"error": "No data provided"}), 400
 
     new_image_urls = data.pop("imageURLs", None)
+
+    try:
+        apartment_schema.load( data, instance=apartment, partial=True )
+        if new_image_urls is not None:
+            existing_image_urls = apartment.imageURLs or []
+            apartment.imageURLs = existing_image_urls + new_image_urls
+            flag_modified(apartment, "imageURLS")
+        db.session.commit()
+        return jsonify({ "message": "Apartment updated successfully", "data": apartment_schema.dump(apartment) }), 200
+
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
     
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
 
 
