@@ -183,7 +183,11 @@ def update_owner():
             setattr(owner,key,value)
         db.session.commit()
 
-        
+        return jsonify({
+            "message": "Owner details updated successfully",
+            "owner": schema.dump(owner)
+        }), 200
+
 
     except Exception as e:
         db.session.rollback()
