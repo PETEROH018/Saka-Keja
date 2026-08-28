@@ -244,8 +244,13 @@ def update_unit(id):
             flag_modified(unit, "imageURLS")
         db.session.commit()
         return jsonify({ "message": "Unit updated successfully", "data": apartment_schema.dump(unit) }), 200
+
+    except ValidationError as err:
+            return jsonify({"validation_errors": err.messages}), 422
+        
     except Exception as e:
-        db.session.rollback()
+            db.session.rollback()
+            return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
 
 
 @app.route("/units", methods=["GET"])
