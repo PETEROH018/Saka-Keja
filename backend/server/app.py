@@ -3,10 +3,11 @@ from schema import *
 from models import Unit,Apartment,ApartmentAmenity,ApartmentAmenityJoining,ApartmentOwner,Student,NearbyFacility,UnitAmenity,UnitAmenityJoining,StudentUnit,Payment
 from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.attributes import flag_modified
 
 apartment_schema = ApartmentSchema()
+unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
-
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -164,6 +165,93 @@ def get_apartment_units(id):
         return jsonify(UnitSchema(many=True).dump(units)), 200
     except Exception as e:
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
+
+@app.route('/owners/<int:id>', methods=['PATCH','PUT'])
+def update_owner(id):
+    owner = ApartmentOwner.query.get(id)
+    if not owner:
+        return jsonify({"error": "Apartment owner not found"}), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    try:
+        schema = ApartmentOwnerSchema(partial=True)
+        validated_owner_data = schema.load(data)
+
+        for key,value in validated_owner_data.items():
+            setattr(owner,key,value)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Owner details updated successfully",
+            "owner": schema.dump(owner)
+        }), 200
+
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
+
+@app.route("/apartments/<int:id>", methods=['PATCH','PUT'])
+def update_apartment(id):
+    apartment=Apartment.query.get(id)
+    if not apartment:
+        return jsonify({"error": "Apartment not found"}), 404
+
+    data=request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    new_image_urls = data.pop("imageURLs", None)
+
+    try:
+        apartment_schema.load( data, instance=apartment, partial=True )
+        if new_image_urls is not None:
+            existing_image_urls = apartment.imageURLs or []
+            apartment.imageURLs = existing_image_urls + new_image_urls
+            flag_modified(apartment, "imageURLs")
+        db.session.commit()
+        return jsonify({ "message": "Apartment updated successfully", "data": apartment_schema.dump(apartment) }), 200
+
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
+
+@app.route("/units/<int:id>", methods=['PATCH','POST'])
+def update_unit(id):
+    unit=Unit.query.get(id)
+
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+    data=request.get_json()
+    if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+    new_image_urls = data.pop("imageURLs", None)
+
+    try:
+        unit_schema.load( data, instance=unit, partial=True )
+        if new_image_urls is not None:
+            existing_image_urls = unit.imageURLS or []
+            unit.imageURLs = existing_image_urls + new_image_urls
+            flag_modified(unit, "imageURLS")
+        db.session.commit()
+        return jsonify({ "message": "Unit updated successfully", "data": apartment_schema.dump(unit) }), 200
+
+    except ValidationError as err:
+            return jsonify({"validation_errors": err.messages}), 422
+        
+    except Exception as e:
+            db.session.rollback()
+            return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
+
 
 @app.route("/units", methods=["GET"])
 def get_all_units():
