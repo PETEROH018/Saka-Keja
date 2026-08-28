@@ -8,7 +8,7 @@ apartment_schema = ApartmentSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
 
 
-@app.route("/apartment", methods=["POST"])
+@app.route("/apartments", methods=["POST"])
 def add_apartment():
     data = request.get_json()
 
@@ -39,7 +39,7 @@ def add_apartment():
         )
 
 
-@app.route("/apartment-owners", methods=["POST"])
+@app.route("/owners", methods=["POST"])
 def add_apartment_owner():
     data = request.get_json()
 
@@ -73,15 +73,15 @@ def add_apartment_owner():
         )
 
 
-# get/properties for a particular manager
-@app.route("/manager-properties/<int:id>")
-def get_manager_properties(id):
-    apartment = Apartment.query.filter_by(owner_id=id).all()
-    return jsonify(ApartmentSchema(many=True).dump(apartment))
+# get/aparments for a particular owner
+@app.route("/owners/<int:id>/aparments")
+def get_owner_aparments(id):
+    apartments = Apartment.query.filter_by(owner_id=id).all()
+    return jsonify(ApartmentSchema(many=True).dump(apartments))
 
 
-@app.route("/manager/<int:id>/metrics")
-def get_manager_metrics(id):
+@app.route("/owners/<int:id>/metrics")
+def get_owner_metrics(id):
     listing_query = select(func.count(Apartment.id)).where(Apartment.owner_id == id)
     views_query = select(func.sum(Apartment.total_views)).where(
         Apartment.owner_id == id
@@ -102,8 +102,8 @@ def get_manager_metrics(id):
     )
 
 
-@app.route("/manager/<int:id>/performance")
-def get_manager_performance(id):
+@app.route("/owners/<int:id>/performance")
+def get_owner_performance(id):
     rows = db.session.execute(
         select(
             Unit.apartment_id.label("apartment_id"),
@@ -179,7 +179,7 @@ def get_all_units():
 # ========================
 
 
-@app.route("/student/<int:id>/favorites", methods=["GET"])
+@app.route("/students/<int:id>/favorites", methods=["GET"])
 def get_student_favorite_units(id):
 
     favorite_units = (
@@ -267,7 +267,7 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    required_fields = ["full_name", "email", "phone_number", "username", "password"]
+    required_fields = ["full_name", "email", "phone_number", "username", "password"] #Duplicate
 
     missing_fields = [field for field in required_fields if field not in data]
 
@@ -340,8 +340,8 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
-# Student login endpoint
-@app.route("/api/students/login", methods=["POST"])
+# Combine the Student login endpoint with the Owner login endpoint
+@app.route("/auth/login", methods=["POST"])
 def student_login():
     data = request.get_json()
 
@@ -373,21 +373,21 @@ def student_login():
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
 
-    # Manager login endpoint
-@app.route("/api/managers/login", methods=["POST"])
-def manager_login():
+    # Combine with Student login endpoint
+@app.route("/api/owners/login", methods=["POST"])
+def owner_login():
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     try:
-        manager = ApartmentOwner.query.filter_by(username=data["userName"]).first()
+        owner = ApartmentOwner.query.filter_by(username=data["userName"]).first()
 
-        if not manager:
+        if not owner:
             return jsonify({"error": "Invalid credentials"}), 401
 
-        if not manager.authenticate(data["password"]):
+        if not owner.authenticate(data["password"]):
             return jsonify({"error": "Invalid credentials"}), 401
 
         # Generate a simple token 
@@ -397,9 +397,9 @@ def manager_login():
         return jsonify({
             "token": token,
             "user": {
-                "id": manager.id,
-                "full_name": manager.full_name,
-                "username": manager.username,
+                "id": owner.id,
+                "full_name": owner.full_name,
+                "username": owner.username,
             }
         }), 200
 
