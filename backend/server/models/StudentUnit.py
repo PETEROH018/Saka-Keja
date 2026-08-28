@@ -1,8 +1,10 @@
-from configs import *
-
+from configs import db
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
 from sqlalchemy.orm import relationship
+
 class StudentUnit(db.Model):
     __tablename__ = "student_units"
+    # ... rest of your code
 
     id = Column(Integer, primary_key=True)
 

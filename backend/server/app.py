@@ -1,5 +1,6 @@
 from configs import *
 from schema import *
+from marshmallow import ValidationError
 from models.Unit import Unit
 from models.Apartment import Apartment
 from models.ApartmentAmenity import ApartmentAmenity
@@ -13,6 +14,7 @@ from models.StudentUnit import StudentUnit
 from models.Payment import Payment
 from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
+from flask import jsonify, request
 
 apartment_schema = ApartmentSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
@@ -31,7 +33,7 @@ def add_apartment():
         db.session.commit()
         return (
             jsonify(
-                "message", f"Added apartment with id {new_apartment.id} and its units"
+                {"message": f"Added apartment with id {new_apartment.id} and its units"}
             ),
             201,
         )
@@ -43,7 +45,7 @@ def add_apartment():
         db.session.rollback()
         return (
             jsonify(
-                {"error", f"Could not add the apartment due to this error, {str(e)}"}
+                {"error": f"Could not add the apartment due to this error, {str(e)}"}
             ),
             500,
         )
@@ -62,7 +64,7 @@ def add_apartment_owner():
         db.session.commit()
         return (
             jsonify(
-                "message", f"Added apartment owner with id {new_apartment_owner.id}"
+                {"message": f"Added apartment owner with id {new_apartment_owner.id}"}
             ),
             201,
         )
@@ -75,8 +77,7 @@ def add_apartment_owner():
         return (
             jsonify(
                 {
-                    "error",
-                    f"Could not add the apartment owner due to this error, {str(e)}",
+                    "error": f"Could not add the apartment owner due to this error, {str(e)}",
                 }
             ),
             500,
@@ -84,7 +85,7 @@ def add_apartment_owner():
 
 
 # get/properties for a particular manager
-@app.route("/manager-properties/<int: id>")
+@app.route("/manager-properties/<int:id>")
 def get_manager_properties(id):
     apartment = Apartment.query.filter_by(owner_id=id).all()
     return jsonify(ApartmentSchema(many=True).dump(apartment))
@@ -182,33 +183,72 @@ def get_apartment_units(id):
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
 # ========================
-# STUDENT ENDPOINTS
+# STUDENT ENDPOINTS (SONIA'S ASSIGNMENTS)
 # ========================
+
+@app.route("/students/<int:id>", methods=["GET"])
+def get_student_by_id(id):
+    student = Student.query.get(id)
+    if not student:
+        return jsonify({"error": "Student not found"}), 404
+    return jsonify(student.to_dict() if hasattr(student, 'to_dict') else {
+        "id": student.id,
+        "full_name": student.full_name,
+        "email": student.email,
+        "phone_number": student.phone_number,
+        "username": student.username
+    }), 200
+
+
+@app.route("/students/<int:id>", methods=["PATCH"])
+def patch_student_info(id):
+    student = Student.query.get(id)
+    if not student:
+        return jsonify({"error": "Student not found"}), 404
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
+
+    try:
+        for key, value in data.items():
+            if hasattr(student, key) and key != "password_hash":
+                setattr(student, key, value)
+        
+        db.session.commit()
+        return jsonify({"message": "Student updated successfully", "id": student.id}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not update student: {str(e)}"}), 500
+
+
+@app.route("/apartments/<int:apartment_id>/units/<int:unit_id>", methods=["GET"])
+def get_single_unit_in_apartment(apartment_id, unit_id):
+    unit = Unit.query.filter_by(id=unit_id, apartment_id=apartment_id).first()
+    if not unit:
+        return jsonify({"error": "Unit not found in this apartment"}), 404
+    return jsonify(UnitSchema().dump(unit)), 200
 
 
 @app.route("/student/<int:id>/favorites", methods=["GET"])
 def get_student_favorite_units(id):
-
     favorite_units = (
         db.session.query(Unit)
         .join(StudentUnit)
         .filter(StudentUnit.student_id == id, StudentUnit.favorite == True)
         .all()
     )
-
     return jsonify(UnitSchema(many=True).dump(favorite_units))
 
 
 @app.route("/payments", methods=["POST"])
 def add_payment():
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     required_fields = ["student_unit_id", "amount", "payment_method"]
-
     missing_fields = [field for field in required_fields if field not in data]
 
     if missing_fields:
@@ -234,9 +274,7 @@ def add_payment():
         )
 
         db.session.add(new_payment)
-
         student_unit.deposit_paid += data["amount"]
-
         db.session.commit()
 
         return (
@@ -258,25 +296,21 @@ def add_payment():
 
     except IntegrityError:
         db.session.rollback()
-
         return jsonify({"error": "Transaction reference already exists"}), 400
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create payment: {str(e)}"}), 500
 
 
 @app.route("/students", methods=["POST"])
 def add_student():
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     required_fields = ["full_name", "email", "phone_number", "username", "password"]
-
     missing_fields = [field for field in required_fields if field not in data]
 
     if missing_fields:
@@ -316,7 +350,6 @@ def add_student():
             username=data["username"],
         )
 
-        # Automatically hashes password using Student model setter
         new_student.password_hash = data["password"]
 
         db.session.add(new_student)
@@ -339,14 +372,26 @@ def add_student():
 
     except IntegrityError:
         db.session.rollback()
-
         return jsonify({"error": "Student already exists"}), 409
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
+@app.route("/")
+def home():
+    return jsonify({
+        "message": "Welcome to the Saka-Keja API!",
+        "status": "Running",
+        "endpoints": {
+            "apartments": "/apartments",
+            "apartment_owners": "/apartment-owners",
+            "students": "/students",
+            "payments": "/payments"
+        }
+    }), 200
+
+
 if __name__ == "__main__":
-    app.run(debug=True, host="localhost", port=5000)
+    app.run(debug=True, use_reloader=False, host="localhost", port=5000)

@@ -1,9 +1,14 @@
 from configs import *
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
+
 class Student(db.Model):
     __tablename__ = "students"
-
+    
     id = Column(Integer, primary_key=True)
+    # ... rest of your student model code ...
+
     full_name = Column(String(100), nullable=False)
     email = Column(String(30), nullable=False, unique=True)
     phone_number = Column(Integer, nullable=False, unique=True)
