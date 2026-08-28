@@ -224,6 +224,9 @@ def update_apartment(id):
         db.session.rollback()
         return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
+@app.route("/units/<int:id>", methods=['PATCH','POST'])
+def update_unit(id):
+    unit=Unit.query.get(id)
 
 
 @app.route("/units", methods=["GET"])
