@@ -168,6 +168,8 @@ def get_apartment_units(id):
 @app.route('/owners/<int:id>', methods=['PATCH','PUT'])
 def update_owner():
     owner = ApartmentOwner.query.get(id)
+    if not owner:
+        return jsonify({"error": "Apartment owner not found"}), 404
 
 
 @app.route("/units", methods=["GET"])
