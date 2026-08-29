@@ -35,10 +35,20 @@ export default function Filter({ onSearch, onFilter }) {
   };
 
   const handleReset = () => {
-    setLocation("");
+    setIsShared("");
     setPrice("");
     setBedrooms("");
-    const emptyFilters = { location: "", price: "", bedrooms: "" };
+    setKitchenette(false);
+    setWardrobe(false);
+    setBalcony(false);
+    const emptyFilters = {
+      isShared: undefined,
+      price: "",
+      bedrooms: "",
+      kitchenette: false,
+      wardrobe: false,
+      balcony: false,
+    };
     if (onSearch) onSearch(emptyFilters);
     if (onFilter) onFilter(emptyFilters);
   };
