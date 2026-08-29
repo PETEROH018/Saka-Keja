@@ -9,17 +9,21 @@ export default function UnitCard({
   furnished,
   isVerified,
   shared,
-  kitchenette,
-  wardrobe,
-  balcony,
-  image_Urls: imageUrls = [],
-  ["monthly-expense-breakdown"]: expenseBreakdown = {},
-  ["WiFi included"]: wifiIncluded,
-  ["Water reliable"]: waterReliable,
-  ["Security Guard"]: securityGuard,
+  rent = 0,
+  imageURLS: imageUrls = [],
+  unit_amenity_links: amenityLinks = [],
 }) {
   const imageUrl = imageUrls[0];
-  const rent = expenseBreakdown.rent ?? 0;
+
+  const hasAmenity = (name) =>
+    amenityLinks.some((link) => link.amenity?.name === name);
+
+  const wifiIncluded = hasAmenity("WiFi");
+  const waterReliable = hasAmenity("Water");
+  const securityGuard = hasAmenity("Security Guard");
+  const kitchenette = hasAmenity("Kitchenette");
+  const wardrobe = hasAmenity("Wardrobe");
+  const balcony = hasAmenity("Balcony");
 
   return (
     <div className="unit-card group max-w-sm overflow-hidden rounded-xl border border-outline-variant bg-white shadow-sm">
