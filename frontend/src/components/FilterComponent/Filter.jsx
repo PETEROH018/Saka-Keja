@@ -19,8 +19,15 @@ export default function Filter({ onSearch, onFilter }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const filterData = { location, price, bedrooms };
-    if (!location && !price && !bedrooms) {
+    const filterData = {
+      isShared: isShared === "" ? undefined : isShared === "true",
+      price,
+      bedrooms,
+      kitchenette,
+      wardrobe,
+      balcony,
+    };
+    if (!isShared && !price && !bedrooms && !kitchenette && !wardrobe && !balcony) {
       onSearch(filterData);
     } else {
       onFilter(filterData);
