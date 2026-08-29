@@ -31,6 +31,12 @@ class StudentUnit(db.Model):
         nullable=False
     )
 
+    viewed = Column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
     repairs = Column(
         String,
         nullable=True

@@ -13,6 +13,7 @@ class Unit(db.Model):
     bathrooms = db.Column(db.Integer, default=0, nullable=False)
     size = db.Column(db.Integer, nullable=True)         
     shared = db.Column(db.Boolean, default=False, nullable=False)
+    promoted = db.Column(db.Boolean, default=False, nullable=False)
     current_occupants = db.Column(db.Integer, default=0, nullable=False)
     maximum_occupants = db.Column(db.Integer, default=1, nullable=False)
     imageURLS = db.Column(db.JSON, default=list, nullable=False)
