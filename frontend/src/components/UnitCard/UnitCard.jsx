@@ -51,10 +51,10 @@ export default function UnitCard({
               <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
               <span>{location}</span>
             </span>
-            {typeof isShared === "boolean" && (
+            {typeof shared === "boolean" && (
               <span className="flex items-center gap-1 text-gray-400">
                 <Users className="h-3.5 w-3.5" />
-                <span>{isShared ? "Shared" : "Private"}</span>
+                <span>{shared ? "Shared" : "Private"}</span>
               </span>
             )}
           </div>
