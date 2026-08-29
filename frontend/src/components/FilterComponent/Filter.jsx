@@ -35,7 +35,7 @@ export default function Filter({ onSearch, onFilter }) {
   };
 
   const handleReset = () => {
-    setIsShared("");
+    setShared("");
     setPrice("");
     setBedrooms("");
     setKitchenette(false);
