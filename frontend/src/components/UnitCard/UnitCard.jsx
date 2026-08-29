@@ -4,7 +4,7 @@ export default function UnitCard({
   name,
   description,
   location,
-  property_type: propertyType,
+  category: propertyType,
   bedrooms,
   furnished,
   isVerified,
