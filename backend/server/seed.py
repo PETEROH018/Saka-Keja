@@ -197,7 +197,7 @@ apartments_data = [
         "total_views": 412,
         "description": "Large four-bedroom apartment surrounded by greenery and located in a peaceful residential area.",
         "location": "Karen",
-        "imageURLS": [
+        "imageURLs": [
             "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
             "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
             "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
