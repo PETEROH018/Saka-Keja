@@ -42,7 +42,7 @@ export default function Filter({ onSearch, onFilter }) {
     setWardrobe(false);
     setBalcony(false);
     const emptyFilters = {
-      isShared: undefined,
+      shared: undefined,
       price: "",
       bedrooms: "",
       kitchenette: false,
