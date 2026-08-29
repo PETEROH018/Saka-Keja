@@ -14,7 +14,7 @@ owners_data = [
     {
         "full_name": "John Kamau",
         "email": "john.kamau@example.com",
-        "phone_number": 254712345601,
+        "phone_number": "254712345601",
         "location": "Westlands",
         "username": "johnkamau",
         "password": "Password123!"
@@ -22,7 +22,7 @@ owners_data = [
     {
         "full_name": "Mary Wanjiku",
         "email": "mary.wanjiku@example.com",
-        "phone_number": 254712345602,
+        "phone_number": "254712345602",
         "location": "Kilimani",
         "username": "marywanjiku",
         "password": "Password123!"
@@ -30,7 +30,7 @@ owners_data = [
     {
         "full_name": "David Mwangi",
         "email": "david.mwangi@example.com",
-        "phone_number": 254712345603,
+        "phone_number": "254712345603",
         "location": "Lavington",
         "username": "davidmwangi",
         "password": "Password123!"
@@ -38,7 +38,7 @@ owners_data = [
     {
         "full_name": "Grace Njeri",
         "email": "grace.njeri@example.com",
-        "phone_number": 254712345604,
+        "phone_number": "254712345604",
         "location": "Kileleshwa",
         "username": "gracenjeri",
         "password": "Password123!"
@@ -46,7 +46,7 @@ owners_data = [
     {
         "full_name": "Peter Otieno",
         "email": "peter.otieno@example.com",
-        "phone_number": 254712345605,
+        "phone_number": "254712345605",
         "location": "Parklands",
         "username": "peterotieno",
         "password": "Password123!"
@@ -54,7 +54,7 @@ owners_data = [
     {
         "full_name": "Anne Akinyi",
         "email": "anne.akinyi@example.com",
-        "phone_number": 254712345606,
+        "phone_number": "254712345606",
         "location": "Karen",
         "username": "anneakinyi",
         "password": "Password123!"
@@ -62,7 +62,7 @@ owners_data = [
     {
         "full_name": "Samuel Kiptoo",
         "email": "samuel.kiptoo@example.com",
-        "phone_number": 254712345607,
+        "phone_number": "254712345607",
         "location": "Riverside",
         "username": "samuelkiptoo",
         "password": "Password123!"
@@ -70,7 +70,7 @@ owners_data = [
     {
         "full_name": "Lucy Wambui",
         "email": "lucy.wambui@example.com",
-        "phone_number": 254712345608,
+        "phone_number": "254712345608",
         "location": "Hurlingham",
         "username": "lucywambui",
         "password": "Password123!"
@@ -78,7 +78,7 @@ owners_data = [
     {
         "full_name": "Brian Ochieng",
         "email": "brian.ochieng@example.com",
-        "phone_number": 254712345609,
+        "phone_number": "254712345609",
         "location": "Loresho",
         "username": "brianochieng",
         "password": "Password123!"
@@ -86,7 +86,7 @@ owners_data = [
     {
         "full_name": "Faith Chebet",
         "email": "faith.chebet@example.com",
-        "phone_number": 254712345610,
+        "phone_number": "254712345610",
         "location": "Kasarani",
         "username": "faithchebet",
         "password": "Password123!"
@@ -94,7 +94,7 @@ owners_data = [
     {
         "full_name": "Kevin Maina",
         "email": "kevin.maina@example.com",
-        "phone_number": 254712345611,
+        "phone_number": "254712345611",
         "location": "Ngong Road",
         "username": "kevinmaina",
         "password": "Password123!"
@@ -102,7 +102,7 @@ owners_data = [
     {
         "full_name": "Cynthia Atieno",
         "email": "cynthia.atieno@example.com",
-        "phone_number": 254712345612,
+        "phone_number": "254712345612",
         "location": "South C",
         "username": "cynthiaatieno",
         "password": "Password123!"
@@ -599,7 +599,7 @@ students_data = [
     {
         "full_name": "Brian Otieno",
         "email": "brian.otieno@student.com",
-        "phone_number": 254701234501,
+        "phone_number": "254701234501",
         "dob": "2002-04-15",
         "institution": "University of Nairobi",
         "course": "Computer Science",
@@ -613,7 +613,7 @@ students_data = [
     {
         "full_name": "Faith Wanjiku",
         "email": "faith.wanjiku@student.com",
-        "phone_number": 254701234502,
+        "phone_number": "254701234502",
         "dob": "2003-08-22",
         "institution": "Kenyatta University",
         "course": "Information Technology",
@@ -627,7 +627,7 @@ students_data = [
     {
         "full_name": "Kevin Mwangi",
         "email": "kevin.mwangi@student.com",
-        "phone_number": 254701234503,
+        "phone_number": "254701234503",
         "dob": "2001-11-10",
         "institution": "Strathmore University",
         "course": "Business Administration",
@@ -641,7 +641,7 @@ students_data = [
     {
         "full_name": "Sharon Njeri",
         "email": "sharon.njeri@student.com",
-        "phone_number": 254701234504,
+        "phone_number": "254701234504",
         "dob": "2004-02-18",
         "institution": "Jomo Kenyatta University",
         "course": "Software Engineering",
@@ -655,7 +655,7 @@ students_data = [
     {
         "full_name": "Daniel Kiptoo",
         "email": "daniel.kiptoo@student.com",
-        "phone_number": 254701234505,
+        "phone_number": "254701234505",
         "dob": "2002-07-03",
         "institution": "Moi University",
         "course": "Computer Science",
@@ -669,7 +669,7 @@ students_data = [
     {
         "full_name": "Mercy Akinyi",
         "email": "mercy.akinyi@student.com",
-        "phone_number": 254701234506,
+        "phone_number": "254701234506",
         "dob": "2003-05-27",
         "institution": "University of Nairobi",
         "course": "Economics",
@@ -683,7 +683,7 @@ students_data = [
     {
         "full_name": "Samuel Kamau",
         "email": "samuel.kamau@student.com",
-        "phone_number": 254701234507,
+        "phone_number": "254701234507",
         "dob": "2004-01-12",
         "institution": "Kenyatta University",
         "course": "Information Science",
@@ -697,7 +697,7 @@ students_data = [
     {
         "full_name": "Lucy Chebet",
         "email": "lucy.chebet@student.com",
-        "phone_number": 254701234508,
+        "phone_number": "254701234508",
         "dob": "2002-09-30",
         "institution": "Egerton University",
         "course": "Agribusiness",
@@ -711,7 +711,7 @@ students_data = [
     {
         "full_name": "Michael Ochieng",
         "email": "michael.ochieng@student.com",
-        "phone_number": 254701234509,
+        "phone_number": "254701234509",
         "dob": "2003-03-14",
         "institution": "Maseno University",
         "course": "Information Technology",
@@ -725,7 +725,7 @@ students_data = [
     {
         "full_name": "Ann Wambui",
         "email": "ann.wambui@student.com",
-        "phone_number": 254701234510,
+        "phone_number": "254701234510",
         "dob": "2004-06-08",
         "institution": "Mount Kenya University",
         "course": "Computer Science",
@@ -739,7 +739,7 @@ students_data = [
     {
         "full_name": "George Maina",
         "email": "george.maina@student.com",
-        "phone_number": 254701234511,
+        "phone_number": "254701234511",
         "dob": "2001-12-21",
         "institution": "Strathmore University",
         "course": "Finance",
@@ -753,7 +753,7 @@ students_data = [
     {
         "full_name": "Cynthia Atieno",
         "email": "cynthia.atieno@student.com",
-        "phone_number": 254701234512,
+        "phone_number": "254701234512",
         "dob": "2003-10-05",
         "institution": "Technical University",
         "course": "Business IT",
