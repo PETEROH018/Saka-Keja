@@ -8,7 +8,7 @@ class ApartmentOwner(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(30), nullable=False, unique=True)
-    phone_number = db.Column(db.Integer, nullable=False, unique=True)
+    phone_number = db.Column(db.String(30), nullable=False, unique=True)
     location = db.Column(db.String(20), nullable=True)
     username = db.Column(db.String(30), unique=True)
     _password_hash = db.Column(db.String, nullable=False)

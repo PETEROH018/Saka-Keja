@@ -97,13 +97,13 @@ class StudentUnitSchema(SQLAlchemyAutoSchema):
 
 class StudentSchema(Schema):
     id = fields.Int(dump_only=True)
-    fullname = fields.Str(required=True, validate=validate.Length(min=1))
+    full_name = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     phone_number = fields.Str(required=True, validate=validate.Length(min=1))
     dob = fields.DateTime(required=False)
     institution = fields.Str(required=False)
     course = fields.Str(required=False)
-    year_of_study = fields.DateTime(required=False)
+    year_of_study = fields.Int(required=False)
     student_number = fields.Int(required=False)
     graduation_year = fields.Int(required=False)
     location = fields.Str(required=False)
@@ -120,7 +120,7 @@ class StudentSchema(Schema):
 
 class ApartmentOwnerSchema(Schema):
     id = fields.Int(dump_only=True)
-    fullname = fields.Str(required=True, validate=validate.Length(min=1))
+    full_name = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     phone_number = fields.Str(required=True, validate=validate.Length(min=1))
     location = fields.Str(required=False)
