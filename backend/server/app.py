@@ -355,16 +355,6 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    required_fields = ["full_name", "email", "phone_number", "username", "password"] #Duplicate
-
-    missing_fields = [field for field in required_fields if field not in data]
-
-    if missing_fields:
-        return (
-            jsonify({"error": "Missing required fields", "fields": missing_fields}),
-            400,
-        )
-
     try:
         existing_student = Student.query.filter(
             (Student.email == data["email"])
@@ -428,8 +418,8 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
-# Combine the Student login endpoint with the Owner login endpoint
-@app.route("/auth/login", methods=["POST"])
+# Student login endpoint
+@app.route("/login", methods=["POST"])
 def student_login():
     data = request.get_json()
 
@@ -461,9 +451,9 @@ def student_login():
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
 
-    # Combine with Student login endpoint
-@app.route("/api/owners/login", methods=["POST"])
-def owner_login():
+    # Manager login endpoint
+@app.route("/managers/login", methods=["POST"])
+def manager_login():
     data = request.get_json()
 
     if not data:
