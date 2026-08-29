@@ -94,9 +94,9 @@ export default function Filter({ onSearch, onFilter }) {
               <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               <select
                 id="filter-shared"
-                name="isShared"
-                value={isShared}
-                onChange={(e) => setIsShared(e.target.value)}
+                name="shared"
+                value={shared}
+                onChange={(e) => setShared(e.target.value)}
                 className="w-full pl-9 pr-8 py-2.5 text-sm bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:border-violet-600 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-gray-900 appearance-none cursor-pointer"
               >
                 <option value="">Any</option>
