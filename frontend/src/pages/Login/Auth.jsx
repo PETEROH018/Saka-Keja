@@ -81,7 +81,7 @@ export function AuthPage() {
   //   setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
   // }
 
-  // Login as a Student
+  // Login 
   async function login(userName, password, userRole) {
     try {
       const res = await fetch("/login", {
@@ -93,11 +93,7 @@ export function AuthPage() {
         throw new Error("Invalid credentials. Please try again.");
       }
       const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("role", "student");
-      navigate("/home");
-      return { success: true };
+      return data;
     } catch (err) {
       console.error("Student login error:", err);
       alert(err.message);
@@ -133,7 +129,11 @@ export function AuthPage() {
         return;
       }
       const data = await login(loginFormData.userName, loginFormData.password, userRole)
-      return;
+      if (data.user_type === "manager") {
+        navigate("/admin-dash");
+      } else if (data.user_type === "student") {
+        navigate("/student-dash");
+      }      
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
@@ -159,7 +159,7 @@ export function AuthPage() {
       }
       const data = await res.json()
 
-      if (data.user_type === "admin") {
+      if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
         navigate("/student-dash");
