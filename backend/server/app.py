@@ -57,7 +57,16 @@ def add_apartment_owner():
     }
 
     try:
-        new_apartment_owner = apartment_owner_schema.load(owner_payload)
+        validated = apartment_owner_schema.load(owner_payload)
+        new_apartment_owner = ApartmentOwner(
+            full_name=validated["full_name"],
+            email=validated["email"],
+            phone_number=validated["phone_number"],
+            username=validated["username"],
+            location=validated.get("location"),
+        )
+        new_apartment_owner.password_hash = owner_payload["password"]
+
         db.session.add(new_apartment_owner)
         db.session.commit()
         return (
@@ -69,10 +78,11 @@ def add_apartment_owner():
                         "id": new_apartment_owner.id,
                         "name": new_apartment_owner.username,
                         "role": "owner",
-                        "profile": "owner"}
+                        "profile": "owner",
+                    },
                 }
-                
-            )
+            ),
+            201,
         )
 
     except ValidationError as err:
@@ -83,8 +93,7 @@ def add_apartment_owner():
         return (
             jsonify(
                 {
-                    "error",
-                    f"Could not add the apartment owner due to this error, {str(e)}",
+                    "error": f"Could not add the apartment owner due to this error, {str(e)}",
                 }
             ),
             500,
