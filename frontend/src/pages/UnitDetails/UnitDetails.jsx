@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import './UnitDetails.css';
+import { API_BASE_URL } from '../../config/api';
+
 
 export default function UnitDetails() {
   // Extract both route parameters
@@ -19,11 +21,11 @@ export default function UnitDetails() {
 
     // Fetch Unit details and Parent Apartment details in parallel
     Promise.all([
-      fetch(`http://localhost:5000/units/${unitId}`).then((res) => {
+      fetch(`${API_BASE_URL}/units/${unitId}`).then((res) => {
         if (!res.ok) throw new Error('Unit not found');
         return res.json();
       }),
-      fetch(`http://localhost:5000/apartments/${apartmentId}`).then((res) => {
+      fetch(`${API_BASE_URL}/apartments/${apartmentId}`).then((res) => {
         if (!res.ok) throw new Error('Apartment not found');
         return res.json();
       })

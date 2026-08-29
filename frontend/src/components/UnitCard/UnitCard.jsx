@@ -69,7 +69,7 @@ export default function UnitCard({
         {/* Pricing */}
         <div>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-bold text-purple-900">KSh {rent.toLocaleString()}</span>
+            <span className="text-lg font-bold text-purple-900">KSh {Number(rent).toLocaleString()}</span>
             <span className="text-xs text-gray-500">/ month</span>
           </div>
           <p className="text-xs text-gray-400 mt-0.5">{propertyType} | {furnished ? "Furnished" : "Unfurnished"}</p>

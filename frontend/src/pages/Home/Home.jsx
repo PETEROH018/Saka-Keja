@@ -5,19 +5,20 @@ import Footer from "../../components/Footer/Footer";
 import UnitsGrid from "../../components/UnitssGrid/UnitsGrid";
 import useFetch from "../../hooks/useFetch";
 import Filter from "../../components/FilterComponent/Filter";
+import { API_BASE_URL } from "../../config/api";
 
-const API_BASE_URL = "http://localhost:5000"; // Flask backend — replace json-server URL once fully migrated
 const PER_PAGE = 6;
 
 export default function Home() {
   const [page, setPage] = useState(1);
   const [activeFilters, setActiveFilters] = useState(null);
 
-  const endpoint = `${API_BASE_URL}/units?page=${page}&per_page=${PER_PAGE}`;
+  // Backend currently ignores page/per_page and returns everything —
+  // fetch once, paginate client-side.
+  const endpoint = `${API_BASE_URL}/units`;
   const { data, loading, error } = useFetch(endpoint);
 
-  const units = data?.items ?? [];
-  const pagination = data?.pagination;
+  const allUnits = data ?? [];
 
   function onFilter(filterData) {
     setActiveFilters(filterData);
@@ -29,22 +30,18 @@ export default function Home() {
     setPage(1);
   }
 
-  // Filtering now operates on units (not apartments). Location filter is
-  // replaced with a "shared" toggle; kitchenette/wardrobe/balcony are
-  // amenity checkboxes.
   const hasAmenity = (unit, name) =>
     unit.unit_amenity_links?.some((link) => link.amenity?.name === name) ?? false;
 
   const filteredUnits = activeFilters
-    ? units.filter((unit) => {
+    ? allUnits.filter((unit) => {
         const sharedMatches =
           typeof activeFilters.shared === "boolean"
             ? Boolean(unit.shared) === activeFilters.shared
             : true;
 
-        const rent = unit.rent;
         const rentMatches = activeFilters.price
-          ? Number(rent) <= Number(activeFilters.price)
+          ? Number(unit.rent) <= Number(activeFilters.price)
           : true;
 
         const bedroomsMatches = activeFilters.bedrooms
@@ -76,30 +73,35 @@ export default function Home() {
           balconyMatches
         );
       })
-    : units;
+    : allUnits;
+
+  // Client-side pagination over the (possibly filtered) list
+  const totalPages = Math.max(1, Math.ceil(filteredUnits.length / PER_PAGE));
+  const startIndex = (page - 1) * PER_PAGE;
+  const pageUnits = filteredUnits.slice(startIndex, startIndex + PER_PAGE);
 
   return (
     <>
       <Navbar showSearch={false} />
       <Filter onSearch={onSearch} onFilter={onFilter} />
       <main className="bg-surface text-on-surface font-sans min-h-screen flex flex-col justify-center items-center py-16">
-        <UnitsGrid units={filteredUnits} loading={loading} error={error} />
+        <UnitsGrid units={pageUnits} loading={loading} error={error} />
 
-        {pagination && !activeFilters && (
+        {!loading && !error && filteredUnits.length > 0 && (
           <div className="flex items-center gap-4 mt-8">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={!pagination.has_prev}
+              disabled={page === 1}
               className="rounded-lg border border-outline-variant px-4 py-2 text-sm font-medium disabled:opacity-40"
             >
               Previous
             </button>
             <span className="text-sm text-on-surface-variant">
-              Page {pagination.page} of {pagination.total_pages}
+              Page {page} of {totalPages}
             </span>
             <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={!pagination.has_next}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
               className="rounded-lg border border-outline-variant px-4 py-2 text-sm font-medium disabled:opacity-40"
             >
               Next
@@ -113,4 +115,3 @@ export default function Home() {
     </>
   );
 }
-
