@@ -13,8 +13,8 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [activeFilters, setActiveFilters] = useState(null);
 
-  // Backend currently ignores page/per_page and returns everything —
-  // fetch once, paginate client-side.
+// Backend currently ignores page/per_page query params and returns
+// the full unit list, so pagination is handled client-side below.
   const endpoint = `${API_BASE_URL}/units`;
   const { data, loading, error } = useFetch(endpoint);
 
