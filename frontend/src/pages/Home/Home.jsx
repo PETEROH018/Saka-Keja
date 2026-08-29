@@ -32,6 +32,9 @@ export default function Home() {
   // Filtering now operates on units (not apartments). Location filter is
   // replaced with a "shared" toggle; kitchenette/wardrobe/balcony are
   // amenity checkboxes.
+  const hasAmenity = (unit, name) =>
+    unit.unit_amenity_links?.some((link) => link.amenity?.name === name) ?? false;
+
   const filteredUnits = activeFilters
     ? units.filter((unit) => {
         const sharedMatches =
