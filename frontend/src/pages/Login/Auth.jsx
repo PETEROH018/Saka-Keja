@@ -90,7 +90,7 @@ export function AuthPage() {
         body: JSON.stringify({ userName, password, userRole }),
       });
       if (!res.ok) {
-        throw new Error("Invalid student credentials. Please try again.");
+        throw new Error("Invalid credentials. Please try again.");
       }
       const data = await res.json();
       localStorage.setItem("token", data.token);
@@ -132,11 +132,7 @@ export function AuthPage() {
         alert("Please enter both your username and password to log in.");
         return;
       }
-      if (userRole === "manager") {
-        await loginAsManager(loginFormData.userName, loginFormData.password);
-      } else {
-        await loginAsStudent(loginFormData.userName, loginFormData.password);
-      }
+      login(loginFormData.userName, loginFormData.password, userRole)
       return;
     }
 
@@ -151,11 +147,11 @@ export function AuthPage() {
 
     try {
       const res = await fetch(
-        isLogin ? "login endpoint" : "sign up endpoint",
+        "sign up endpoint",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(isSignup? {...formData, location: await getLocation()}: formData),
+          body: JSON.stringify({...formData, location: await getLocation()}),
         },
       )
       if (!res.ok) {
