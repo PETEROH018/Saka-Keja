@@ -604,6 +604,11 @@ apartments_data = [
 def seed_database():
     with app.app_context():
 
+        # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
+        ApartmentOwner.query.delete( synchronize_session=False)
+        Apartment.query.delete( synchronize_session=False )
+        db.session.commit()
+
         # ----------------------------------------------------
         # 1. Seed apartment owners
         # ----------------------------------------------------
