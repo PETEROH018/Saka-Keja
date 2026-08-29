@@ -32,6 +32,16 @@ export function AuthPage() {
   });
   const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
 
+  function handleLoginChange(event) {
+    const { name, value } = event.target;
+    setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
+  }
+
+  function handleSignUpChange(event) {
+    const { name, value } = event.target;
+    setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
+  }
+
   // const loginAsStudent = () => {
   //       if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
   //         setUser({
@@ -123,19 +133,28 @@ export function AuthPage() {
       }
     }
 
-    // Handle login submission: route to the correct endpoint based on selected role
     if (isLogin) {
       if (!loginFormData.userName || !loginFormData.password) {
         alert("Please enter both your username and password to log in.");
         return;
       }
-      const data = await login(loginFormData.userName, loginFormData.password, userRole)
-      setUser(data.token)
-      if (data.user_type === "manager") {
-        navigate("/admin-dash");
-      } else if (data.user_type === "student") {
-        navigate("/student-dash");
-      }      
+
+      try {
+        const data = await login(loginFormData.userName, loginFormData.password, userRole);
+        if (!data || data.error || !data.token) {
+          return;
+        }
+
+        setUser(data.token);
+        if (data.user_type === "manager") {
+          navigate("/admin-dash");
+        } else if (data.user_type === "student") {
+          navigate("/student-dash");
+        }
+      } catch (err) {
+        console.error("Login failed:", err);
+      }
+      return;
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
@@ -143,32 +162,37 @@ export function AuthPage() {
     const formattedPhone = countryCode + (cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone);
     const finalSignUpPayload = {
       ...signUpPayload,
+      name: signUpFormData.name.trim(),
+      user_name: signUpFormData.user_name.trim(),
+      full_name: signUpFormData.name.trim(),
+      username: signUpFormData.user_name.trim(),
       phone_number: formattedPhone,
+      location: await getLocation(),
     };
-    const formData = isLogin ? loginFormData : finalSignUpPayload;
+
+    const endpoint = signUpFormData.user_type === "manager" ? "/owners" : "/students";
 
     try {
-      const res = await fetch(
-        data.user_type === "admin"? "/owners": "/students",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({...formData, location: await getLocation()}),
-        },
-      )
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalSignUpPayload),
+      });
+
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error("Something went wrong. Please try again.");
+        throw new Error(data.error || "Something went wrong. Please try again.");
       }
-      const data = await res.json()
-      setUser(data.token)
+
+      setUser(data.token);
       if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
         navigate("/student-dash");
       }
-    } catch (err)
-    {
-      console.error(err)
+    } catch (err) {
+      console.error("Signup failed:", err);
+      alert(err.message || "Something went wrong. Please try again.");
     }
   }
     
@@ -304,7 +328,6 @@ export function AuthPage() {
                   text-sm sm:text-base font-semibold text-white
                   transition hover:bg-primary-container
                   active:scale-[0.98]"
-                onClick={()=>{handleLoginSimulation()}}
               >
                 Login
               </button>
@@ -581,7 +604,7 @@ export function AuthPage() {
                   onChange={handleSignUpChange}
                 >
                   <option value="student">Student</option>
-                  <option value="property_manager">Property Manager</option>
+                  <option value="manager">Property Manager</option>
                 </select>
               </div>
 
