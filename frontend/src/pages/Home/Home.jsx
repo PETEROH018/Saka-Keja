@@ -53,11 +53,11 @@ export default function Home() {
           : true;
 
         const kitchenetteMatches = activeFilters.kitchenette
-          ? hasAmenity(unit, "Kitchenette")
+          ? hasAmenity(unit, "Kitchen")
           : true;
 
         const wardrobeMatches = activeFilters.wardrobe
-          ? hasAmenity(unit, "Wardrobe")
+          ? hasAmenity(unit, "Wardrobes")
           : true;
 
         const balconyMatches = activeFilters.balcony
