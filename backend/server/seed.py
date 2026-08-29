@@ -913,6 +913,7 @@ def seed_database():
 
         # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
 
+        ApartmentAmenityJoining.query.delete( synchronize_session=False )
         UnitAmenityJoining.query.delete( synchronize_session=False )
         NearbyFacility.query.delete( synchronize_session=False )
         Unit.query.delete( synchronize_session=False )
@@ -1239,13 +1240,13 @@ def seed_database():
         for unit_index, unit in enumerate(units):
 
             # First amenity
-            first_amenity = amenities[
-                unit_index % len(amenities)
+            first_amenity = unit_amenities[
+                unit_index % len(unit_amenities)
             ]
 
             # Second amenity
-            second_amenity = amenities[
-                (unit_index + 1) % len(amenities)
+            second_amenity = unit_amenities[
+                (unit_index + 1) % len(unit_amenities)
             ]
 
             # Create first relationship
@@ -1273,6 +1274,55 @@ def seed_database():
             f"Created {len(unit_amenity_links)} "
             f"unit-amenity relationships."
         )
+
+        
+        # ----------------------------------------------------
+        # Seed apartment-amenity relationships
+        # ----------------------------------------------------
+
+        apartment_amenity_links = []
+
+        # Each apartment receives at least two amenities.
+
+        for apartment_index, apartment in enumerate(apartments):
+
+            # First amenity
+            first_amenity = apartment_amenities[
+                apartment_index % len(apartment_amenities)
+            ]
+
+            # Second amenity
+            second_amenity = apartment_amenities[
+                (apartment_index + 1) % len(apartment_amenities)
+            ]
+
+            # First relationship
+            apartment_amenity_links.append(
+                ApartmentAmenityJoining(
+                    apartment_id=apartment.id,
+                    amenity_id=first_amenity.id
+                )
+            )
+
+            # Second relationship
+            apartment_amenity_links.append(
+                ApartmentAmenityJoining(
+                    apartment_id=apartment.id,
+                    amenity_id=second_amenity.id
+                )
+            )
+
+
+        db.session.add_all(apartment_amenity_links)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(apartment_amenity_links)} "
+            f"apartment-amenity relationships."
+        )
+
+
 
 
 
