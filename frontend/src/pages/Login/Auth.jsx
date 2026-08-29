@@ -130,6 +130,7 @@ export function AuthPage() {
         return;
       }
       const data = await login(loginFormData.userName, loginFormData.password, userRole)
+      setUser(data.token)
       if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
@@ -159,7 +160,7 @@ export function AuthPage() {
         throw new Error("Something went wrong. Please try again.");
       }
       const data = await res.json()
-
+      setUser(data.token)
       if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
