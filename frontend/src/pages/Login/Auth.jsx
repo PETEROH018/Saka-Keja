@@ -147,7 +147,7 @@ export function AuthPage() {
 
     try {
       const res = await fetch(
-        "sign up endpoint",
+        data.user_type === "admin"? "/owners": "/students",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -58,8 +58,6 @@ def add_apartment_owner():
                     "message": "Manager created successfully",
                     "student": {
                         "id": new_apartment_owner.id,
-                        "full_name": new_apartment_owner.full_name,
-                        "email": new_apartment_owner.email,
                         "username": new_apartment_owner.username,}
                 }
                 
@@ -407,8 +405,6 @@ def add_student():
                     "message": "Student created successfully",
                     "student": {
                         "id": new_student.id,
-                        "full_name": new_student.full_name,
-                        "email": new_student.email,
                         "username": new_student.username,
                     },
                 }
