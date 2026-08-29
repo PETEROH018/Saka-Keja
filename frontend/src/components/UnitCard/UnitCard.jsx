@@ -1,4 +1,4 @@
-import { Wifi, ShieldCheck, MapPin, Bed } from 'lucide-react';
+import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun } from 'lucide-react';
 
 export default function UnitCard({
   name,
