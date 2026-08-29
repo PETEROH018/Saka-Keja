@@ -13,7 +13,9 @@ export default function UnitsProvider({children}){
     },[])
 
     return(
-        <></>
+        <UnitsContext.Provider value={{allUnits}}  >
+            {children}
+        </UnitsContext.Provider>
     )
 
 } 
