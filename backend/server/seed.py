@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime,timezone
 from app import app
 from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, ApartmentAmenity, ApartmentAmenityJoining, NearbyFacility, Payment, Student, StudentUnit, ApartmentOwner
 from werkzeug.security import generate_password_hash
@@ -132,10 +132,10 @@ apartments_data = [
     },
     {
         "name": "Kilimani Gardens",
-        "type": "1 Bedroom",
+        "type": "Mixed",
         "isVerified": True,
         "total_views": 189,
-        "description": "Cozy one-bedroom apartment with modern finishes, ample natural light and excellent security.",
+        "description": "Modern residential apartment offering different unit configurations suitable for students, professionals and small families.",
         "location": "Kilimani",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
@@ -165,7 +165,7 @@ apartments_data = [
         "type": "2 Bedroom",
         "isVerified": True,
         "total_views": 156,
-        "description": "Well-designed two-bedroom apartment with a spacious living area and modern kitchen.",
+        "description": "Well-designed two-bedroom apartment with spacious living areas and modern kitchen.",
         "location": "Kileleshwa",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
@@ -177,10 +177,10 @@ apartments_data = [
     },
     {
         "name": "Parklands Executive",
-        "type": "2 Bedroom",
+        "type": "Mixed",
         "isVerified": False,
         "total_views": 98,
-        "description": "Comfortable two-bedroom apartment ideal for professionals looking for convenient city living.",
+        "description": "Comfortable residential apartment offering a mixture of unit types for professionals and families.",
         "location": "Parklands",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
@@ -197,7 +197,7 @@ apartments_data = [
         "total_views": 412,
         "description": "Large four-bedroom apartment surrounded by greenery and located in a peaceful residential area.",
         "location": "Karen",
-        "imageURLs": [
+        "imageURLS": [
             "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
             "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
             "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
@@ -237,10 +237,10 @@ apartments_data = [
     },
     {
         "name": "Loresho View",
-        "type": "3 Bedroom",
+        "type": "Mixed",
         "isVerified": True,
         "total_views": 204,
-        "description": "Spacious three-bedroom apartment with modern interiors and secure parking.",
+        "description": "Residential apartment offering different unit configurations with modern interiors and secure parking.",
         "location": "Loresho",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
@@ -297,10 +297,10 @@ apartments_data = [
     },
     {
         "name": "South B Residency",
-        "type": "2 Bedroom",
+        "type": "Mixed",
         "isVerified": False,
         "total_views": 87,
-        "description": "Affordable two-bedroom apartment located near shopping centers and major transport routes.",
+        "description": "Affordable residential apartment offering different unit types near shopping centers and major transport routes.",
         "location": "South B",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
@@ -387,10 +387,10 @@ apartments_data = [
     },
     {
         "name": "Kahawa West Apartments",
-        "type": "1 Bedroom",
+        "type": "Mixed",
         "isVerified": False,
         "total_views": 52,
-        "description": "Affordable one-bedroom apartment with convenient access to shops and public transportation.",
+        "description": "Affordable residential apartment offering different unit configurations with convenient access to shops and transport.",
         "location": "Kahawa West",
         "imageURLs": [
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
@@ -429,173 +429,177 @@ apartments_data = [
             "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
             "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
         ]
-    },
-    {
-        "name": "Embakasi Gardens",
-        "type": "2 Bedroom",
-        "isVerified": False,
-        "total_views": 66,
-        "description": "Affordable two-bedroom apartment with convenient access to major roads and public transport.",
-        "location": "Embakasi",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "Ruaka Modern Living",
-        "type": "2 Bedroom",
-        "isVerified": True,
-        "total_views": 312,
-        "description": "Modern two-bedroom apartment close to Two Rivers Mall and other major amenities.",
-        "location": "Ruaka",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
-            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154"
-        ]
-    },
-    {
-        "name": "Kikuyu Green Apartments",
-        "type": "1 Bedroom",
-        "isVerified": False,
-        "total_views": 39,
-        "description": "Affordable one-bedroom apartment in a growing residential area with easy access to Nairobi.",
-        "location": "Kikuyu",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c",
-            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154"
-        ]
-    },
-    {
-        "name": "Runda Luxury Homes",
-        "type": "4 Bedroom",
-        "isVerified": True,
-        "total_views": 521,
-        "description": "Luxury four-bedroom apartment featuring spacious interiors, premium finishes and ample parking.",
-        "location": "Runda",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "Gigiri Executive Apartments",
-        "type": "3 Bedroom",
-        "isVerified": True,
-        "total_views": 447,
-        "description": "Executive three-bedroom apartment in a secure neighborhood close to international organizations and embassies.",
-        "location": "Gigiri",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "Upper Hill Residences",
-        "type": "2 Bedroom",
-        "isVerified": True,
-        "total_views": 354,
-        "description": "Modern two-bedroom apartment ideal for professionals working in Nairobi's central business districts.",
-        "location": "Upper Hill",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "CBD City Apartments",
-        "type": "1 Bedroom",
-        "isVerified": True,
-        "total_views": 611,
-        "description": "Convenient one-bedroom apartment offering easy access to Nairobi CBD, offices, restaurants and public transport.",
-        "location": "Nairobi CBD",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "Westlands Prime",
-        "type": "3 Bedroom",
-        "isVerified": True,
-        "total_views": 489,
-        "description": "Premium three-bedroom apartment with modern finishes, spacious rooms and excellent security.",
-        "location": "Westlands",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154"
-        ]
-    },
-    {
-        "name": "Kilimani Central",
-        "type": "2 Bedroom",
-        "isVerified": True,
-        "total_views": 263,
-        "description": "Contemporary two-bedroom apartment located close to restaurants, shopping centers and entertainment.",
-        "location": "Kilimani",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154"
-        ]
-    },
-    {
-        "name": "Kileleshwa Park",
-        "type": "1 Bedroom",
-        "isVerified": False,
-        "total_views": 91,
-        "description": "Comfortable one-bedroom apartment in a peaceful neighborhood with easy access to major roads.",
-        "location": "Kileleshwa",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
-    },
-    {
-        "name": "Brookside Apartments",
-        "type": "2 Bedroom",
-        "isVerified": True,
-        "total_views": 238,
-        "description": "Well-appointed two-bedroom apartment in a quiet neighborhood near Westlands and Parklands.",
-        "location": "Brookside",
-        "imageURLs": [
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
-            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
-            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
-        ]
     }
 ]
+
+
+# ============================================================
+# UNITS
+# ============================================================
+
+def create_units_data(apartments):
+
+    units_data = []
+
+    mixed_categories = [
+        {
+            "category": "Single Room",
+            "bedrooms": 1,
+            "bathrooms": 1,
+            "rent": 12000,
+            "deposit": 12000,
+            "size": 30,
+            "maximum_occupants": 1
+        },
+        {
+            "category": "Bedsitter",
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "rent": 10000,
+            "deposit": 10000,
+            "size": 25,
+            "maximum_occupants": 1
+        },
+        {
+            "category": "1 Bedroom",
+            "bedrooms": 1,
+            "bathrooms": 1,
+            "rent": 18000,
+            "deposit": 18000,
+            "size": 45,
+            "maximum_occupants": 2
+        },
+        {
+            "category": "2 Bedroom",
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "rent": 28000,
+            "deposit": 28000,
+            "size": 70,
+            "maximum_occupants": 4
+        }
+    ]
+
+    for apartment_index, apartment in enumerate(apartments):
+
+        # ----------------------------------------------------
+        # Mixed apartments have different unit categories
+        # ----------------------------------------------------
+
+        if apartment["type"] == "Mixed":
+
+            for unit_number, unit_type in enumerate(
+                mixed_categories,
+                start=1
+            ):
+
+                units_data.append({
+                    "category": unit_type["category"],
+                    "description": (
+                        f"{unit_type['category']} unit available "
+                        f"at {apartment['name']}."
+                    ),
+                    "status": "Vacant",
+                    "rent": unit_type["rent"],
+                    "deposit": unit_type["deposit"],
+                    "bedrooms": unit_type["bedrooms"],
+                    "bathrooms": unit_type["bathrooms"],
+                    "size": unit_type["size"],
+                    "shared": False,
+                    "promoted": (
+                        apartment_index % 5 == 0
+                        and unit_number == 1
+                    ),
+                    "current_occupants": 0,
+                    "maximum_occupants": unit_type[
+                        "maximum_occupants"
+                    ],
+                    "imageURLS": apartment["imageURLs"],
+                    "apartment_id": apartment["id"]
+                })
+
+        # ----------------------------------------------------
+        # Non-mixed apartments
+        # ----------------------------------------------------
+
+        else:
+            if apartment["type"] == "Bedsitter":
+                bedrooms = 0
+                bathrooms = 1
+                rent = 10000
+                deposit = 10000
+                size = 25
+                maximum_occupants = 1
+
+            elif apartment["type"] == "1 Bedroom":
+                bedrooms = 1
+                bathrooms = 1
+                rent = 18000
+                deposit = 18000
+                size = 45
+                maximum_occupants = 2
+
+            elif apartment["type"] == "2 Bedroom":
+                bedrooms = 2
+                bathrooms = 2
+                rent = 28000
+                deposit = 28000
+                size = 70
+                maximum_occupants = 4
+
+            elif apartment["type"] == "3 Bedroom":
+                bedrooms = 3
+                bathrooms = 2
+                rent = 40000
+                deposit = 40000
+                size = 100
+                maximum_occupants = 5
+
+            elif apartment["type"] == "4 Bedroom":
+                bedrooms = 4
+                bathrooms = 3
+                rent = 55000
+                deposit = 55000
+                size = 140
+                maximum_occupants = 7
+
+            else:
+                bedrooms = 1
+                bathrooms = 1
+                rent = 15000
+                deposit = 15000
+                size = 40
+                maximum_occupants = 2
+
+            # Create 3 units for this apartment
+            for unit_number in range(1, 4):
+
+                units_data.append({
+                    "category": apartment["type"],
+                    "description": (
+                        f"{apartment['type']} unit {unit_number} "
+                        f"at {apartment['name']}."
+                    ),
+                    "status": "Vacant",
+                    "rent": rent,
+                    "deposit": deposit,
+                    "bedrooms": bedrooms,
+                    "bathrooms": bathrooms,
+                    "size": size,
+                    "shared": False,
+                    "promoted": (
+                        apartment_index % 5 == 0
+                        and unit_number == 1
+                    ),
+                    "current_occupants": 0,
+                    "maximum_occupants": maximum_occupants,
+                    "imageURLS": apartment["imageURLs"],
+                    "apartment_id": apartment["id"]
+                })
+
+    return units_data
+
+
 
 
 # ============================================================
@@ -840,8 +844,9 @@ def seed_database():
     with app.app_context():
 
         # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
-        ApartmentOwner.query.delete( synchronize_session=False )
+        Unit.query.delete( synchronize_session=False )
         Apartment.query.delete( synchronize_session=False )
+        ApartmentOwner.query.delete( synchronize_session=False )
         Student.query.delete( synchronize_session=False )
         UnitAmenity.query.delete( synchronize_session=False )
         ApartmentAmenity.query.delete( synchronize_session=False )
@@ -967,13 +972,13 @@ def seed_database():
         # Flush so newly-created owners receive their IDs
         db.session.flush()
 
-        print(f"Apartment owners available: {len(owners)}")
+        print(f"Created {len(owners)} apartment owners")
 
         # ----------------------------------------------------
         # Seed apartments
         # ----------------------------------------------------
 
-        apartments_created = 0
+        apartments = []
 
         for index, data in enumerate(apartments_data):
 
@@ -1000,7 +1005,58 @@ def seed_database():
             )
 
             db.session.add(apartment)
-            apartments_created += 1
+            apartments.append(apartment)
+
+        db.session.flush()
+
+        apartments.append(apartment)
+        print(
+            f"Created {len(apartments)} apartments."
+        )
+
+        # ----------------------------------------------------
+        # Seed units
+        # ----------------------------------------------------
+
+        units_data = create_units_data([
+            {
+                "id": apartment.id,
+                "name": apartment.name,
+                "type": apartment.type,
+                "imageURLs": apartment.imageURLs
+            }
+            for apartment in apartments
+        ])
+
+        units = []
+
+        for data in units_data:
+
+            unit = Unit(
+                category=data["category"],
+                description=data["description"],
+                status=data["status"],
+                rent=data["rent"],
+                deposit=data["deposit"],
+                bedrooms=data["bedrooms"],
+                bathrooms=data["bathrooms"],
+                size=data["size"],
+                shared=data["shared"],
+                promoted=data["promoted"],
+                current_occupants=data["current_occupants"],
+                maximum_occupants=data["maximum_occupants"],
+                imageURLS=data["imageURLS"],
+                apartment_id=data["apartment_id"]
+            )
+
+            db.session.add(unit)
+            units.append(unit)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(units)} units."
+        )
 
         # ----------------------------------------------------
         # Commit everything
@@ -1009,11 +1065,7 @@ def seed_database():
         db.session.commit()
 
         print(
-            f"Successfully seeded {len(owners)} apartment owners."
-        )
-
-        print(
-            f"Successfully seeded {apartments_created} apartments."
+            f"Successfully seeded the database."
         )
 
 
