@@ -56,9 +56,11 @@ def add_apartment_owner():
                 {
                     "user_type": "manager",
                     "message": "Manager created successfully",
-                    "student": {
+                    "token": {
                         "id": new_apartment_owner.id,
-                        "username": new_apartment_owner.username,}
+                        "name": new_apartment_owner.username,
+                        "role": "owner",
+                        "profile": "owner"}
                 }
                 
             )
@@ -403,9 +405,11 @@ def add_student():
                 {
                     "user_type": "student",
                     "message": "Student created successfully",
-                    "student": {
+                    "token": {
                         "id": new_student.id,
-                        "username": new_student.username,
+                        "name": new_student.username,
+                        "role": "student",
+                        "profile": "student"
                     },
                 }
             ),
@@ -444,10 +448,11 @@ def student_login():
 
             return jsonify({
                 "user_type": "student",
-                "user": {
+                "token": {
                     "id": student.id,
-                    "full_name": student.full_name,
-                    "username": student.username,
+                    "name": student.username,
+                    "role": "student",
+                    "profile": "student"
                 }
             }), 200
 
@@ -460,10 +465,11 @@ def student_login():
 
         return jsonify({
             "user_type": "manager",
-            "user": {
+            "token": {
                 "id": owner.id,
-                "full_name": owner.full_name,
-                "username": owner.username,
+                "name": owner.username,
+                "role": "owner",
+                "profile": "owner"
             }
         }), 200
 

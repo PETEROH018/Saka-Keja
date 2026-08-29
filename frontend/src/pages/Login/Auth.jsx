@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import getLocation from "../../utils/GetLocation";
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
 import validatePhoneNumber from "../../utils/ValidateNumber";
 import { useAuth } from "../../context/useAuth"
+
 
 export function AuthPage() {
   const { user,setUser } = useAuth()
