@@ -46,9 +46,17 @@ export default function UnitCard({
           <h3 className="text-base font-semibold text-gray-900">
             {name}
           </h3>
-          <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-            <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-            <span>{location}</span>
+          <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+            <span className="flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+              <span>{location}</span>
+            </span>
+            {typeof isShared === "boolean" && (
+              <span className="flex items-center gap-1 text-gray-400">
+                <Users className="h-3.5 w-3.5" />
+                <span>{isShared ? "Shared" : "Private"}</span>
+              </span>
+            )}
           </div>
         </div>
 
