@@ -84,23 +84,26 @@ export default function Filter({ onSearch, onFilter }) {
 
         {/* Filter Form */}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-          {/* Location Field */}
+          {/* Shared/Private Field */}
           <div className="md:col-span-4 flex flex-col gap-1.5">
-            <label htmlFor="filter-location" className="text-xs font-medium text-gray-700 flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-violet-600" />
-              <span>Location</span>
+            <label htmlFor="filter-shared" className="text-xs font-medium text-gray-700 flex items-center gap-1.5">
+              <Users className="h-3.5 w-3.5 text-violet-600" />
+              <span>Unit Type</span>
             </label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              <input
-                id="filter-location"
-                name="location"
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Kahawa Sukari, Juja..."
-                className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:border-violet-600 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
-              />
+              <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <select
+                id="filter-shared"
+                name="isShared"
+                value={isShared}
+                onChange={(e) => setIsShared(e.target.value)}
+                className="w-full pl-9 pr-8 py-2.5 text-sm bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:border-violet-600 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-gray-900 appearance-none cursor-pointer"
+              >
+                <option value="">Any</option>
+                <option value="true">Shared</option>
+                <option value="false">Private / Self-contained</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
     
