@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 export default function Filter({ onSearch, onFilter }) {
-  const [isShared, setIsShared] = useState("");
+  const [shared, setShared] = useState("");
   const [price, setPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [kitchenette, setKitchenette] = useState(false);
