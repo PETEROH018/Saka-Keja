@@ -447,7 +447,7 @@ def create_units_data(apartments):
             "bedrooms": 1,
             "bathrooms": 1,
             "rent": 12000,
-            "deposit": 12000,
+            "deposit": 12000/2,
             "size": 30,
             "maximum_occupants": 1
         },
@@ -456,7 +456,7 @@ def create_units_data(apartments):
             "bedrooms": 0,
             "bathrooms": 1,
             "rent": 10000,
-            "deposit": 10000,
+            "deposit": 10000/2,
             "size": 25,
             "maximum_occupants": 1
         },
@@ -465,7 +465,7 @@ def create_units_data(apartments):
             "bedrooms": 1,
             "bathrooms": 1,
             "rent": 18000,
-            "deposit": 18000,
+            "deposit": 18000/2,
             "size": 45,
             "maximum_occupants": 2
         },
@@ -474,7 +474,7 @@ def create_units_data(apartments):
             "bedrooms": 2,
             "bathrooms": 2,
             "rent": 28000,
-            "deposit": 28000,
+            "deposit": 28000/2,
             "size": 70,
             "maximum_occupants": 4
         }
@@ -527,7 +527,7 @@ def create_units_data(apartments):
                 bedrooms = 0
                 bathrooms = 1
                 rent = 10000
-                deposit = 10000
+                deposit = rent/2
                 size = 25
                 maximum_occupants = 1
 
@@ -535,7 +535,7 @@ def create_units_data(apartments):
                 bedrooms = 1
                 bathrooms = 1
                 rent = 18000
-                deposit = 18000
+                deposit = rent/2
                 size = 45
                 maximum_occupants = 2
 
@@ -543,7 +543,7 @@ def create_units_data(apartments):
                 bedrooms = 2
                 bathrooms = 2
                 rent = 28000
-                deposit = 28000
+                deposit = rent/2
                 size = 70
                 maximum_occupants = 4
 
@@ -551,7 +551,7 @@ def create_units_data(apartments):
                 bedrooms = 3
                 bathrooms = 2
                 rent = 40000
-                deposit = 40000
+                deposit = rent/2
                 size = 100
                 maximum_occupants = 5
 
@@ -559,7 +559,7 @@ def create_units_data(apartments):
                 bedrooms = 4
                 bathrooms = 3
                 rent = 55000
-                deposit = 55000
+                deposit = rent/2
                 size = 140
                 maximum_occupants = 7
 
@@ -567,7 +567,7 @@ def create_units_data(apartments):
                 bedrooms = 1
                 bathrooms = 1
                 rent = 15000
-                deposit = 15000
+                deposit = rent/2
                 size = 40
                 maximum_occupants = 2
 
