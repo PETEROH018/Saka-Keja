@@ -423,7 +423,7 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
-# Student login endpoint
+# login endpoint
 @app.route("/login", methods=["POST"])
 def student_login():
     data = request.get_json()
@@ -433,53 +433,33 @@ def student_login():
     
 
     try:
-        student = Student.query.filter_by(username=data["userName"]).first()
+        if data["userRole"] == "student":
+            student = Student.query.filter_by(username=data["userName"]).first()
 
-        if not student:
-            return jsonify({"error": "Invalid credentials"}), 401
+            if not student:
+                return jsonify({"error": "Invalid credentials"}), 401
 
-        if not student.authenticate(data["password"]):
-            return jsonify({"error": "Invalid credentials"}), 401
+            if not student.authenticate(data["password"]):
+                return jsonify({"error": "Invalid credentials"}), 401
 
-        import secrets
-        token = secrets.token_urlsafe(32)
+            return jsonify({
+                "user_type": "student",
+                "user": {
+                    "id": student.id,
+                    "full_name": student.full_name,
+                    "username": student.username,
+                }
+            }), 200
 
-        return jsonify({
-            "user_type": token,
-            "user": {
-                "id": student.id,
-                "full_name": student.full_name,
-                "username": student.username,
-            }
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": f"Login failed: {str(e)}"}), 500
-
-
-    # Manager login endpoint
-@app.route("/managers/login", methods=["POST"])
-def manager_login():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "No input data provided"}), 400
-
-    try:
-        owner = ApartmentOwner.query.filter_by(username=data["userName"]).first()
-
+        owner = ApartmentOwner.query.filter_by(username=data["userName"]).first()        
         if not owner:
             return jsonify({"error": "Invalid credentials"}), 401
 
         if not owner.authenticate(data["password"]):
             return jsonify({"error": "Invalid credentials"}), 401
 
-        # Generate a simple token 
-        import secrets
-        token = secrets.token_urlsafe(32)
-
         return jsonify({
-            "token": token,
+            "user_type": "manager",
             "user": {
                 "id": owner.id,
                 "full_name": owner.full_name,
@@ -489,6 +469,8 @@ def manager_login():
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
+
+
 
 
 if __name__ == "__main__":
