@@ -34,7 +34,7 @@ function App() {
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
-        <Route path="/apartments/:apartmentId/units/:unitId" element={<UnitDetails />} />      </Routes>
+        <Route path="/unit/:id" element={<UnitDetails />} />      </Routes>
     </HashRouter>
   )
 }
