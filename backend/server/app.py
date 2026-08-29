@@ -47,18 +47,17 @@ def add_apartment_owner():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    normalized = {
-        **data,
-        "full_name": data.get("full_name") or data.get("name"),
-        "username": data.get("username") or data.get("user_name"),
+    owner_payload = {
+        "full_name": data.get("full_name") or data.get("fullName") or data.get("name"),
+        "username": data.get("username") or data.get("userName") or data.get("user_name"),
         "password": data.get("password"),
         "email": data.get("email"),
-        "phone_number": data.get("phone_number"),
+        "phone_number": data.get("phoneNumber") or data.get("phone_number"),
         "location": data.get("location"),
     }
 
     try:
-        new_apartment_owner = apartment_owner_schema.load(normalized)
+        new_apartment_owner = apartment_owner_schema.load(owner_payload)
         db.session.add(new_apartment_owner)
         db.session.commit()
         return (
@@ -373,17 +372,15 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    normalized = {
-        **data,
-        "full_name": data.get("full_name") or data.get("name"),
-        "username": data.get("username") or data.get("user_name"),
-    }
+    full_name = data.get("full_name") or data.get("fullName") or data.get("name")
+    username = data.get("username") or data.get("userName") or data.get("user_name")
+    phone_number = data.get("phoneNumber") or data.get("phone_number")
 
     try:
         existing_student = Student.query.filter(
-            (Student.email == normalized["email"])
-            | (Student.username == normalized["username"])
-            | (Student.phone_number == normalized["phone_number"])
+            (Student.email == data["email"])
+            | (Student.username == username)
+            | (Student.phone_number == phone_number)
         ).first()
 
         if existing_student:
@@ -397,21 +394,21 @@ def add_student():
             )
 
         new_student = Student(
-            full_name=normalized["full_name"],
-            email=normalized["email"],
-            phone_number=normalized["phone_number"],
-            dob=normalized.get("dob"),
-            institution=normalized.get("institution"),
-            course=normalized.get("course"),
-            year_of_study=normalized.get("year_of_study"),
-            student_number=normalized.get("student_number"),
-            graduation_year=normalized.get("graduation_year"),
-            location=normalized.get("location"),
-            username=normalized["username"],
+            full_name=full_name,
+            email=data["email"],
+            phone_number=phone_number,
+            dob=data.get("dob"),
+            institution=data.get("institution"),
+            course=data.get("course"),
+            year_of_study=data.get("year_of_study"),
+            student_number=data.get("student_number"),
+            graduation_year=data.get("graduation_year"),
+            location=data.get("location"),
+            username=username,
         )
 
         # Automatically hashes password using Student model setter
-        new_student.password_hash = normalized["password"]
+        new_student.password_hash = data["password"]
 
         db.session.add(new_student)
         db.session.commit()
@@ -451,13 +448,13 @@ def student_login():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    user_role = data.get("userRole") or data.get("user_type") or data.get("role")
-    username = data.get("userName") or data.get("username") or data.get("user_name")
+    userRole = data.get("userRole") or data.get("user_type") or data.get("role")
+    userName = data.get("userName") or data.get("username") or data.get("user_name")
     password = data.get("password")
 
     try:
-        if user_role == "student":
-            student = Student.query.filter_by(username=username).first()
+        if userRole == "student":
+            student = Student.query.filter_by(username=userName).first()
 
             if not student:
                 return jsonify({"error": "Invalid credentials"}), 401
@@ -475,7 +472,7 @@ def student_login():
                 }
             }), 200
 
-        owner = ApartmentOwner.query.filter_by(username=username).first()        
+        owner = ApartmentOwner.query.filter_by(username=userName).first()        
         if not owner:
             return jsonify({"error": "Invalid credentials"}), 401
 

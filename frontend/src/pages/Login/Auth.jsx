@@ -17,20 +17,20 @@ export function AuthPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [countryCode, setCountryCode] = useState("+254");
   const [signUpFormData, setSignUpFormData] = useState({
-    name: "",
-    user_name: "",
-    phone_number: "",
+    fullName: "",
+    username: "",
+    phoneNumber: "",
     email: "",
     password: "",
     confirmPassword: "",
-    user_type: "student",
+    userRole: "student",
   });
 
   const [loginFormData, setLoginFormData] = useState({
     userName: "",
     password: "",
   });
-  const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
+  const phoneStatus = validatePhoneNumber(signUpFormData.phoneNumber, countryCode);
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -118,7 +118,7 @@ export function AuthPage() {
     const isLogin = formType === "login";
 
     if (!isLogin) {
-      const phoneCheck = validatePhoneNumber(signUpFormData.phone_number, countryCode);
+      const phoneCheck = validatePhoneNumber(signUpFormData.phoneNumber, countryCode);
       if (!phoneCheck.isValid) {
         alert("Please enter a valid phone number.");
         return;
@@ -158,19 +158,18 @@ export function AuthPage() {
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
-    const cleanPhone = signUpFormData.phone_number.replace(/\D/g, "");
+    const cleanPhone = signUpFormData.phoneNumber.replace(/\D/g, "");
     const formattedPhone = countryCode + (cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone);
     const finalSignUpPayload = {
       ...signUpPayload,
-      name: signUpFormData.name.trim(),
-      user_name: signUpFormData.user_name.trim(),
-      full_name: signUpFormData.name.trim(),
-      username: signUpFormData.user_name.trim(),
-      phone_number: formattedPhone,
+      fullName: signUpFormData.fullName.trim(),
+      username: signUpFormData.username.trim(),
+      phoneNumber: formattedPhone,
+      userRole: signUpFormData.userRole,
       location: await getLocation(),
     };
 
-    const endpoint = signUpFormData.user_type === "manager" ? "/owners" : "/students";
+    const endpoint = signUpFormData.userRole === "manager" ? "/owners" : "/students";
 
     try {
       const res = await fetch(endpoint, {
@@ -422,11 +421,11 @@ export function AuthPage() {
 
                 <input
                   type="text"
-                  name="name"
+                  name="fullName"
                   placeholder="John Doe"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
-                  value={signUpFormData.name}
+                  value={signUpFormData.fullName}
                 />
               </div>
 
@@ -438,11 +437,11 @@ export function AuthPage() {
 
                 <input
                   type="text"
-                  name="user_name"
+                  name="username"
                   placeholder="username123"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
-                  value={signUpFormData.user_name}
+                  value={signUpFormData.username}
                 />
               </div>
 
@@ -489,19 +488,19 @@ export function AuthPage() {
                   <div className="relative flex-1">
                     <input
                       type="tel"
-                      name="phone_number"
+                      name="phoneNumber"
                       placeholder="712 345 678"
                       className={`w-full rounded-xl border bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:ring-2 ${
-                        signUpFormData.phone_number
+                        signUpFormData.phoneNumber
                           ? phoneStatus.isValid
                             ? "border-green-500 focus:border-green-500 focus:ring-green-200"
                             : "border-red-500 focus:border-red-500 focus:ring-red-200"
                           : "border-outline-variant focus:border-primary focus:ring-secondary-container"
                       }`}
                       onChange={handleSignUpChange}
-                      value={signUpFormData.phone_number}
+                      value={signUpFormData.phoneNumber}
                     />
-                    {signUpFormData.phone_number && (
+                    {signUpFormData.phoneNumber && (
                       <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
                         {phoneStatus.isValid ? (
                           <Check className="h-5 w-5 text-green-500" />
@@ -513,7 +512,7 @@ export function AuthPage() {
                   </div>
                 </div>
 
-                {signUpFormData.phone_number && (
+                {signUpFormData.phoneNumber && (
                   <p className={`mt-1 text-xs ${phoneStatus.isValid ? "text-green-600 font-medium" : "text-red-500"}`}>
                     {phoneStatus.message}
                   </p>
@@ -599,8 +598,8 @@ export function AuthPage() {
                     bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface-variant
                     outline-none transition
                     focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                  name="user_type"
-                  value={signUpFormData.user_type}
+                  name="userRole"
+                  value={signUpFormData.userRole}
                   onChange={handleSignUpChange}
                 >
                   <option value="student">Student</option>
