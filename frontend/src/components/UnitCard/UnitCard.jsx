@@ -21,8 +21,8 @@ export default function UnitCard({
   const wifiIncluded = hasAmenity("WiFi");
   const waterReliable = hasAmenity("Water");
   const securityGuard = hasAmenity("Security Guard");
-  const kitchenette = hasAmenity("Kitchenette");
-  const wardrobe = hasAmenity("Wardrobe");
+  const kitchenette = hasAmenity("Kitchen");
+  const wardrobe = hasAmenity("Wardrobes");
   const balcony = hasAmenity("Balcony");
 
   return (
