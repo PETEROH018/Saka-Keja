@@ -9,16 +9,41 @@ import { API_BASE_URL } from "../../config/api";
 
 const PER_PAGE = 6;
 
+function buildQueryString(filters) {
+  if (!filters) return "";
+  const params = new URLSearchParams();
+
+  if (typeof filters.shared === "boolean") {
+    params.set("shared", String(filters.shared));
+  }
+  if (filters.price) {
+    params.set("max_rent", filters.price);
+  }
+  if (filters.bedrooms) {
+    params.set("bedrooms", filters.bedrooms);
+  }
+  if (filters.kitchenette) {
+    params.set("kitchenette", "true");
+  }
+  if (filters.wardrobe) {
+    params.set("wardrobe", "true");
+  }
+  if (filters.balcony) {
+    params.set("balcony", "true");
+  }
+
+  const qs = params.toString();
+  return qs ? `?${qs}` : "";
+}
+
 export default function Home() {
   const [page, setPage] = useState(1);
   const [activeFilters, setActiveFilters] = useState(null);
 
-// Backend currently ignores page/per_page query params and returns
-// the full unit list, so pagination is handled client-side below.
-  const endpoint = `${API_BASE_URL}/units`;
+  const endpoint = `${API_BASE_URL}/units${buildQueryString(activeFilters)}`;
   const { data, loading, error } = useFetch(endpoint);
 
-  const allUnits = data ?? [];
+  const units = data ?? [];
 
   function onFilter(filterData) {
     setActiveFilters(filterData);
@@ -30,55 +55,11 @@ export default function Home() {
     setPage(1);
   }
 
-  const hasAmenity = (unit, name) =>
-    unit.unit_amenity_links?.some((link) => link.amenity?.name === name) ?? false;
-
-  const filteredUnits = activeFilters
-    ? allUnits.filter((unit) => {
-        const sharedMatches =
-          typeof activeFilters.shared === "boolean"
-            ? Boolean(unit.shared) === activeFilters.shared
-            : true;
-
-        const rentMatches = activeFilters.price
-          ? Number(unit.rent) <= Number(activeFilters.price)
-          : true;
-
-        const bedroomsMatches = activeFilters.bedrooms
-          ? activeFilters.bedrooms === "bedsitter"
-            ? unit.property_type?.toLowerCase() === "bedsitter"
-            : activeFilters.bedrooms === "3+"
-              ? Number(unit.bedrooms) >= 3
-              : Number(unit.bedrooms) === Number(activeFilters.bedrooms)
-          : true;
-
-        const kitchenetteMatches = activeFilters.kitchenette
-          ? hasAmenity(unit, "Kitchen")
-          : true;
-
-        const wardrobeMatches = activeFilters.wardrobe
-          ? hasAmenity(unit, "Wardrobes")
-          : true;
-
-        const balconyMatches = activeFilters.balcony
-          ? hasAmenity(unit, "Balcony")
-          : true;
-
-        return (
-          sharedMatches &&
-          rentMatches &&
-          bedroomsMatches &&
-          kitchenetteMatches &&
-          wardrobeMatches &&
-          balconyMatches
-        );
-      })
-    : allUnits;
-
-  // Client-side pagination over the (possibly filtered) list
-  const totalPages = Math.max(1, Math.ceil(filteredUnits.length / PER_PAGE));
+  // Backend now returns only matching units — paginate client-side
+  // since /units still doesn't support page/per_page itself.
+  const totalPages = Math.max(1, Math.ceil(units.length / PER_PAGE));
   const startIndex = (page - 1) * PER_PAGE;
-  const pageUnits = filteredUnits.slice(startIndex, startIndex + PER_PAGE);
+  const pageUnits = units.slice(startIndex, startIndex + PER_PAGE);
 
   return (
     <>
@@ -87,7 +68,7 @@ export default function Home() {
       <main className="bg-surface text-on-surface font-sans min-h-screen flex flex-col justify-center items-center py-16">
         <UnitsGrid units={pageUnits} loading={loading} error={error} />
 
-        {!loading && !error && filteredUnits.length > 0 && (
+        {!loading && !error && units.length > 0 && (
           <div className="flex items-center gap-4 mt-8">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
