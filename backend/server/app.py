@@ -425,6 +425,7 @@ def student_login():
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
+    
 
     try:
         student = Student.query.filter_by(username=data["userName"]).first()

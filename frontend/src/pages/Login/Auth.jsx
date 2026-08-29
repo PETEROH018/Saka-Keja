@@ -31,104 +31,81 @@ export function AuthPage() {
   });
   const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
 
-  const loginAsStudent = () => {
-        if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
-          setUser({
-              id: 1,
-              name: "Ben",
-              role: "student",
-              profile: "student",
-          });
-          navigate('/')
-        }
-        else{
-          alert("Wrong username or password!")
-        }
-      };
+  // const loginAsStudent = () => {
+  //       if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
+  //         setUser({
+  //             id: 1,
+  //             name: "Ben",
+  //             role: "student",
+  //             profile: "student",
+  //         });
+  //         navigate('/')
+  //       }
+  //       else{
+  //         alert("Wrong username or password!")
+  //       }
+  //     };
 
-  const loginAsOwner = () => {
-      if(loginFormData['userName'] === 'ann' && loginFormData['password'] === '1234'){
-          setUser({
-              id: 2,
-              name: "Ann",
-              role: "owner",
-              profile: "owner"
-          });
-          navigate('/admin-dash')
-        }
-      else{
-          alert("Wrong username or password!")
-        }
-      };
+  // const loginAsOwner = () => {
+  //     if(loginFormData['userName'] === 'ann' && loginFormData['password'] === '1234'){
+  //         setUser({
+  //             id: 2,
+  //             name: "Ann",
+  //             role: "owner",
+  //             profile: "owner"
+  //         });
+  //         navigate('/admin-dash')
+  //       }
+  //     else{
+  //         alert("Wrong username or password!")
+  //       }
+  //     };
   
 
-  function handleLoginSimulation(event){
-    if (userRole == 'student'){
-      loginAsStudent()
-    }
-    else{
-      loginAsOwner()
-    }
-  }
+  // function handleLoginSimulation(event){
+  //   if (userRole == 'student'){
+  //     loginAsStudent()
+  //   }
+  //   else{
+  //     loginAsOwner()
+  //   }
+  // }
 
-  function handleLoginChange(event) {
-    const { name, value } = event.target;
-    setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
-  }
+  // function handleLoginChange(event) {
+  //   const { name, value } = event.target;
+  //   setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
+  // }
 
-  function handleSignUpChange(event) {
-    const { name, value } = event.target;
-    setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
-  }
+  // function handleSignUpChange(event) {
+  //   const { name, value } = event.target;
+  //   setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
+  // }
 
   // Login as a Student
-  // async function loginAsStudent(userName, password) {
-  //   try {
-  //     const res = await fetch("/api/students/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userName, password }),
-  //     });
-  //     if (!res.ok) {
-  //       throw new Error("Invalid student credentials. Please try again.");
-  //     }
-  //     const data = await res.json();
-  //     localStorage.setItem("token", data.token);
-  //     localStorage.setItem("user", JSON.stringify(data.user));
-  //     localStorage.setItem("role", "student");
-  //     navigate("/home");
-  //     return { success: true };
-  //   } catch (err) {
-  //     console.error("Student login error:", err);
-  //     alert(err.message);
-  //     return { success: false, message: err.message };
-  //   }
-  // }
+  async function login(userName, password, userRole) {
+    try {
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password, userRole }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid student credentials. Please try again.");
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", "student");
+      navigate("/home");
+      return { success: true };
+    } catch (err) {
+      console.error("Student login error:", err);
+      alert(err.message);
+      return { success: false, message: err.message };
+    }
+  }
 
-  // // Login as a Manager (property owner)
-  // async function loginAsManager(userName, password) {
-  //   try {
-  //     const res = await fetch("/api/managers/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userName, password }),
-  //     });
-  //     if (!res.ok) {
-  //       throw new Error("Invalid manager credentials. Please try again.");
-  //     }
-  //     const data = await res.json();
-  //     localStorage.setItem("token", data.token);
-  //     localStorage.setItem("user", JSON.stringify(data.user));
-  //     localStorage.setItem("role", "manager");
-  //     navigate("/owner-profile");
-  //     return { success: true };
-  //   } catch (err) {
-  //     console.error("Manager login error:", err);
-  //     alert(err.message);
-  //     return { success: false, message: err.message };
-  //   }
-  // }
-
+  
   async function handleSubmit(event, formType) {
     event.preventDefault();
     const isLogin = formType === "login";
