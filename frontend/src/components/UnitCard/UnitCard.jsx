@@ -90,6 +90,15 @@ export default function UnitCard({
           <div title="Security guard" className={`flex h-7 w-7 items-center justify-center rounded-full ${securityGuard ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
             <ShieldCheck className="h-3.5 w-3.5" />
           </div>
+          <div title="Kitchenette" className={`flex h-7 w-7 items-center justify-center rounded-full ${kitchenette ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Utensils className="h-3.5 w-3.5" />
+          </div>
+          <div title="Wardrobe" className={`flex h-7 w-7 items-center justify-center rounded-full ${wardrobe ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Shirt className="h-3.5 w-3.5" />
+          </div>
+          <div title="Balcony" className={`flex h-7 w-7 items-center justify-center rounded-full ${balcony ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Sun className="h-3.5 w-3.5" />
+          </div>
         </div>
 
         {/* Action Button */}
