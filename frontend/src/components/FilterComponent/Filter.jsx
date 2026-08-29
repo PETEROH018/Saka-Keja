@@ -53,7 +53,7 @@ export default function Filter({ onSearch, onFilter }) {
     if (onFilter) onFilter(emptyFilters);
   };
 
-  const hasActiveFilters = Boolean(location || price || bedrooms);
+  const hasActiveFilters = Boolean(isShared || price || bedrooms || kitchenette || wardrobe || balcony);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-4 sm:px-6">
