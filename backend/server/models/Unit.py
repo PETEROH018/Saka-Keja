@@ -1,4 +1,5 @@
 from configs import *
+
 from sqlalchemy.orm import relationship
 class Unit(db.Model):
     __tablename__ = 'units'
@@ -21,7 +22,7 @@ class Unit(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     
-    amenity_links = db.relationship(
+    unit_amenity_links = db.relationship(
         "UnitAmenityJoining",
         backref="unit",
         cascade="all, delete-orphan",
