@@ -457,8 +457,8 @@ def student_login():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    userRole = data.get("userRole") or data.get("user_type") or data.get("role")
-    userName = data.get("userName") or data.get("username") or data.get("user_name")
+    userRole = data.get("userRole")
+    userName = data.get("userName") 
     password = data.get("password")
 
     try:
