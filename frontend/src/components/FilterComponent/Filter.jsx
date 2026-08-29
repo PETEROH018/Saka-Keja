@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { 
-  MapPin, 
+  Users, 
   Banknote, 
   Bed, 
   Search, 
