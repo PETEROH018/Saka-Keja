@@ -803,6 +803,36 @@ unit_amenities_data = [
 
 
 # ============================================================
+# APARTMENT AMENITIES
+# ============================================================
+
+apartment_amenities_data = [
+    {
+        "name": "Furnished",
+        "description": "The apartment comes fully furnished with essential furniture and fittings.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/1946/1946436.png"
+    },
+    {
+        "name": "WiFi Available",
+        "description": "Reliable WiFi internet connectivity is available throughout the apartment.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/93/93158.png"
+    },
+    {
+        "name": "Water Reliable",
+        "description": "The apartment has a reliable and consistent water supply.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/3105/3105807.png"
+    },
+    {
+        "name": "Security Guard",
+        "description": "Trained security personnel are available to provide security for residents.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/3067/3067452.png"
+    }
+]
+
+
+
+
+# ============================================================
 # SEED DATABASE
 # ============================================================
 
@@ -814,6 +844,7 @@ def seed_database():
         Apartment.query.delete( synchronize_session=False )
         Student.query.delete( synchronize_session=False )
         UnitAmenity.query.delete( synchronize_session=False )
+        ApartmentAmenity.query.delete( synchronize_session=False )
         db.session.commit()
 
         # ----------------------------------------------------
@@ -875,6 +906,30 @@ def seed_database():
 
         print(
             f"Created {len(unit_amenities)} unit amenities."
+        )
+
+        
+        # ----------------------------------------------------
+        # Create the 4 apartment amenities
+        # ----------------------------------------------------
+
+        apartment_amenities = []
+
+        for data in apartment_amenities_data:
+
+            apartment_amenity = ApartmentAmenity(
+                name=data["name"],
+                description=data["description"],
+                iconUrl=data["iconUrl"]
+            )
+
+            db.session.add(apartment_amenity)
+            apartment_amenities.append(apartment_amenity)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(apartment_amenities)} apartment amenities."
         )
 
 
