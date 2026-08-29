@@ -834,6 +834,74 @@ apartment_amenities_data = [
 ]
 
 
+# ============================================================
+# NEARBY FACILITIES
+# ============================================================
+
+facility_types = [
+    {
+        "category": "school",
+        "titles": [
+            "Nearby Primary School",
+            "Nearby Secondary School",
+            "Nearby International School",
+            "Nearby University"
+        ],
+        "distances": [
+            "0.8 km",
+            "1.2 km",
+            "1.5 km",
+            "2.0 km"
+        ]
+    },
+    {
+        "category": "mall",
+        "titles": [
+            "Nearby Shopping Mall",
+            "Nearby City Mall",
+            "Nearby Plaza",
+            "Nearby Shopping Centre"
+        ],
+        "distances": [
+            "1.0 km",
+            "1.4 km",
+            "1.8 km",
+            "2.3 km"
+        ]
+    },
+    {
+        "category": "hospital",
+        "titles": [
+            "Nearby Medical Centre",
+            "Nearby Hospital",
+            "Nearby Health Centre",
+            "Nearby Clinic"
+        ],
+        "distances": [
+            "0.7 km",
+            "1.3 km",
+            "1.6 km",
+            "2.1 km"
+        ]
+    },
+    {
+        "category": "gym",
+        "titles": [
+            "Nearby Fitness Centre",
+            "Nearby Gym",
+            "Nearby Fitness Club",
+            "Nearby Health Club"
+        ],
+        "distances": [
+            "0.5 km",
+            "0.9 km",
+            "1.4 km",
+            "1.9 km"
+        ]
+    }
+]
+
+
 
 
 # ============================================================
@@ -844,6 +912,7 @@ def seed_database():
     with app.app_context():
 
         # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
+        NearbyFacility.query.delete( synchronize_session=False )
         Unit.query.delete( synchronize_session=False )
         Apartment.query.delete( synchronize_session=False )
         ApartmentOwner.query.delete( synchronize_session=False )
@@ -1057,6 +1126,106 @@ def seed_database():
         print(
             f"Created {len(units)} units."
         )
+
+
+        # ----------------------------------------------------
+        # Seed nearby facilities
+        # ----------------------------------------------------
+
+        nearby_facilities = []
+
+        for apartment_index, apartment in enumerate(apartments):
+
+            # ------------------------------------------------
+            # Create one school
+            # ------------------------------------------------
+
+            school = NearbyFacility(
+                title=facility_types[0]["titles"][
+                    apartment_index % len(
+                        facility_types[0]["titles"]
+                    )
+                ],
+                distance=facility_types[0]["distances"][
+                    apartment_index % len(
+                        facility_types[0]["distances"]
+                    )
+                ],
+                apartmentId=apartment.id
+            )
+
+            nearby_facilities.append(school)
+
+            # ------------------------------------------------
+            # Create one mall
+            # ------------------------------------------------
+
+            mall = NearbyFacility(
+                title=facility_types[1]["titles"][
+                    apartment_index % len(
+                        facility_types[1]["titles"]
+                    )
+                ],
+                distance=facility_types[1]["distances"][
+                    apartment_index % len(
+                        facility_types[1]["distances"]
+                    )
+                ],
+                apartmentId=apartment.id
+            )
+
+            nearby_facilities.append(mall)
+
+            # ------------------------------------------------
+            # Create one hospital
+            # ------------------------------------------------
+
+            hospital = NearbyFacility(
+                title=facility_types[2]["titles"][
+                    apartment_index % len(
+                        facility_types[2]["titles"]
+                    )
+                ],
+                distance=facility_types[2]["distances"][
+                    apartment_index % len(
+                        facility_types[2]["distances"]
+                    )
+                ],
+                apartmentId=apartment.id
+            )
+
+            nearby_facilities.append(hospital)
+
+            # ------------------------------------------------
+            # Create one gym
+            # ------------------------------------------------
+
+            gym = NearbyFacility(
+                title=facility_types[3]["titles"][
+                    apartment_index % len(
+                        facility_types[3]["titles"]
+                    )
+                ],
+                distance=facility_types[3]["distances"][
+                    apartment_index % len(
+                        facility_types[3]["distances"]
+                    )
+                ],
+                apartmentId=apartment.id
+            )
+
+            nearby_facilities.append(gym)
+
+
+        db.session.add_all(nearby_facilities)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(nearby_facilities)} nearby facilities."
+        )
+
+
 
         # ----------------------------------------------------
         # Commit everything
