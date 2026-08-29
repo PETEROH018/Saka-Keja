@@ -773,6 +773,35 @@ students_data = [
     }
 ]
 
+
+# ============================================================
+# UNIT AMENITIES
+# ============================================================
+
+unit_amenities_data = [
+    {
+        "name": "Kitchen",
+        "description": "A functional kitchen area for preparing and cooking meals.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/1046/1046857.png"
+    },
+    {
+        "name": "Wardrobes",
+        "description": "Built-in or fitted storage wardrobes for clothes and personal belongings.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/2910/2910768.png"
+    },
+    {
+        "name": "Balcony",
+        "description": "A private outdoor balcony providing additional space and ventilation.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/2555/2555013.png"
+    },
+    {
+        "name": "Sink",
+        "description": "A fixed sink for washing dishes, utensils, and other household items.",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/2738/2738152.png"
+    }
+]
+
+
 # ============================================================
 # SEED DATABASE
 # ============================================================
@@ -784,10 +813,11 @@ def seed_database():
         ApartmentOwner.query.delete( synchronize_session=False )
         Apartment.query.delete( synchronize_session=False )
         Student.query.delete( synchronize_session=False )
+        UnitAmenity.query.delete( synchronize_session=False )
         db.session.commit()
 
         # ----------------------------------------------------
-        # 1. Seed students
+        # Seed students
         # ----------------------------------------------------
 
         students = []
@@ -823,9 +853,33 @@ def seed_database():
             f"Created {len(students)} students."
         )
 
+        
+        # ----------------------------------------------------
+        # Seed 4 unit amenities
+        # ----------------------------------------------------
+
+        unit_amenities = []
+
+        for data in unit_amenities_data:
+
+            unit_amenity = UnitAmenity(
+                name=data["name"],
+                description=data["description"],
+                iconUrl=data["iconUrl"]
+            )
+
+            db.session.add(unit_amenity)
+            unit_amenities.append(unit_amenity)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(unit_amenities)} unit amenities."
+        )
+
 
         # ----------------------------------------------------
-        # 2. Seed apartment owners
+        # Seed apartment owners
         # ----------------------------------------------------
 
         owners = []
@@ -861,7 +915,7 @@ def seed_database():
         print(f"Apartment owners available: {len(owners)}")
 
         # ----------------------------------------------------
-        # 3. Seed apartments
+        # Seed apartments
         # ----------------------------------------------------
 
         apartments_created = 0
@@ -894,7 +948,7 @@ def seed_database():
             apartments_created += 1
 
         # ----------------------------------------------------
-        # 4. Commit everything
+        # Commit everything
         # ----------------------------------------------------
 
         db.session.commit()
