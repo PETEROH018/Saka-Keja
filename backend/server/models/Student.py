@@ -6,7 +6,7 @@ class Student(db.Model):
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
-    phone_number = Column(String(20), nullable=False, unique=True)
+    phone_number = Column(String(30), nullable=False, unique=True)
     dob = Column(DateTime, nullable=True)
     institution = Column(String(50), nullable=True)
     course = Column(String(50), nullable=True)

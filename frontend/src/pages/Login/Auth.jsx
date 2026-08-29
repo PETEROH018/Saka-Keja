@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import getLocation from "../../utils/GetLocation";
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
 import validatePhoneNumber from "../../utils/ValidateNumber";
 import { useAuth } from "../../context/useAuth"
+
 
 export function AuthPage() {
   const { user,setUser } = useAuth()
@@ -16,60 +17,20 @@ export function AuthPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [countryCode, setCountryCode] = useState("+254");
   const [signUpFormData, setSignUpFormData] = useState({
-    name: "",
-    user_name: "",
-    phone_number: "",
+    fullName: "",
+    username: "",
+    phoneNumber: "",
     email: "",
     password: "",
     confirmPassword: "",
-    user_type: "student",
+    userRole: "student",
   });
 
   const [loginFormData, setLoginFormData] = useState({
     userName: "",
     password: "",
   });
-  const phoneStatus = validatePhoneNumber(signUpFormData.phone_number, countryCode);
-
-  const loginAsStudent = () => {
-        if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
-          setUser({
-              id: 1,
-              name: "Ben",
-              role: "student",
-              profile: "student",
-          });
-          navigate('/')
-        }
-        else{
-          alert("Wrong username or password!")
-        }
-      };
-
-  const loginAsOwner = () => {
-      if(loginFormData['userName'] === 'ann' && loginFormData['password'] === '1234'){
-          setUser({
-              id: 2,
-              name: "Ann",
-              role: "owner",
-              profile: "owner"
-          });
-          navigate('/admin-dash')
-        }
-      else{
-          alert("Wrong username or password!")
-        }
-      };
-  
-
-  function handleLoginSimulation(event){
-    if (userRole == 'student'){
-      loginAsStudent()
-    }
-    else{
-      loginAsOwner()
-    }
-  }
+  const phoneStatus = validatePhoneNumber(signUpFormData.phoneNumber, countryCode);
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -81,60 +42,83 @@ export function AuthPage() {
     setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
   }
 
-  // Login as a Student
-  // async function loginAsStudent(userName, password) {
-  //   try {
-  //     const res = await fetch("/api/students/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userName, password }),
-  //     });
-  //     if (!res.ok) {
-  //       throw new Error("Invalid student credentials. Please try again.");
-  //     }
-  //     const data = await res.json();
-  //     localStorage.setItem("token", data.token);
-  //     localStorage.setItem("user", JSON.stringify(data.user));
-  //     localStorage.setItem("role", "student");
-  //     navigate("/home");
-  //     return { success: true };
-  //   } catch (err) {
-  //     console.error("Student login error:", err);
-  //     alert(err.message);
-  //     return { success: false, message: err.message };
+  // const loginAsStudent = () => {
+  //       if(loginFormData['userName'] === 'ben' && loginFormData['password'] === '1234'){
+  //         setUser({
+  //             id: 1,
+  //             name: "Ben",
+  //             role: "student",
+  //             profile: "student",
+  //         });
+  //         navigate('/')
+  //       }
+  //       else{
+  //         alert("Wrong username or password!")
+  //       }
+  //     };
+
+  // const loginAsOwner = () => {
+  //     if(loginFormData['userName'] === 'ann' && loginFormData['password'] === '1234'){
+  //         setUser({
+  //             id: 2,
+  //             name: "Ann",
+  //             role: "owner",
+  //             profile: "owner"
+  //         });
+  //         navigate('/admin-dash')
+  //       }
+  //     else{
+  //         alert("Wrong username or password!")
+  //       }
+  //     };
+  
+
+  // function handleLoginSimulation(event){
+  //   if (userRole == 'student'){
+  //     loginAsStudent()
+  //   }
+  //   else{
+  //     loginAsOwner()
   //   }
   // }
 
-  // // Login as a Manager (property owner)
-  // async function loginAsManager(userName, password) {
-  //   try {
-  //     const res = await fetch("/api/managers/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userName, password }),
-  //     });
-  //     if (!res.ok) {
-  //       throw new Error("Invalid manager credentials. Please try again.");
-  //     }
-  //     const data = await res.json();
-  //     localStorage.setItem("token", data.token);
-  //     localStorage.setItem("user", JSON.stringify(data.user));
-  //     localStorage.setItem("role", "manager");
-  //     navigate("/owner-profile");
-  //     return { success: true };
-  //   } catch (err) {
-  //     console.error("Manager login error:", err);
-  //     alert(err.message);
-  //     return { success: false, message: err.message };
-  //   }
+  // function handleLoginChange(event) {
+  //   const { name, value } = event.target;
+  //   setLoginFormData((currentData) => ({ ...currentData, [name]: value }));
   // }
 
+  // function handleSignUpChange(event) {
+  //   const { name, value } = event.target;
+  //   setSignUpFormData((currentData) => ({ ...currentData, [name]: value }));
+  // }
+
+  // Login 
+  async function login(userName, password, userRole) {
+    try {
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password, userRole }),
+      });
+      if (!res.ok) {
+        throw new Error("Invalid credentials. Please try again.");
+      }
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Student login error:", err);
+      alert(err.message);
+      return { success: false, message: err.message };
+    }
+  }
+
+  
   async function handleSubmit(event, formType) {
     event.preventDefault();
     const isLogin = formType === "login";
 
     if (!isLogin) {
-      const phoneCheck = validatePhoneNumber(signUpFormData.phone_number, countryCode);
+      const phoneCheck = validatePhoneNumber(signUpFormData.phoneNumber, countryCode);
       if (!phoneCheck.isValid) {
         alert("Please enter a valid phone number.");
         return;
@@ -149,51 +133,65 @@ export function AuthPage() {
       }
     }
 
-    // Handle login submission: route to the correct endpoint based on selected role
     if (isLogin) {
       if (!loginFormData.userName || !loginFormData.password) {
         alert("Please enter both your username and password to log in.");
         return;
       }
-      if (userRole === "manager") {
-        await loginAsManager(loginFormData.userName, loginFormData.password);
-      } else {
-        await loginAsStudent(loginFormData.userName, loginFormData.password);
+
+      try {
+        const data = await login(loginFormData.userName, loginFormData.password, userRole);
+        if (!data || data.error || !data.token) {
+          return;
+        }
+
+        setUser(data.token);
+        if (data.user_type === "manager") {
+          navigate("/admin-dash");
+        } else if (data.user_type === "student") {
+          navigate("/student-dash");
+        }
+      } catch (err) {
+        console.error("Login failed:", err);
       }
       return;
     }
 
     const { confirmPassword, ...signUpPayload } = signUpFormData;
-    const cleanPhone = signUpFormData.phone_number.replace(/\D/g, "");
+    const cleanPhone = signUpFormData.phoneNumber.replace(/\D/g, "");
     const formattedPhone = countryCode + (cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone);
     const finalSignUpPayload = {
       ...signUpPayload,
-      phone_number: formattedPhone,
+      fullName: signUpFormData.fullName.trim(),
+      username: signUpFormData.username.trim(),
+      phoneNumber: formattedPhone,
+      userRole: signUpFormData.userRole,
+      location: await getLocation(),
     };
-    const formData = isLogin ? loginFormData : finalSignUpPayload;
+
+    const endpoint = signUpFormData.userRole === "manager" ? "/owners" : "/students";
 
     try {
-      const res = await fetch(
-        isLogin ? "login endpoint" : "sign up endpoint",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(isSignup? {...formData, location: await getLocation()}: formData),
-        },
-      )
-      if (!res.ok) {
-        throw new Error("Something went wrong. Please try again.");
-      }
-      const data = await res.json()
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalSignUpPayload),
+      });
 
-      if (data.user_type === "admin") {
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+
+      setUser(data.token);
+      if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
-        navigate("/home");
+        navigate("/student-dash");
       }
-    } catch (err)
-    {
-      console.error(err)
+    } catch (err) {
+      console.error("Signup failed:", err);
+      alert(err.message || "Something went wrong. Please try again.");
     }
   }
     
@@ -329,7 +327,6 @@ export function AuthPage() {
                   text-sm sm:text-base font-semibold text-white
                   transition hover:bg-primary-container
                   active:scale-[0.98]"
-                onClick={()=>{handleLoginSimulation()}}
               >
                 Login
               </button>
@@ -424,11 +421,11 @@ export function AuthPage() {
 
                 <input
                   type="text"
-                  name="name"
+                  name="fullName"
                   placeholder="John Doe"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
-                  value={signUpFormData.name}
+                  value={signUpFormData.fullName}
                 />
               </div>
 
@@ -440,11 +437,11 @@ export function AuthPage() {
 
                 <input
                   type="text"
-                  name="user_name"
+                  name="username"
                   placeholder="username123"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-secondary-container"
                   onChange={handleSignUpChange}
-                  value={signUpFormData.user_name}
+                  value={signUpFormData.username}
                 />
               </div>
 
@@ -491,19 +488,19 @@ export function AuthPage() {
                   <div className="relative flex-1">
                     <input
                       type="tel"
-                      name="phone_number"
+                      name="phoneNumber"
                       placeholder="712 345 678"
                       className={`w-full rounded-xl border bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 pr-10 text-sm sm:text-base text-on-surface outline-none transition placeholder:text-on-surface-variant focus:ring-2 ${
-                        signUpFormData.phone_number
+                        signUpFormData.phoneNumber
                           ? phoneStatus.isValid
                             ? "border-green-500 focus:border-green-500 focus:ring-green-200"
                             : "border-red-500 focus:border-red-500 focus:ring-red-200"
                           : "border-outline-variant focus:border-primary focus:ring-secondary-container"
                       }`}
                       onChange={handleSignUpChange}
-                      value={signUpFormData.phone_number}
+                      value={signUpFormData.phoneNumber}
                     />
-                    {signUpFormData.phone_number && (
+                    {signUpFormData.phoneNumber && (
                       <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
                         {phoneStatus.isValid ? (
                           <Check className="h-5 w-5 text-green-500" />
@@ -515,7 +512,7 @@ export function AuthPage() {
                   </div>
                 </div>
 
-                {signUpFormData.phone_number && (
+                {signUpFormData.phoneNumber && (
                   <p className={`mt-1 text-xs ${phoneStatus.isValid ? "text-green-600 font-medium" : "text-red-500"}`}>
                     {phoneStatus.message}
                   </p>
@@ -601,12 +598,12 @@ export function AuthPage() {
                     bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-on-surface-variant
                     outline-none transition
                     focus:border-primary focus:ring-2 focus:ring-secondary-container"
-                  name="user_type"
-                  value={signUpFormData.user_type}
+                  name="userRole"
+                  value={signUpFormData.userRole}
                   onChange={handleSignUpChange}
                 >
                   <option value="student">Student</option>
-                  <option value="property_manager">Property Manager</option>
+                  <option value="manager">Property Manager</option>
                 </select>
               </div>
 
