@@ -132,7 +132,7 @@ export function AuthPage() {
         alert("Please enter both your username and password to log in.");
         return;
       }
-      login(loginFormData.userName, loginFormData.password, userRole)
+      const data = await login(loginFormData.userName, loginFormData.password, userRole)
       return;
     }
 
@@ -162,7 +162,7 @@ export function AuthPage() {
       if (data.user_type === "admin") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
-        navigate("/home");
+        navigate("/student-dash");
       }
     } catch (err)
     {
