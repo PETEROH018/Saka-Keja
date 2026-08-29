@@ -159,6 +159,37 @@ export default function Filter({ onSearch, onFilter }) {
             </div>
           </div>
 
+          {/* Amenities Field */}
+          <div className="md:col-span-12 flex flex-wrap items-center gap-4 pt-1">
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={kitchenette}
+                onChange={(e) => setKitchenette(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Kitchenette
+            </label>
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={wardrobe}
+                onChange={(e) => setWardrobe(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Wardrobe
+            </label>
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={balcony}
+                onChange={(e) => setBalcony(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Balcony
+            </label>
+          </div>
+
           {/* Submit Button */}
           <div className="md:col-span-2">
             <button
