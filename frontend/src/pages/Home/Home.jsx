@@ -56,15 +56,15 @@ export default function Home() {
           : true;
 
         const kitchenetteMatches = activeFilters.kitchenette
-          ? Boolean(unit.kitchenette)
+          ? hasAmenity(unit, "Kitchenette")
           : true;
 
         const wardrobeMatches = activeFilters.wardrobe
-          ? Boolean(unit.wardrobe)
+          ? hasAmenity(unit, "Wardrobe")
           : true;
 
         const balconyMatches = activeFilters.balcony
-          ? Boolean(unit.balcony)
+          ? hasAmenity(unit, "Balcony")
           : true;
 
         return (
