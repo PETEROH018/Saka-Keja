@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 from app import app
 from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, ApartmentAmenity, ApartmentAmenityJoining, NearbyFacility, Payment, Student, StudentUnit, ApartmentOwner
 from werkzeug.security import generate_password_hash
@@ -598,6 +599,181 @@ apartments_data = [
 
 
 # ============================================================
+# STUDENTS
+# ============================================================
+
+students_data = [
+    {
+        "full_name": "Brian Otieno",
+        "email": "brian.otieno@student.com",
+        "phone_number": 254701234501,
+        "dob": "2002-04-15",
+        "institution": "University of Nairobi",
+        "course": "Computer Science",
+        "year_of_study": 4,
+        "student_number": 20210001,
+        "graduation_year": 2026,
+        "location": "Nairobi",
+        "username": "brianotieno",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Faith Wanjiku",
+        "email": "faith.wanjiku@student.com",
+        "phone_number": 254701234502,
+        "dob": "2003-08-22",
+        "institution": "Kenyatta University",
+        "course": "Information Technology",
+        "year_of_study": 3,
+        "student_number": 20220002,
+        "graduation_year": 2027,
+        "location": "Nairobi",
+        "username": "faithwanjiku",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Kevin Mwangi",
+        "email": "kevin.mwangi@student.com",
+        "phone_number": 254701234503,
+        "dob": "2001-11-10",
+        "institution": "Strathmore University",
+        "course": "Business Administration",
+        "year_of_study": 4,
+        "student_number": 20210003,
+        "graduation_year": 2026,
+        "location": "Nairobi",
+        "username": "kevinmwangi",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Sharon Njeri",
+        "email": "sharon.njeri@student.com",
+        "phone_number": 254701234504,
+        "dob": "2004-02-18",
+        "institution": "Jomo Kenyatta University",
+        "course": "Software Engineering",
+        "year_of_study": 2,
+        "student_number": 20230004,
+        "graduation_year": 2028,
+        "location": "Juja",
+        "username": "sharonnjeri",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Daniel Kiptoo",
+        "email": "daniel.kiptoo@student.com",
+        "phone_number": 254701234505,
+        "dob": "2002-07-03",
+        "institution": "Moi University",
+        "course": "Computer Science",
+        "year_of_study": 4,
+        "student_number": 20210005,
+        "graduation_year": 2026,
+        "location": "Eldoret",
+        "username": "danielkiptoo",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Mercy Akinyi",
+        "email": "mercy.akinyi@student.com",
+        "phone_number": 254701234506,
+        "dob": "2003-05-27",
+        "institution": "University of Nairobi",
+        "course": "Economics",
+        "year_of_study": 3,
+        "student_number": 20220006,
+        "graduation_year": 2027,
+        "location": "Kisumu",
+        "username": "mercyakinyi",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Samuel Kamau",
+        "email": "samuel.kamau@student.com",
+        "phone_number": 254701234507,
+        "dob": "2004-01-12",
+        "institution": "Kenyatta University",
+        "course": "Information Science",
+        "year_of_study": 2,
+        "student_number": 20230007,
+        "graduation_year": 2028,
+        "location": "Nairobi",
+        "username": "samuelkamau",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Lucy Chebet",
+        "email": "lucy.chebet@student.com",
+        "phone_number": 254701234508,
+        "dob": "2002-09-30",
+        "institution": "Egerton University",
+        "course": "Agribusiness",
+        "year_of_study": 4,
+        "student_number": 20210008,
+        "graduation_year": 2026,
+        "location": "Nakuru",
+        "username": "lucychebet",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Michael Ochieng",
+        "email": "michael.ochieng@student.com",
+        "phone_number": 254701234509,
+        "dob": "2003-03-14",
+        "institution": "Maseno University",
+        "course": "Information Technology",
+        "year_of_study": 3,
+        "student_number": 20220009,
+        "graduation_year": 2027,
+        "location": "Kisumu",
+        "username": "michaelchieng",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Ann Wambui",
+        "email": "ann.wambui@student.com",
+        "phone_number": 254701234510,
+        "dob": "2004-06-08",
+        "institution": "Mount Kenya University",
+        "course": "Computer Science",
+        "year_of_study": 2,
+        "student_number": 20230010,
+        "graduation_year": 2028,
+        "location": "Thika",
+        "username": "annwambui",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "George Maina",
+        "email": "george.maina@student.com",
+        "phone_number": 254701234511,
+        "dob": "2001-12-21",
+        "institution": "Strathmore University",
+        "course": "Finance",
+        "year_of_study": 4,
+        "student_number": 20210011,
+        "graduation_year": 2026,
+        "location": "Nairobi",
+        "username": "georgemaina",
+        "password": "Password123!"
+    },
+    {
+        "full_name": "Cynthia Atieno",
+        "email": "cynthia.atieno@student.com",
+        "phone_number": 254701234512,
+        "dob": "2003-10-05",
+        "institution": "Technical University",
+        "course": "Business IT",
+        "year_of_study": 3,
+        "student_number": 20220012,
+        "graduation_year": 2027,
+        "location": "Nairobi",
+        "username": "cynthiaatieno",
+        "password": "Password123!"
+    }
+]
+
+# ============================================================
 # SEED DATABASE
 # ============================================================
 
@@ -605,12 +781,51 @@ def seed_database():
     with app.app_context():
 
         # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
-        ApartmentOwner.query.delete( synchronize_session=False)
+        ApartmentOwner.query.delete( synchronize_session=False )
         Apartment.query.delete( synchronize_session=False )
+        Student.query.delete( synchronize_session=False )
         db.session.commit()
 
         # ----------------------------------------------------
-        # 1. Seed apartment owners
+        # 1. Seed students
+        # ----------------------------------------------------
+
+        students = []
+
+        for data in students_data:
+
+            student = Student(
+                full_name=data["full_name"],
+                email=data["email"],
+                phone_number=data["phone_number"],
+                dob=datetime.strptime(
+                    data["dob"],
+                    "%Y-%m-%d"
+                ),
+                institution=data["institution"],
+                course=data["course"],
+                year_of_study=data["year_of_study"],
+                student_number=data["student_number"],
+                graduation_year=data["graduation_year"],
+                location=data["location"],
+                username=data["username"],
+                _password_hash=generate_password_hash(
+                    data["password"]
+                )
+            )
+
+            db.session.add(student)
+            students.append(student)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(students)} students."
+        )
+
+
+        # ----------------------------------------------------
+        # 2. Seed apartment owners
         # ----------------------------------------------------
 
         owners = []
@@ -646,7 +861,7 @@ def seed_database():
         print(f"Apartment owners available: {len(owners)}")
 
         # ----------------------------------------------------
-        # 2. Seed apartments
+        # 3. Seed apartments
         # ----------------------------------------------------
 
         apartments_created = 0
@@ -679,7 +894,7 @@ def seed_database():
             apartments_created += 1
 
         # ----------------------------------------------------
-        # 3. Commit everything
+        # 4. Commit everything
         # ----------------------------------------------------
 
         db.session.commit()
