@@ -39,7 +39,7 @@ export default function Home() {
             ? Boolean(unit.shared) === activeFilters.shared
             : true;
 
-        const rent = unit["monthly-expense-breakdown"]?.rent;
+        const rent = unit.rent;
         const rentMatches = activeFilters.price
           ? Number(rent) <= Number(activeFilters.price)
           : true;
