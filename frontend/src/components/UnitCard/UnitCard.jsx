@@ -8,7 +8,7 @@ export default function UnitCard({
   bedrooms,
   furnished,
   isVerified,
-  isShared,
+  shared,
   kitchenette,
   wardrobe,
   balcony,
