@@ -27,7 +27,7 @@ export default function Filter({ onSearch, onFilter }) {
       wardrobe,
       balcony,
     };
-    if (!isShared && !price && !bedrooms && !kitchenette && !wardrobe && !balcony) {
+    if (!shared && !price && !bedrooms && !kitchenette && !wardrobe && !balcony) {
       onSearch(filterData);
     } else {
       onFilter(filterData);
