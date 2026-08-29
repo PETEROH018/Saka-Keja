@@ -10,9 +10,12 @@ import {
 } from "lucide-react";
 
 export default function Filter({ onSearch, onFilter }) {
-  const [location, setLocation] = useState("");
+  const [isShared, setIsShared] = useState("");
   const [price, setPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
+  const [kitchenette, setKitchenette] = useState(false);
+  const [wardrobe, setWardrobe] = useState(false);
+  const [balcony, setBalcony] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
