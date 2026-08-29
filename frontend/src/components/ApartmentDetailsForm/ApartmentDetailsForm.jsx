@@ -26,7 +26,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                 type === "checkbox"
                 ? checked
                 : type === "file"
-                    ? Array.from(files)
+                    ? [...(prev[name] || []), ...Array.from(files)]
                         : value,
                 }));
             };
