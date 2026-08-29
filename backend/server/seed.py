@@ -912,6 +912,8 @@ def seed_database():
     with app.app_context():
 
         # Deleting the existing records first to avoid duplication of data when the seed file is executed each time
+
+        UnitAmenityJoining.query.delete( synchronize_session=False )
         NearbyFacility.query.delete( synchronize_session=False )
         Unit.query.delete( synchronize_session=False )
         Apartment.query.delete( synchronize_session=False )
@@ -984,7 +986,7 @@ def seed_database():
 
         
         # ----------------------------------------------------
-        # Create the 4 apartment amenities
+        # Seed 4 apartment amenities
         # ----------------------------------------------------
 
         apartment_amenities = []
@@ -1224,6 +1226,54 @@ def seed_database():
         print(
             f"Created {len(nearby_facilities)} nearby facilities."
         )
+
+        
+        # ----------------------------------------------------
+        # Seed unit-amenity relationships
+        # ----------------------------------------------------
+
+        unit_amenity_links = []
+
+        # Each unit gets at least two amenities.
+
+        for unit_index, unit in enumerate(units):
+
+            # First amenity
+            first_amenity = amenities[
+                unit_index % len(amenities)
+            ]
+
+            # Second amenity
+            second_amenity = amenities[
+                (unit_index + 1) % len(amenities)
+            ]
+
+            # Create first relationship
+            unit_amenity_links.append(
+                UnitAmenityJoining(
+                    unitId=unit.id,
+                    amenityId=first_amenity.id
+                )
+            )
+
+            # Create second relationship
+            unit_amenity_links.append(
+                UnitAmenityJoining(
+                    unitId=unit.id,
+                    amenityId=second_amenity.id
+                )
+            )
+
+
+        db.session.add_all(unit_amenity_links)
+
+        db.session.flush()
+
+        print(
+            f"Created {len(unit_amenity_links)} "
+            f"unit-amenity relationships."
+        )
+
 
 
 
