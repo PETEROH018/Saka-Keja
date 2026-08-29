@@ -53,9 +53,17 @@ def add_apartment_owner():
         db.session.commit()
         return (
             jsonify(
-                "message", f"Added apartment owner with id {new_apartment_owner.id}"
-            ),
-            201,
+                {
+                    "user_type": "manager",
+                    "message": "Manager created successfully",
+                    "student": {
+                        "id": new_apartment_owner.id,
+                        "full_name": new_apartment_owner.full_name,
+                        "email": new_apartment_owner.email,
+                        "username": new_apartment_owner.username,}
+                }
+                
+            )
         )
 
     except ValidationError as err:
@@ -395,6 +403,7 @@ def add_student():
         return (
             jsonify(
                 {
+                    "user_type": "student",
                     "message": "Student created successfully",
                     "student": {
                         "id": new_student.id,
@@ -440,7 +449,7 @@ def student_login():
         token = secrets.token_urlsafe(32)
 
         return jsonify({
-            "token": token,
+            "user_type": token,
             "user": {
                 "id": student.id,
                 "full_name": student.full_name,
