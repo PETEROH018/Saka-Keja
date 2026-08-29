@@ -1,8 +1,8 @@
-import { createContext, useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 const UnitsContext = createContext()
 
-export default function UnitsProvider({children}){
+export function UnitsProvider({children}){
 
     const [allUnits,setAllUnits] = useState()
 
@@ -19,3 +19,7 @@ export default function UnitsProvider({children}){
     )
 
 } 
+
+export function useUnits(){
+    return useContext(UnitsContext)
+}
