@@ -10,10 +10,7 @@ export default function AddApartment(){
               propertyType: "",
               address: "",
               description: "",
-              furnished: false,
-              wifiIncluded: false,
-              waterReliable: false,
-              securityGuard: false,
+              apartment_amenities: [],
               images: [],
             }
   const emptyAmenities = [
