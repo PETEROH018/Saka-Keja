@@ -122,7 +122,7 @@ export default function AddApartment(){
           <div className="mx-auto flex w-full max-w-[650px] items-start">
 
             {[
-              ["1", "Location"],
+              ["1", "Property"],
               ["2", "Units"],
               ["3", "Review"],
             ].map(([number, label], index) => {

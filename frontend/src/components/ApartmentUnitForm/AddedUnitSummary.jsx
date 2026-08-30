@@ -12,12 +12,10 @@ export default function({units,setUnit,setUnits,setEditingId,editingId}){
             item.depositAmount,
         size: item.size,
         shared: item.shared ?? false,
-        bathrooms:
-            String(item.bathrooms ?? 0),
-        bedrooms:
-            String(item.bedrooms ?? 0),
-        amenities:
-            item.amenities ?? [],
+        bathrooms: String(item.bathrooms ?? 0),
+        bedrooms: String(item.bedrooms ?? 0),
+        amenities: item.amenities ?? [],
+        images: item.images ?? [],
         });
 
         window.scrollTo({

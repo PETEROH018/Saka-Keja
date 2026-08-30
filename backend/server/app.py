@@ -47,13 +47,40 @@ def add_apartment_owner():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
+    owner_payload = {
+        "full_name": data.get("full_name") or data.get("fullName") or data.get("name"),
+        "username": data.get("username") or data.get("userName") or data.get("user_name"),
+        "password": data.get("password"),
+        "email": data.get("email"),
+        "phone_number": data.get("phoneNumber") or data.get("phone_number"),
+        "location": data.get("location"),
+    }
+
     try:
-        new_apartment_owner = apartment_owner_schema.load(data)
+        validated = apartment_owner_schema.load(owner_payload)
+        new_apartment_owner = ApartmentOwner(
+            full_name=validated["full_name"],
+            email=validated["email"],
+            phone_number=validated["phone_number"],
+            username=validated["username"],
+            location=validated.get("location"),
+        )
+        new_apartment_owner.password_hash = owner_payload["password"]
+
         db.session.add(new_apartment_owner)
         db.session.commit()
         return (
             jsonify(
-                "message", f"Added apartment owner with id {new_apartment_owner.id}"
+                {
+                    "user_type": "manager",
+                    "message": "Manager created successfully",
+                    "token": {
+                        "id": new_apartment_owner.id,
+                        "name": new_apartment_owner.username,
+                        "role": "owner",
+                        "profile": "owner",
+                    },
+                }
             ),
             201,
         )
@@ -66,8 +93,7 @@ def add_apartment_owner():
         return (
             jsonify(
                 {
-                    "error",
-                    f"Could not add the apartment owner due to this error, {str(e)}",
+                    "error": f"Could not add the apartment owner due to this error, {str(e)}",
                 }
             ),
             500,
@@ -389,21 +415,15 @@ def add_student():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    required_fields = ["full_name", "email", "phone_number", "username", "password"] #Duplicate
-
-    missing_fields = [field for field in required_fields if field not in data]
-
-    if missing_fields:
-        return (
-            jsonify({"error": "Missing required fields", "fields": missing_fields}),
-            400,
-        )
+    full_name = data.get("full_name") or data.get("fullName") or data.get("name")
+    username = data.get("username") or data.get("userName") or data.get("user_name")
+    phone_number = data.get("phoneNumber") or data.get("phone_number")
 
     try:
         existing_student = Student.query.filter(
             (Student.email == data["email"])
-            | (Student.username == data["username"])
-            | (Student.phone_number == data["phone_number"])
+            | (Student.username == username)
+            | (Student.phone_number == phone_number)
         ).first()
 
         if existing_student:
@@ -417,9 +437,9 @@ def add_student():
             )
 
         new_student = Student(
-            full_name=data["full_name"],
+            full_name=full_name,
             email=data["email"],
-            phone_number=data["phone_number"],
+            phone_number=phone_number,
             dob=data.get("dob"),
             institution=data.get("institution"),
             course=data.get("course"),
@@ -427,7 +447,7 @@ def add_student():
             student_number=data.get("student_number"),
             graduation_year=data.get("graduation_year"),
             location=data.get("location"),
-            username=data["username"],
+            username=username,
         )
 
         # Automatically hashes password using Student model setter
@@ -439,12 +459,13 @@ def add_student():
         return (
             jsonify(
                 {
+                    "user_type": "student",
                     "message": "Student created successfully",
-                    "student": {
+                    "token": {
                         "id": new_student.id,
-                        "full_name": new_student.full_name,
-                        "email": new_student.email,
-                        "username": new_student.username,
+                        "name": new_student.username,
+                        "role": "student",
+                        "profile": "student"
                     },
                 }
             ),
@@ -462,71 +483,59 @@ def add_student():
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
-# Combine the Student login endpoint with the Owner login endpoint
-@app.route("/auth/login", methods=["POST"])
+# login endpoint
+@app.route("/login", methods=["POST"])
 def student_login():
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    try:
-        student = Student.query.filter_by(username=data["userName"]).first()
-
-        if not student:
-            return jsonify({"error": "Invalid credentials"}), 401
-
-        if not student.authenticate(data["password"]):
-            return jsonify({"error": "Invalid credentials"}), 401
-
-        import secrets
-        token = secrets.token_urlsafe(32)
-
-        return jsonify({
-            "token": token,
-            "user": {
-                "id": student.id,
-                "full_name": student.full_name,
-                "username": student.username,
-            }
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": f"Login failed: {str(e)}"}), 500
-
-
-    # Combine with Student login endpoint
-@app.route("/api/owners/login", methods=["POST"])
-def owner_login():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "No input data provided"}), 400
+    userRole = data.get("userRole")
+    userName = data.get("userName") 
+    password = data.get("password")
 
     try:
-        owner = ApartmentOwner.query.filter_by(username=data["userName"]).first()
+        if userRole == "student":
+            student = Student.query.filter_by(username=userName).first()
 
+            if not student:
+                return jsonify({"error": "Invalid credentials"}), 401
+
+            if not student.authenticate(password):
+                return jsonify({"error": "Invalid credentials"}), 401
+
+            return jsonify({
+                "user_type": "student",
+                "token": {
+                    "id": student.id,
+                    "name": student.username,
+                    "role": "student",
+                    "profile": "student"
+                }
+            }), 200
+
+        owner = ApartmentOwner.query.filter_by(username=userName).first()        
         if not owner:
             return jsonify({"error": "Invalid credentials"}), 401
 
-        if not owner.authenticate(data["password"]):
+        if not owner.authenticate(password):
             return jsonify({"error": "Invalid credentials"}), 401
 
-        # Generate a simple token 
-        import secrets
-        token = secrets.token_urlsafe(32)
-
         return jsonify({
-            "token": token,
-            "user": {
+            "user_type": "manager",
+            "token": {
                 "id": owner.id,
-                "full_name": owner.full_name,
-                "username": owner.username,
+                "name": owner.username,
+                "role": "owner",
+                "profile": "owner"
             }
         }), 200
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
+
+
 
 
 if __name__ == "__main__":
