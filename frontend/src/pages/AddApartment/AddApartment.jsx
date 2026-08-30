@@ -10,20 +10,26 @@ export default function AddApartment(){
               propertyType: "",
               address: "",
               description: "",
-              apartment_amenities: [],
+              furnished: false,
+              wifiIncluded: false,
+              waterReliable: false,
+              securityGuard: false,
               images: [],
             }
-  const emptyAmenities = [
+  const emptySocialAmenities = [
               { title: "", distance: "" },
             ]
+  
+  const emptyApartmentAmenities = [
+              {name: "", description: ""},
+          ]
   const [currentStep, setCurrentStep] = useState(1);
   const [units, setUnits] = useState([]);
   const [apartmentData,setApartmentData] = useState({});
-
   const [form, setForm] = useState(emptyForm);
-  
-  
-  const [amenities, setAmenities] = useState(emptyAmenities);
+  const [socialAmenities, setSocialAmenities] = useState(emptySocialAmenities);
+  const [apartmentAmenities, setApartmentAmenities] = useState(emptyApartmentAmenities);
+
   const handleEditProperty = () => {
     setCurrentStep(1)
   }
@@ -36,7 +42,8 @@ export default function AddApartment(){
     e.preventDefault()
     const propertyData = {
               ...form,
-              amenities,
+              socialAmenities,
+              apartmentAmenities
               };
       
       setApartmentData(propertyData);
@@ -66,7 +73,7 @@ export default function AddApartment(){
           setApartmentData({})
           setForm(emptyForm)
           setUnits([])
-          setAmenities(emptyAmenities)
+          setSocialAmenities(emptySocialAmenities)
           setCurrentStep(1)
         }
     return(
@@ -219,8 +226,10 @@ export default function AddApartment(){
             }
             form={form}
             setForm={setForm}
-            amenities={amenities}
-            setAmenities={setAmenities}
+            socialAmenities={socialAmenities}
+            setSocialAmenities={setSocialAmenities}
+            apartmentAmenities={apartmentAmenities}
+            setApartmentAmenities={setApartmentAmenities}
           />
         )}
 
