@@ -18,6 +18,7 @@ def client():
         db.session.remove()
         db.drop_all()
 
+
 def test_unit_amenity_schema_serializes(client):
     amenity = UnitAmenity(name="WiFi", description="Fast internet", iconUrl="wifi")
     db.session.add(amenity)
@@ -33,11 +34,10 @@ def test_unit_schema_serializes(client):
         full_name="Test Owner",
         email="owner@test.com",
         phone_number=700000000,
-        username="testowner"
+        username="testowner",
     )
 
     owner.password_hash = "password123"
-
 
     db.session.add(owner)
     db.session.commit()
@@ -47,7 +47,7 @@ def test_unit_schema_serializes(client):
         type="Apartment",
         description="A test apartment",
         location="Ruiru",
-        owner_id=owner.id
+        owner_id=owner.id,
     )
 
     db.session.add(apartment)
@@ -59,7 +59,7 @@ def test_unit_schema_serializes(client):
         rent=8000,
         bedrooms=0,
         bathrooms=1,
-        apartment_id=apartment.id
+        apartment_id=apartment.id,
     )
 
     db.session.add(unit)
@@ -70,12 +70,15 @@ def test_unit_schema_serializes(client):
     assert result["category"] == "bedsitter"
     assert result["rent"] == 8000
 
+
 def test_student_schema_requires_fullname():
     schema = StudentSchema()
-    errors = schema.validate({
-        "email": "test@example.com",
-        "phone_number": "0700000000",
-        "username": "testuser",
-        "password": "secret123",
-    })
-    assert "fullname" in errors
+    errors = schema.validate(
+        {
+            "email": "test@example.com",
+            "phone_number": "0700000000",
+            "username": "testuser",
+            "password": "secret123",
+        }
+    )
+    assert "full_name" in errors
