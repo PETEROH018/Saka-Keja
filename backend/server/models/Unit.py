@@ -1,7 +1,10 @@
+from datetime import datetime, timezone
 from configs import *
 
 from sqlalchemy.orm import relationship
+
 class Unit(db.Model):
+    # ... rest of your model code remains the same ...
     __tablename__ = 'units'
 
     id = db.Column(db.Integer, primary_key=True)

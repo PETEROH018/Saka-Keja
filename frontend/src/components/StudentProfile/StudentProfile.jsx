@@ -1,14 +1,15 @@
 import React from 'react';
+<<<<<<< HEAD
+import { Link } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar'; // Adjust relative import path as needed
+import Footer from '../Footer/Footer'; // Adjust relative import path as needed
+=======
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
+>>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
 import { 
-  Search, 
   Pencil, 
-  Building2, 
-  Mail, 
-  Phone, 
-  X, 
-  Globe 
+  Building2 
 } from 'lucide-react';
 
 export default function StudentProfile() {
@@ -27,25 +28,37 @@ export default function StudentProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
       
+<<<<<<< HEAD
+      {/* REUSABLE NAVBAR */}
+      <Navbar showSearch={true} />
+
+      {/* MAIN CONTENT AREA */}
+=======
       {/* TOP NAVBAR */}
     <Navbar/>
 
       {/* MAIN CONTENT */}
+>>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
       <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow">
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">Student Profile</h1>
-            <p className="text-gray-400 text-xs mt-1">Manage your personal information and university details.</p>
+            <p className="text-gray-500 text-xs mt-1">Manage your personal information and university details.</p>
           </div>
-          <button className="flex items-center space-x-1.5 text-[11px] border border-gray-200 bg-white rounded-md px-3 py-1.5 text-gray-600 hover:bg-gray-50 transition shadow-2xs font-medium">
-            <Pencil className="w-3 h-3 text-gray-500" />
+          
+          {/* UPDATED LINK TO EDIT PROFILE */}
+          <Link 
+            to="/edit-profile" 
+            className="flex items-center space-x-1.5 text-xs border border-gray-200 bg-white rounded-md px-3 py-1.5 text-gray-600 hover:bg-gray-50 transition shadow-xs font-medium"
+          >
+            <Pencil className="w-3.5 h-3.5 text-gray-500" />
             <span>Edit Profile</span>
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* PERSONAL INFORMATION CARD */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-xs">
             <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
               Personal Information
             </h2>
@@ -70,7 +83,7 @@ export default function StudentProfile() {
           </div>
 
           {/* ACADEMIC INFORMATION CARD */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-xs">
             <h2 className="text-sm font-bold text-[#0f172a] pb-4 mb-5 border-b border-gray-100">
               Academic Information
             </h2>
@@ -105,8 +118,14 @@ export default function StudentProfile() {
         </div>
       </main>
 
+<<<<<<< HEAD
+      {/* REUSABLE FOOTER */}
+      <Footer />
+
+=======
       {/* FOOTER */}
      <Footer/>
+>>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
     </div>
   );
 }

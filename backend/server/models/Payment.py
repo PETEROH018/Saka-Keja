@@ -1,6 +1,7 @@
 from configs import *
-
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+
 class Payment(db.Model):
     __tablename__ = "payments"
 
@@ -47,12 +48,4 @@ class Payment(db.Model):
         "StudentUnit", 
         back_populates="payments"
     )
-
     
-    student_unit = relationship(
-        "StudentUnit",
-        back_populates="payments"
-    )
-    
-    
-        
