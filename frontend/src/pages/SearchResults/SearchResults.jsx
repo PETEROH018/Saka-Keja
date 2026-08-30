@@ -21,3 +21,22 @@ export default function SearchResults() {
   const [amenities, setAmenities] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Default');
+
+  // Fetch Data from Flask Backend API
+  useEffect(() => {
+    fetch('http://localhost:5000/apartments')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch apartments');
+        return res.json();
+      })
+      .then((data) => {
+        setAllApartments(data);
+        setFilteredApartments(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching apartments:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
