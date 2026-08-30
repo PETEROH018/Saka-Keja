@@ -73,3 +73,27 @@ describe('Student Dashboard', () => {
         ).toBeInTheDocument();
     });
 });
+
+it("renders property cards inside each dashboard section", () => {
+  render(<StudentDashboard />);
+
+  expect(
+    screen.getByRole("heading", { name: "Promoted Units" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("heading", { name: "Favorite Units" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("heading", { name: "Booked Unit" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("heading", { name: "View Units" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getAllByTestId("student-property-card")
+  ).toHaveLength(4);
+});
