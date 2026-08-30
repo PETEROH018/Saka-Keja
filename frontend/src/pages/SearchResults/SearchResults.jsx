@@ -82,3 +82,25 @@ export default function SearchResults() {
     setAmenities([]);
     setFilteredApartments(allApartments);
   };
+
+  // Apply Filters based on Flask Apartment + Units schema
+  const handleApplyFilters = () => {
+    let result = allApartments.filter(item => {
+      // Get lowest unit rent or default to 0
+      const lowestRent = item.units && item.units.length > 0 
+        ? Math.min(...item.units.map(u => u.rent)) 
+        : 0;
+
+      const matchMin = minRent ? lowestRent >= Number(minRent) : true;
+      const matchMax = maxRent ? lowestRent <= Number(maxRent) : true;
+      
+      // Property type matching against Flask field 'type'
+      const matchType = propertyTypes.length > 0 
+        ? propertyTypes.some(t => (item.type || '').toLowerCase().includes(t.toLowerCase())) 
+        : true;
+
+      return matchMin && matchMax && matchType;
+    });
+
+    setFilteredApartments(result);
+  };
