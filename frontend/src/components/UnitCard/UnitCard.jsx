@@ -1,21 +1,29 @@
-import { Wifi, ShieldCheck, MapPin, Bed } from 'lucide-react';
+import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun } from 'lucide-react';
 
 export default function UnitCard({
   name,
   description,
   location,
-  property_type: propertyType,
+  category: propertyType,
   bedrooms,
   furnished,
   isVerified,
-  image_Urls: imageUrls = [],
-  ["monthly-expense-breakdown"]: expenseBreakdown = {},
-  ["WiFi included"]: wifiIncluded,
-  ["Water reliable"]: waterReliable,
-  ["Security Guard"]: securityGuard,
+  shared,
+  rent = 0,
+  imageURLS: imageUrls = [],
+  unit_amenity_links: amenityLinks = [],
 }) {
   const imageUrl = imageUrls[0];
-  const rent = expenseBreakdown.rent ?? 0;
+
+  const hasAmenity = (name) =>
+    amenityLinks.some((link) => link.amenity?.name === name);
+
+  const wifiIncluded = hasAmenity("WiFi");
+  const waterReliable = hasAmenity("Water");
+  const securityGuard = hasAmenity("Security Guard");
+  const kitchenette = hasAmenity("Kitchen");
+  const wardrobe = hasAmenity("Wardrobes");
+  const balcony = hasAmenity("Balcony");
 
   return (
     <div className="unit-card group max-w-sm overflow-hidden rounded-xl border border-outline-variant bg-white shadow-sm">
@@ -42,9 +50,17 @@ export default function UnitCard({
           <h3 className="text-base font-semibold text-gray-900">
             {name}
           </h3>
-          <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-            <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-            <span>{location}</span>
+          <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+            <span className="flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+              <span>{location}</span>
+            </span>
+            {typeof shared === "boolean" && (
+              <span className="flex items-center gap-1 text-gray-400">
+                <Users className="h-3.5 w-3.5" />
+                <span>{shared ? "Shared" : "Private"}</span>
+              </span>
+            )}
           </div>
         </div>
 
@@ -53,7 +69,7 @@ export default function UnitCard({
         {/* Pricing */}
         <div>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-bold text-purple-900">KSh {rent.toLocaleString()}</span>
+            <span className="text-lg font-bold text-purple-900">KSh {Number(rent).toLocaleString()}</span>
             <span className="text-xs text-gray-500">/ month</span>
           </div>
           <p className="text-xs text-gray-400 mt-0.5">{propertyType} | {furnished ? "Furnished" : "Unfurnished"}</p>
@@ -77,6 +93,15 @@ export default function UnitCard({
           </div>
           <div title="Security guard" className={`flex h-7 w-7 items-center justify-center rounded-full ${securityGuard ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
             <ShieldCheck className="h-3.5 w-3.5" />
+          </div>
+          <div title="Kitchenette" className={`flex h-7 w-7 items-center justify-center rounded-full ${kitchenette ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Utensils className="h-3.5 w-3.5" />
+          </div>
+          <div title="Wardrobe" className={`flex h-7 w-7 items-center justify-center rounded-full ${wardrobe ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Shirt className="h-3.5 w-3.5" />
+          </div>
+          <div title="Balcony" className={`flex h-7 w-7 items-center justify-center rounded-full ${balcony ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+            <Sun className="h-3.5 w-3.5" />
           </div>
         </div>
 

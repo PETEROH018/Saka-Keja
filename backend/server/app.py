@@ -282,7 +282,41 @@ def update_unit(id):
 @app.route("/units", methods=["GET"])
 def get_all_units():
     try:
-        units = Unit.query.all()
+        query = Unit.query
+
+        shared = request.args.get("shared")
+        if shared is not None and shared != "":
+            query = query.filter(Unit.shared == (shared.lower() == "true"))
+
+        max_rent = request.args.get("max_rent")
+        if max_rent:
+            query = query.filter(Unit.rent <= int(max_rent))
+
+        bedrooms = request.args.get("bedrooms")
+        if bedrooms:
+            if bedrooms.lower() == "bedsitter":
+                query = query.filter(Unit.category.ilike("bedsitter"))
+            elif bedrooms == "3+":
+                query = query.filter(Unit.bedrooms >= 3)
+            else:
+                query = query.filter(Unit.bedrooms == int(bedrooms))
+
+        amenity_names = []
+        if request.args.get("kitchenette") == "true":
+            amenity_names.append("Kitchen")
+        if request.args.get("wardrobe") == "true":
+            amenity_names.append("Wardrobes")
+        if request.args.get("balcony") == "true":
+            amenity_names.append("Balcony")
+
+        for name in amenity_names:
+            query = query.filter(
+                Unit.unit_amenity_links.any(
+                    UnitAmenityJoining.amenity.has(UnitAmenity.name == name)
+                )
+            )
+
+        units = query.all()
         return jsonify(UnitSchema(many=True).dump(units)), 200
     except Exception as e:
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500

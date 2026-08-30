@@ -902,6 +902,72 @@ facility_types = [
 ]
 
 
+# ============================================================
+# NEARBY FACILITIES
+# ============================================================
+
+facility_types = [
+    {
+        "category": "school",
+        "titles": [
+            "Nearby Primary School",
+            "Nearby Secondary School",
+            "Nearby International School",
+            "Nearby University"
+        ],
+        "distances": [
+            "0.8 km",
+            "1.2 km",
+            "1.5 km",
+            "2.0 km"
+        ]
+    },
+    {
+        "category": "mall",
+        "titles": [
+            "Nearby Shopping Mall",
+            "Nearby City Mall",
+            "Nearby Plaza",
+            "Nearby Shopping Centre"
+        ],
+        "distances": [
+            "1.0 km",
+            "1.4 km",
+            "1.8 km",
+            "2.3 km"
+        ]
+    },
+    {
+        "category": "hospital",
+        "titles": [
+            "Nearby Medical Centre",
+            "Nearby Hospital",
+            "Nearby Health Centre",
+            "Nearby Clinic"
+        ],
+        "distances": [
+            "0.7 km",
+            "1.3 km",
+            "1.6 km",
+            "2.1 km"
+        ]
+    },
+    {
+        "category": "gym",
+        "titles": [
+            "Nearby Fitness Centre",
+            "Nearby Gym",
+            "Nearby Fitness Club",
+            "Nearby Health Club"
+        ],
+        "distances": [
+            "0.5 km",
+            "0.9 km",
+            "1.4 km",
+            "1.9 km"
+        ]
+    }
+]
 
 
 # ============================================================
@@ -1321,11 +1387,6 @@ def seed_database():
             f"Created {len(apartment_amenity_links)} "
             f"apartment-amenity relationships."
         )
-
-
-
-
-
 
         # ----------------------------------------------------
         # Commit everything

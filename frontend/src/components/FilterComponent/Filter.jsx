@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { 
-  MapPin, 
+  Users, 
   Banknote, 
   Bed, 
   Search, 
@@ -10,14 +10,24 @@ import {
 } from "lucide-react";
 
 export default function Filter({ onSearch, onFilter }) {
-  const [location, setLocation] = useState("");
+  const [shared, setShared] = useState("");
   const [price, setPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
+  const [kitchenette, setKitchenette] = useState(false);
+  const [wardrobe, setWardrobe] = useState(false);
+  const [balcony, setBalcony] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const filterData = { location, price, bedrooms };
-    if (!location && !price && !bedrooms) {
+    const filterData = {
+      shared: shared === "" ? undefined : shared === "true",
+      price,
+      bedrooms,
+      kitchenette,
+      wardrobe,
+      balcony,
+    };
+    if (!shared && !price && !bedrooms && !kitchenette && !wardrobe && !balcony) {
       onSearch(filterData);
     } else {
       onFilter(filterData);
@@ -25,15 +35,25 @@ export default function Filter({ onSearch, onFilter }) {
   };
 
   const handleReset = () => {
-    setLocation("");
+    setShared("");
     setPrice("");
     setBedrooms("");
-    const emptyFilters = { location: "", price: "", bedrooms: "" };
+    setKitchenette(false);
+    setWardrobe(false);
+    setBalcony(false);
+    const emptyFilters = {
+      shared: undefined,
+      price: "",
+      bedrooms: "",
+      kitchenette: false,
+      wardrobe: false,
+      balcony: false,
+    };
     if (onSearch) onSearch(emptyFilters);
     if (onFilter) onFilter(emptyFilters);
   };
 
-  const hasActiveFilters = Boolean(location || price || bedrooms);
+  const hasActiveFilters = Boolean(shared || price || bedrooms || kitchenette || wardrobe || balcony);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-4 sm:px-6">
@@ -64,23 +84,26 @@ export default function Filter({ onSearch, onFilter }) {
 
         {/* Filter Form */}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-          {/* Location Field */}
+          {/* Shared/Private Field */}
           <div className="md:col-span-4 flex flex-col gap-1.5">
-            <label htmlFor="filter-location" className="text-xs font-medium text-gray-700 flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-violet-600" />
-              <span>Location</span>
+            <label htmlFor="filter-shared" className="text-xs font-medium text-gray-700 flex items-center gap-1.5">
+              <Users className="h-3.5 w-3.5 text-violet-600" />
+              <span>Unit Type</span>
             </label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              <input
-                id="filter-location"
-                name="location"
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Kahawa Sukari, Juja..."
-                className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:border-violet-600 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
-              />
+              <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <select
+                id="filter-shared"
+                name="shared"
+                value={shared}
+                onChange={(e) => setShared(e.target.value)}
+                className="w-full pl-9 pr-8 py-2.5 text-sm bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:border-violet-600 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-gray-900 appearance-none cursor-pointer"
+              >
+                <option value="">Any</option>
+                <option value="true">Shared</option>
+                <option value="false">Private / Self-contained</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
     
@@ -134,6 +157,37 @@ export default function Filter({ onSearch, onFilter }) {
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
+          </div>
+
+          {/* Amenities Field */}
+          <div className="md:col-span-12 flex flex-wrap items-center gap-4 pt-1">
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={kitchenette}
+                onChange={(e) => setKitchenette(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Kitchenette
+            </label>
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={wardrobe}
+                onChange={(e) => setWardrobe(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Wardrobe
+            </label>
+            <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={balcony}
+                onChange={(e) => setBalcony(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-violet-700 focus:ring-violet-500/20"
+              />
+              Balcony
+            </label>
           </div>
 
           {/* Submit Button */}
