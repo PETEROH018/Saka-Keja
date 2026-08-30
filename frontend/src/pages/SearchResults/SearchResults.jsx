@@ -40,3 +40,45 @@ export default function SearchResults() {
         setLoading(false);
       });
   }, []);
+
+  // Fetch Data from Flask Backend API
+  useEffect(() => {
+    fetch('http://localhost:5000/apartments')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch apartments');
+        return res.json();
+      })
+      .then((data) => {
+        setAllApartments(data);
+        setFilteredApartments(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching apartments:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  // Handle Checkboxes
+  const handleTypeChange = (type) => {
+    setPropertyTypes(prev => 
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    );
+  };
+
+  const handleAmenityChange = (amenity) => {
+    setAmenities(prev => 
+      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+    );
+  };
+
+  // Clear All Filters
+  const handleClearAll = () => {
+    setMapView(false);
+    setMinRent('');
+    setMaxRent('');
+    setPropertyTypes([]);
+    setAmenities([]);
+    setFilteredApartments(allApartments);
+  };
