@@ -104,3 +104,23 @@ export default function SearchResults() {
 
     setFilteredApartments(result);
   };
+
+  // Sort Logic based on unit rents
+  const getSortedApartments = (items) => {
+    const sorted = [...items];
+
+    const getMinRent = (apt) => {
+      if (!apt.units || apt.units.length === 0) return 0;
+      return Math.min(...apt.units.map(u => u.rent));
+    };
+
+    if (sortBy === 'Price: Low to High') {
+      return sorted.sort((a, b) => getMinRent(a) - getMinRent(b));
+    }
+    if (sortBy === 'Price: High to Low') {
+      return sorted.sort((a, b) => getMinRent(b) - getMinRent(a));
+    }
+    return sorted;
+  };
+
+  const displayedApartments = getSortedApartments(filteredApartments);
