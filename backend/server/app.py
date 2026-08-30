@@ -8,7 +8,6 @@ from sqlalchemy.orm.attributes import flag_modified
 apartment_schema = ApartmentSchema()
 unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
-apartment_amenities_schema = ApartmentAmenitySchema()
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -538,7 +537,12 @@ def student_login():
 
 @app.route("/apartment/amenities", methods=['GET'])
 def get_apartment_amenities():
-    apartment_amenities = ApartmentAmenity.query.all()
+    try:
+        apartment_amenities = ApartmentAmenity.query.all()
+        return jsonify(ApartmentAmenitySchema(many=True).dump(apartment_amenities))
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve apartment amenities due to this error: {str(e)}"}), 500
+
 
 
 if __name__ == "__main__":
