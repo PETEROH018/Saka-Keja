@@ -6,9 +6,12 @@ import ApartmentDetails from './pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
 import AddApartment from './pages/AddApartment/AddApartment'
 import MyProperties from './pages/MyProperties/MyProperties.jsx'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage"
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx"
+import StudentEditProfile from "./components/EditProfile/StudentEditProfile.jsx"
+import ManagerEditProfile from "./components/EditProfile/ManagerEditProfile.jsx"
+import ManagerProfile from "./components/StudentProfile/ManagerProfile.jsx"
 import OwnerProfile from './pages/OwnerProfile/OwnerProfile.jsx'
 import SavedProperties from './pages/SavedProperties/SavedProperties'
 import About from "./pages/About/About.jsx"
@@ -18,7 +21,7 @@ import UnitDetails from './pages/UnitDetails/UnitDetails';
 
 function App() {
   return (
-    <HashRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
@@ -27,16 +30,31 @@ function App() {
         <Route path="/my-properties" element={<MyProperties />} />
         <Route path="/edit-property/:id" element={<EditProperty />} />
         <Route path="/compare" element={<ComparePage />} />
+        
+        {/* Student Profile & Edit Routes */}
         <Route path="/student-profile" element={<StudentProfile />} />
+        <Route path="/StudentProfile" element={<StudentProfile />} />
+        <Route path="/StudentEditProfile" element={<StudentEditProfile />} />
+        <Route path="/student-edit-profile" element={<StudentEditProfile />} />
+        <Route path="/edit-profile" element={<StudentEditProfile />} />
+
         <Route path="/owner-profile" element={<OwnerProfile />} />
         <Route path="/saved-properties" element={<SavedProperties />} />
         <Route path="/auth" element={<AuthPage />} />
+
+        {/* Manager Profile & Edit Routes */}
+        <Route path="/manager-profile" element={<ManagerProfile />} />
+        <Route path="/ManagerProfile" element={<ManagerProfile />} />
+        <Route path="/ManagerEditProfile" element={<ManagerEditProfile />} />
+        <Route path="/manager-edit-profile" element={<ManagerEditProfile />} />
+
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
-        <Route path="/unit/:id" element={<UnitDetails />} />      </Routes>
-    </HashRouter>
+        <Route path="/unit/:id" element={<UnitDetails />} />
+      </Routes>
+    </Router>
   )
 }
 
-export default App
+export default App;

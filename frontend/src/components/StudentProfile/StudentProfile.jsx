@@ -1,12 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
-import Navbar from '../Navbar/Navbar'; // Adjust relative import path as needed
-import Footer from '../Footer/Footer'; // Adjust relative import path as needed
-=======
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
->>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
 import { 
   Pencil, 
   Building2 
@@ -28,17 +23,10 @@ export default function StudentProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
       
-<<<<<<< HEAD
-      {/* REUSABLE NAVBAR */}
+      {/* NAVBAR */}
       <Navbar showSearch={true} />
 
       {/* MAIN CONTENT AREA */}
-=======
-      {/* TOP NAVBAR */}
-    <Navbar/>
-
-      {/* MAIN CONTENT */}
->>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
       <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow">
         <div className="flex justify-between items-start mb-8">
           <div>
@@ -118,14 +106,8 @@ export default function StudentProfile() {
         </div>
       </main>
 
-<<<<<<< HEAD
-      {/* REUSABLE FOOTER */}
-      <Footer />
-
-=======
       {/* FOOTER */}
-     <Footer/>
->>>>>>> 369c91380cd19b6e6f86bf6512ee5af142e68080
+      <Footer />
     </div>
   );
 }
