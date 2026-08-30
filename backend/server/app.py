@@ -8,6 +8,7 @@ from sqlalchemy.orm.attributes import flag_modified
 apartment_schema = ApartmentSchema()
 unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
+apartment_amenities_schema = ApartmentAmenitySchema()
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -535,7 +536,9 @@ def student_login():
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
-
+@app.route("/apartment/amenities", methods=['GET'])
+def get_apartment_amenities():
+    apartment_amenities = ApartmentAmenity.query.all()
 
 
 if __name__ == "__main__":
