@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Icon from "../Icon/Icon";
+import { API_BASE_URL } from "../../config/api";
+import useFetch from "../../hooks/useFetch";
+
 
 //This is the list of the types of properties that can be listed by an owner
 const propertyTypes = [
@@ -15,7 +18,17 @@ const inputClass =
 
 const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
+
+
 export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,setAmenities}){
+
+        const endpoint = `${API_BASE_URL}/apartments/amenities`
+        const { data, loading, error } = useFetch(endpoint)
+        const [apartmentAmenities, setApartmentAmenities] = useState()
+
+        if (!loading){
+          setApartmentAmenities(data)
+        }
 
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
