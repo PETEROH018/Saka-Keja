@@ -4,7 +4,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 class ApartmentOwner(db.Model):
     __tablename__ = "apartment_owners"
-    # ... rest of your model code ...
 
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)

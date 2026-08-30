@@ -9,6 +9,13 @@ apartment_schema = ApartmentSchema()
 unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "message": "Welcome to the Saka-Keja API",
+        "status": "running"
+    }), 200
+
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
     data = request.get_json()
