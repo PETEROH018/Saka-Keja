@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Heart,
-  CalendarCheck,
   Building2,
   UserRound,
 } from "lucide-react";
@@ -16,11 +15,6 @@ const navigation = [
     label: "Favorites",
     path: "/saved-properties",
     icon: Heart,
-  },
-  {
-    label: "Booked Unit",
-    path: "/booked-unit",
-    icon: CalendarCheck,
   },
   {
     label: "View Units",

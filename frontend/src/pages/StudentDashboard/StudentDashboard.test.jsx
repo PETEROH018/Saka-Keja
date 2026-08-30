@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import StudentDashboard from './StudentDashboard';
 
 afterEach(() => {
-  cleanup();
+    cleanup();
 });
 
 describe('Student Dashboard', () => {
@@ -21,10 +21,6 @@ describe('Student Dashboard', () => {
 
         expect(
             screen.getByRole("heading", { name: /favorite units/i })
-        ).toBeInTheDocument();
-
-        expect(
-            screen.getByRole("heading", { name: /booked unit/i })
         ).toBeInTheDocument();
 
         expect(
@@ -53,13 +49,6 @@ describe('Student Dashboard', () => {
 
         expect(
             within(sidebar).getByRole("link", {
-                name: "Booked Unit",
-                exact: true,
-            })
-        ).toBeInTheDocument();
-
-        expect(
-            within(sidebar).getByRole("link", {
                 name: "View Units",
                 exact: true,
             })
@@ -75,25 +64,21 @@ describe('Student Dashboard', () => {
 });
 
 it("renders property cards inside each dashboard section", () => {
-  render(<StudentDashboard />);
+    render(<StudentDashboard />);
 
-  expect(
-    screen.getByRole("heading", { name: "Promoted Units" })
-  ).toBeInTheDocument();
+    expect(screen.getByText("Skyline Heights")).toBeInTheDocument();
+    expect(screen.getByText("The Apex Residences")).toBeInTheDocument();
+    expect(screen.getByText("Greenway Hostels")).toBeInTheDocument();
 
-  expect(
-    screen.getByRole("heading", { name: "Favorite Units" })
-  ).toBeInTheDocument();
+    expect(
+        screen.getByRole("heading", { name: "Promoted Units" })
+    ).toBeInTheDocument();
 
-  expect(
-    screen.getByRole("heading", { name: "Booked Unit" })
-  ).toBeInTheDocument();
+    expect(
+        screen.getByRole("heading", { name: "Favorite Units" })
+    ).toBeInTheDocument();
 
-  expect(
-    screen.getByRole("heading", { name: "View Units" })
-  ).toBeInTheDocument();
-
-  expect(
-    screen.getAllByTestId("student-property-card")
-  ).toHaveLength(4);
+    expect(
+        screen.getByRole("heading", { name: "View Units" })
+    ).toBeInTheDocument();
 });

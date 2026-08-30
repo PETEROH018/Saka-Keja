@@ -6,7 +6,7 @@ import ApartmentDetails from './pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
 import AddApartment from './pages/AddApartment/AddApartment'
 import MyProperties from './pages/MyProperties/MyProperties.jsx'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as HashRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage"
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx"
 import StudentEditProfile from "./components/EditProfile/StudentEditProfile.jsx"
@@ -18,10 +18,11 @@ import About from "./pages/About/About.jsx"
 import EditProperty from './pages/EditProperty/EditProperty.jsx'
 import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 import UnitDetails from './pages/UnitDetails/UnitDetails';
+import StudentDashboard from './pages/StudentDashboard/StudentDashboard'
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
@@ -30,7 +31,7 @@ function App() {
         <Route path="/my-properties" element={<MyProperties />} />
         <Route path="/edit-property/:id" element={<EditProperty />} />
         <Route path="/compare" element={<ComparePage />} />
-        
+
         {/* Student Profile & Edit Routes */}
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/StudentProfile" element={<StudentProfile />} />
@@ -51,9 +52,11 @@ function App() {
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/unit/:id" element={<UnitDetails />} />
       </Routes>
-    </Router>
+    </HashRouter>
+
   )
 }
 
