@@ -3,6 +3,7 @@ import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import ApartmentDetailsForm from "../../components/ApartmentDetailsForm/ApartmentDetailsForm";
 import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
 import ApartmentReview from "../../components/ApartmentReview/ApartmentReview";
+import { API_BASE_URL } from "../../config/api";
 
 export default function AddApartment(){
   const emptyForm= {
@@ -68,6 +69,22 @@ export default function AddApartment(){
   };
 
   function handleSubmit(){
+          fetch(`${API_BASE_URL}/apartments`,{
+            method : 'POST',
+            headers : {
+               "Content-Type": "application/json"
+            },
+            body : JSON.stringify(apartmentData)
+          })
+          .then(response => {
+            if (!response.ok){
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            response.json()
+          })
+          .then( data => console.log(data))
+          .catch( error => console.error(error))
+
           console.log(apartmentData)
           alert("Apartment added successfully")
           setApartmentData({})
