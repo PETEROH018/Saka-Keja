@@ -1,138 +1,147 @@
+import { useEffect, useState } from "react";
 import StudentSidebar from "../../components/StudentSidebar/StudentSidebar";
 import UnitCard from "../../components/UnitCard/UnitCard";
-
-const dashboardSections = [
-  {
-    title: "Promoted Units",
-    items: [
-      {
-        name: "Skyline Heights",
-        description: "Modern studio apartment in a convenient location.",
-        location: "Kilimani, Nairobi",
-        category: "Studio",
-        bedrooms: 1,
-        furnished: true,
-        isVerified: true,
-        shared: false,
-        rent: 920,
-      },
-    ],
-  },
-  {
-    title: "Favorite Units",
-    items: [
-      {
-        name: "The Apex Residences",
-        description: "Comfortable apartment with convenient amenities.",
-        location: "Westlands, Nairobi",
-        category: "Apartment",
-        bedrooms: 2,
-        furnished: true,
-        isVerified: true,
-        shared: false,
-        rent: 850,
-      },
-      {
-        name: "Greenway Hostels",
-        description: "Affordable student accommodation close to campus.",
-        location: "Parklands, Nairobi",
-        category: "Hostel",
-        bedrooms: 1,
-        furnished: true,
-        isVerified: false,
-        shared: true,
-        rent: 420,
-      },
-    ],
-  },
-  {
-    title: "View Units",
-    items: [
-      {
-        name: "Maple Court",
-        description: "Affordable and conveniently located accommodation.",
-        location: "Lavington, Nairobi",
-        category: "Apartment",
-        bedrooms: 1,
-        furnished: false,
-        isVerified: true,
-        shared: false,
-        rent: 700,
-      },
-      {
-        name: "Green View Residences",
-        description: "Bright and comfortable student-friendly units.",
-        location: "Kileleshwa, Nairobi",
-        category: "Apartment",
-        bedrooms: 2,
-        furnished: true,
-        isVerified: true,
-        shared: false,
-        rent: 950,
-      },
-      {
-        name: "Parkside Hostels",
-        description: "Practical student accommodation near key amenities.",
-        location: "Parklands, Nairobi",
-        category: "Hostel",
-        bedrooms: 1,
-        furnished: true,
-        isVerified: false,
-        shared: true,
-        rent: 450,
-      },
-    ],
-  },
-];
+import { useAuth } from "../../context/useAuth";
+import { API_BASE_URL } from "../../config/api";
 
 function StudentDashboard() {
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      <StudentSidebar />
+    const { user } = useAuth();
 
-      <main className="min-w-0 flex-1 p-6 lg:p-8">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back
-          </h1>
+    const [promotedUnits, setPromotedUnits] = useState([]);
+    const [favoriteUnits, setFavoriteUnits] = useState([]);
+    const [availableUnits, setAvailableUnits] = useState([]);
 
-          <p className="mt-1 text-sm text-gray-500">
-            Here is a summary of your housing activity.
-          </p>
-        </header>
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        <div className="space-y-8">
-          {dashboardSections.map((section) => (
-            <section key={section.title}>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  {section.title}
-                </h2>
+    useEffect(() => {
+        if (!user?.id) {
+            setLoading(false);
+            return;
+        }
 
-                <a
-                  href="#/search"
-                  className="text-sm font-medium text-purple-700 hover:text-purple-900"
-                >
-                  View All
-                </a>
-              </div>
+        const loadDashboardData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {section.items.map((unit) => (
-                  <UnitCard
-                    key={unit.name}
-                    {...unit}
-                    imageURLS={[]}
-                    unit_amenity_links={[]}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+                const [
+                    promotedResponse,
+                    favoritesResponse,
+                    unitsResponse,
+                ] = await Promise.all([
+                    fetch(`${API_BASE_URL}/units/promoted`),
+                    fetch(`${API_BASE_URL}/students/${user.id}/favorites`),
+                    fetch(`${API_BASE_URL}/units`),
+                ]);
+
+                if (
+                    !promotedResponse.ok ||
+                    !favoritesResponse.ok ||
+                    !unitsResponse.ok
+                ) {
+                    throw new Error("Failed to load dashboard data.");
+                }
+
+                const promotedData = await promotedResponse.json();
+                const favoritesData = await favoritesResponse.json();
+                const unitsData = await unitsResponse.json();
+
+                setPromotedUnits(promotedData.items || []);
+                setFavoriteUnits(favoritesData || []);
+                setAvailableUnits(unitsData || []);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadDashboardData();
+    }, [user?.id]);
+
+    const dashboardSections = [
+        {
+            title: "Promoted Units",
+            items: promotedUnits,
+        },
+        {
+            title: "Favorite Units",
+            items: favoriteUnits,
+        },
+        {
+            title: "View Units",
+            items: availableUnits,
+        },
+    ];
+
+    return (
+        <div className="flex min-h-screen bg-gray-50">
+            <StudentSidebar />
+
+            <main className="min-w-0 flex-1 p-6 lg:p-8">
+                <header className="mb-8">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                        Welcome back
+                    </h1>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                        Here is a summary of your housing activity.
+                    </p>
+                </header>
+
+                {loading && (
+                    <p className="text-sm text-gray-500">
+                        Loading your dashboard...
+                    </p>
+                )}
+
+                {error && (
+                    <p className="rounded-lg bg-red-50 p-4 text-sm text-red-600">
+                        {error}
+                    </p>
+                )}
+
+                {!loading && !error && (
+                    <div className="space-y-8">
+                        {dashboardSections.map((section) => (
+                            <section key={section.title}>
+                                <div className="mb-4 flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold text-gray-900">
+                                        {section.title}
+                                    </h2>
+
+                                    <a
+                                        href="#/search"
+                                        className="text-sm font-medium text-purple-700 hover:text-purple-900"
+                                    >
+                                        View All
+                                    </a>
+                                </div>
+
+                                {section.items.length === 0 ? (
+                                    <div className="rounded-xl border border-gray-200 bg-white p-6">
+                                        <p className="text-sm text-gray-500">
+                                            No units available in this section.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                        {section.items.map((unit) => (
+                                            <UnitCard
+                                                key={unit.id}
+                                                {...unit}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+                        ))}
+                    </div>
+                )}
+            </main>
         </div>
-      </main>
-    </div>
-  );
+    );
 }
 
 export default StudentDashboard;
