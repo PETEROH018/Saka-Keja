@@ -535,7 +535,7 @@ def student_login():
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
-@app.route("/apartment/amenities", methods=['GET'])
+@app.route("/apartments/amenities", methods=['GET'])
 def get_apartment_amenities():
     try:
         apartment_amenities = ApartmentAmenity.query.all()
