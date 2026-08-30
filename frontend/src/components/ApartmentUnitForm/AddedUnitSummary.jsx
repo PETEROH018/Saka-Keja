@@ -14,7 +14,7 @@ export default function({units,setUnit,setUnits,setEditingId,editingId}){
         shared: item.shared ?? false,
         bathrooms: String(item.bathrooms ?? 0),
         bedrooms: String(item.bedrooms ?? 0),
-        amenities: item.amenities ?? [],
+        unitAmenities: item.unitAmenities ?? [],
         images: item.images ?? [],
         });
 
