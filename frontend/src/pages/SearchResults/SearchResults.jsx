@@ -6,3 +6,9 @@ import './SearchResults.css';
 
 export default function SearchResults() {
   const navigate = useNavigate();
+  
+  // Data & Load States
+  const [allApartments, setAllApartments] = useState([]);
+  const [filteredApartments, setFilteredApartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
