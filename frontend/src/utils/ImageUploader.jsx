@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Icon from "../components/Icon/Icon";
 
-export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
-    // const [image, setImage] = useState(null);
+export default function ImageUploader({form,setForm}) {
+    const [imageUrl, setImageUrl] = useState("");
     const [loading, setLoading] = useState(false);
     const [imageFiles, setImageFiles] = useState([])
 
@@ -11,7 +11,6 @@ export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
     
     const handleFileChange = (e) => {
         
-        // setImage(e.target.files[0]);
         setImageFiles([...imageFiles,...Array(e.target.files[0])])
     }
 
