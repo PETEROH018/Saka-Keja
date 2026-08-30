@@ -20,7 +20,6 @@ const labelClass =
 
 
 export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities}){
-        const [imageUrl, setImageUrl] = useState("");
 
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
@@ -393,7 +392,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
             </section>
             </section>
 
-            <ImageUploader imageUrl={imageUrl} setImageUrl={setImageUrl} form={form} setForm={setForm} /> 
+            <ImageUploader form={form} setForm={setForm} /> 
 
             <section className="mb-8">
 
