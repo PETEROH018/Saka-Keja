@@ -535,13 +535,7 @@ def student_login():
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
-@app.route("/apartments/amenities", methods=['GET'])
-def get_apartment_amenities():
-    try:
-        apartment_amenities = ApartmentAmenity.query.all()
-        return jsonify(ApartmentAmenitySchema(many=True).dump(apartment_amenities))
-    except Exception as e:
-        return jsonify({"error": f"Could not retrieve apartment amenities due to this error: {str(e)}"}), 500
+
 
 
 
