@@ -20,7 +20,7 @@ const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
 
 
-export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities}){
+export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities}){
 
        
 
@@ -47,6 +47,16 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                 )
                 );
             };
+        
+        const handleApartmentAmenityChange = (index, field, value) => {
+            setApartmentAmenities((prev) =>
+                prev.map((amenity, i) =>
+                    i === index
+                    ? { ...amenity, [field]: value }
+                    : amenity
+                )
+                );
+            };
     
         const addSocialAmenity = () => {
                 setSocialAmenities((prev) => [
@@ -54,9 +64,22 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                 { title: "", distance: "" },
                 ]);
             };
+        
+        const addApartmentAmenity = () => {
+                setApartmentAmenities((prev) => [
+                ...prev,
+                { name: "", description: "" },
+                ]);
+            };
     
         const removeSocialAmenity = (index) => {
                 setSocialAmenities((prev) =>
+                prev.filter((_, i) => i !== index)
+                );
+            };
+        
+        const removeApartmentAmenity = (index) => {
+                setApartmentAmenities((prev) =>
                 prev.filter((_, i) => i !== index)
                 );
             };
@@ -153,7 +176,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
               </div>
             </section>
 
-            <section className="mb-8">
+            <section className="mb-8 mt-8">
               <h3 className="mb-4 text-[13px] font-semibold">
                 Property Features
               </h3>
@@ -287,6 +310,91 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                   </span>
                 </label>
               </div>
+               <section className="mb-8">
+
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-[13px] font-semibold">
+                    Add extra features in the property
+                  </h3>
+
+                  <p className="mt-1 text-[9px] text-[#8b858f]">
+                    Add other features that are not included in the list above.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addApartmentAmenity}
+                  className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2] mt-4"
+                >
+                  <Icon name="plus" size={12}  />
+                  Add Feature
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-3">
+
+                {apartmentAmenities.map((amenity, index) => (
+                  <div
+                    key={index}
+                    className="grid gap-3 sm:grid-cols-[1fr_150px_32px]"
+                  >
+
+                    <div>
+                      <label className={labelClass}>
+                        Feature Name
+                      </label>
+
+                      <input
+                        value={amenity.title}
+                        onChange={(e) =>
+                          handleApartmentAmenityChange(
+                            index,
+                            "name",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. Swimming pool"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={labelClass}>
+                        Description
+                      </label>
+
+                      <input
+                        value={amenity.distance}
+                        onChange={(e) =>
+                          handleSocialAmenityChange(
+                            index,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. Heated swimming pool"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {apartmentAmenities.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeApartmentAmenity(index)}
+                        className="mt-auto grid h-9 place-items-center rounded-md bg-[#faeeee] text-[#9b5360] hover:bg-[#f8e2e2]"
+                        title="Remove amenity"
+                      >
+                        <Icon name="trash" size={14} />
+                      </button>
+                    )}
+
+                  </div>
+                ))}
+
+              </div>
+            </section>
             </section>
 
             <section className="mb-8">
@@ -368,7 +476,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                   className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2]"
                 >
                   <Icon name="plus" size={12} />
-                  Add Amenity
+                  Add Social Amenity
                 </button>
               </div>
 
