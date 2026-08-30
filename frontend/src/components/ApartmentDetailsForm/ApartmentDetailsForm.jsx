@@ -20,15 +20,9 @@ const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
 
 
-export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,setAmenities}){
+export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities}){
 
-        const endpoint = `${API_BASE_URL}/apartments/amenities`
-        const { data, loading, error } = useFetch(endpoint)
-        const [apartmentAmenities, setApartmentAmenities] = useState()
-
-        if (!loading){
-          setApartmentAmenities(data)
-        }
+       
 
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
@@ -44,8 +38,8 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                 }));
             };
         
-        const handleAmenityChange = (index, field, value) => {
-            setAmenities((prev) =>
+        const handleSocialAmenityChange = (index, field, value) => {
+            setSocialAmenities((prev) =>
                 prev.map((amenity, i) =>
                     i === index
                     ? { ...amenity, [field]: value }
@@ -54,15 +48,15 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                 );
             };
     
-        const addAmenity = () => {
-                setAmenities((prev) => [
+        const addSocialAmenity = () => {
+                setSocialAmenities((prev) => [
                 ...prev,
                 { title: "", distance: "" },
                 ]);
             };
     
-        const removeAmenity = (index) => {
-                setAmenities((prev) =>
+        const removeSocialAmenity = (index) => {
+                setSocialAmenities((prev) =>
                 prev.filter((_, i) => i !== index)
                 );
             };
@@ -153,7 +147,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Briefly describe the amenities and general vibe of the building..."
+                  placeholder="Briefly describe the social amenities and general vibe of the building..."
                   className="w-full resize-y rounded-md border border-[#ddd6e2] bg-[#fcf8fd] p-2.5 text-[10px] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10"
                 />
               </div>
@@ -360,7 +354,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-[13px] font-semibold">
-                    Nearby Amenities
+                    Nearby Social Amenities
                   </h3>
 
                   <p className="mt-1 text-[9px] text-[#8b858f]">
@@ -370,7 +364,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
 
                 <button
                   type="button"
-                  onClick={addAmenity}
+                  onClick={addSocialAmenity}
                   className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2]"
                 >
                   <Icon name="plus" size={12} />
@@ -380,7 +374,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
 
               <div className="mt-4 space-y-3">
 
-                {amenities.map((amenity, index) => (
+                {socialAmenities.map((amenity, index) => (
                   <div
                     key={index}
                     className="grid gap-3 sm:grid-cols-[1fr_150px_32px]"
@@ -394,7 +388,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       <input
                         value={amenity.title}
                         onChange={(e) =>
-                          handleAmenityChange(
+                          handleSocialAmenityChange(
                             index,
                             "title",
                             e.target.value
@@ -413,7 +407,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       <input
                         value={amenity.distance}
                         onChange={(e) =>
-                          handleAmenityChange(
+                          handleSocialAmenityChange(
                             index,
                             "distance",
                             e.target.value
@@ -424,10 +418,10 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       />
                     </div>
 
-                    {amenities.length > 1 && (
+                    {socialAmenities.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => removeAmenity(index)}
+                        onClick={() => removeSocialAmenity(index)}
                         className="mt-auto grid h-9 place-items-center rounded-md bg-[#faeeee] text-[#9b5360] hover:bg-[#f8e2e2]"
                         title="Remove amenity"
                       >
