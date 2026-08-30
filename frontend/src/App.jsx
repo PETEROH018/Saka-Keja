@@ -25,7 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-dash" element={<AdminDashboard />} />
-        <Route path="/apartment-details" element={<ApartmentDetails />} />
+        <Route path="/apartment-details/:id" element={<ApartmentDetails />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/my-properties" element={<MyProperties />} />
         <Route path="/edit-property/:id" element={<EditProperty />} />
