@@ -124,3 +124,188 @@ export default function SearchResults() {
   };
 
   const displayedApartments = getSortedApartments(filteredApartments);
+
+  return (
+    <>
+      <Navbar showSearch={true} />
+      <div className="search-container">
+        {/* LEFT SIDEBAR - FILTERS */}
+        <aside className="filter-sidebar">
+          <div className="filter-header">
+            <h2>Filters</h2>
+            <button className="clear-btn" onClick={handleClearAll}>Clear all</button>
+          </div>
+
+          <div className="filter-group">
+            <label className="group-label">Monthly Rent (KES)</label>
+            <div className="range-inputs">
+              <input 
+                type="number" 
+                placeholder="Min" 
+                value={minRent} 
+                onChange={(e) => setMinRent(e.target.value)} 
+              />
+              <span>-</span>
+              <input 
+                type="number" 
+                placeholder="Max" 
+                value={maxRent} 
+                onChange={(e) => setMaxRent(e.target.value)} 
+              />
+            </div>
+          </div>
+
+          <div className="filter-group">
+            <label className="group-label">Property Type</label>
+            {[
+              { label: 'Single Room', value: 'single' },
+              { label: 'Bedsitter', value: 'bedsitter' },
+              { label: '1 Bedroom', value: 'one bedroom' },
+              { label: '2 Bedroom', value: 'two bedroom' }
+            ].map(type => (
+              <label key={type.value} className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  checked={propertyTypes.includes(type.value)} 
+                  onChange={() => handleTypeChange(type.value)} 
+                /> {type.label}
+              </label>
+            ))}
+          </div>
+
+          <div className="filter-group">
+            <label className="group-label">Amenities</label>
+            {['Wi-Fi Included', 'Water Reliable', 'Security Guard'].map(item => (
+              <label key={item} className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  checked={amenities.includes(item)} 
+                  onChange={() => handleAmenityChange(item)} 
+                /> {item}
+              </label>
+            ))}
+          </div>
+
+          <button className="apply-btn" onClick={handleApplyFilters}>Apply Filters</button>
+        </aside>
+
+        {/* RIGHT MAIN CONTENT */}
+        <main className="results-main">
+          <header className="results-header">
+            <div>
+              <h1>{displayedApartments.length} properties found</h1>
+              <p className="subtext">Select a property to view available units</p>
+            </div>
+            <div className="sort-box">
+              <span>Sort by:</span>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <option value="Default">Default</option>
+                <option value="Price: Low to High">Price: Low to High</option>
+                <option value="Price: High to Low">Price: High to Low</option>
+              </select>
+            </div>
+          </header>
+
+          {/* DYNAMIC CONTENT GRID */}
+          {loading ? (
+            <div className="no-results">Loading available properties...</div>
+          ) : error ? (
+            <div className="no-results">Error loading data: {error}</div>
+          ) : (
+            <div className="cards-grid">
+              {displayedApartments.length > 0 ? (
+                displayedApartments.map((item) => {
+                  // Fallback pricing calculation based on nested units
+                  const lowestRent = item.units && item.units.length > 0 
+                    ? Math.min(...item.units.map(u => u.rent)) 
+                    : 0;
+
+                  const firstImage = item.imageURLs && item.imageURLs.length > 0 
+                    ? item.imageURLs[0] 
+                    : 'https://via.placeholder.com/800x600';
+
+                  const nearbyNote = item.nearby_facilities && item.nearby_facilities.length > 0
+                    ? `${item.nearby_facilities[0].title} (${item.nearby_facilities[0].distance})`
+                    : '';
+
+                  return (
+                    <article key={item.id} className="property-card">
+                      <div className="card-image-wrapper">
+                        <img src={firstImage} alt={item.name} />
+                        {item.isVerified && <span className="verified-badge">🛡️ Verified</span>}
+                      </div>
+
+                      <div className="card-body">
+                        <div className="card-title-row">
+                          <h3>{item.name}</h3>
+                          <div className="price-tag">
+                            <span className="amount">
+                              {lowestRent > 0 ? `KES ${lowestRent.toLocaleString()}` : 'Contact for Price'}
+                            </span>
+                            {lowestRent > 0 && <span className="period">/ month</span>}
+                          </div>
+                        </div>
+
+                        <p className="location-text">📍 {item.location} {nearbyNote ? `· ${nearbyNote}` : ''}</p>
+
+                        <div className="fit-note">
+                          <span>✔️</span>
+                          <p>{item.description}</p>
+                        </div>
+
+                        <div className="card-footer">
+                          <div className="specs">
+                            <span>🏢 {item.type}</span>
+                            <span>🚪 {item.units ? item.units.length : 0} Units</span>
+                          </div>
+                          
+                          {/* DYNAMIC ROUTE NAVIGATION TO APARTMENT UNITS */}
+                          <button 
+                            className="details-btn" 
+                            onClick={() => navigate(`/apartment-details/${item.id}`)}
+                          >
+                            View Units
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
+              ) : (
+                <p className="no-results">No properties match your filter criteria.</p>
+              )}
+            </div>
+          )}
+
+          {/* PAGINATION */}
+          <div className="pagination">
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {[1, 2, 3].map(num => (
+              <button 
+                key={num} 
+                className={`page-num ${currentPage === num ? 'active' : ''}`}
+                onClick={() => setCurrentPage(num)}
+              >
+                {num}
+              </button>
+            ))}
+            <button 
+              className="page-nav" 
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, 3))}
+              disabled={currentPage === 3}
+            >
+              &gt;
+            </button>
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
+  );
+}
