@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "../components/Icon/Icon";
 
 export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
@@ -14,6 +14,12 @@ export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
         // setImage(e.target.files[0]);
         setImageFiles([...imageFiles,...Array(e.target.files[0])])
     }
+
+    const removeImageFile = (indexToRemove) => {
+        setImageFiles((prevFiles) => 
+            prevFiles.filter((_, index) => index !== indexToRemove)
+        );
+    };
 
     const uploadImage = async () => {
     if (imageFiles.length < 0) return alert("Please select an image first!");
@@ -42,7 +48,7 @@ export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
         
         // The secure_url property contains your usable image URL
         setImageUrl(data.secure_url); 
-        setForm((prev) => prev['images'] = [...prev['images'],imageUrl])
+        setForm((prev) => ( {...prev,images : [...(prev.images || []).filter(Boolean),String(imageUrl)].filter(Boolean)} ))
         console.log("Cloudinary URL:", data.secure_url);
         
         } catch (error) {
@@ -53,7 +59,11 @@ export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
         setLoading(false);
         }
     }
+    setImageFiles([])
+
   };
+    
+
 
   return(
     <section className="mb-8">
@@ -95,29 +105,40 @@ export default function ImageUploader({imageUrl,setImageUrl,form,setForm}) {
                   </button>
     
                   {/* Selected images */}
-                  {imageFiles.length > 0 && (
+                    {imageFiles.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {imageFiles.map((file, index) => (
+                        {imageFiles.map((file, index) => (
                         <div
-                          key={`${file.name}-${index}`}
-                          className="relative overflow-hidden rounded-md border border-[#e2dce6] bg-[#fcf8fd]"
+                            key={`${file.name}-${index}`}
+                            className="relative overflow-hidden rounded-md border border-[#e2dce6] bg-[#fcf8fd]"
                         >
-                          <img
+                            {/* ❌ The Remove Button */}
+                            <button
+                            type="button"
+                            onClick={() => removeImageFile(index)} // Passes the current index
+                            className="absolute right-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500/80 text-white font-bold text-[10px] hover:bg-red-600 transition-colors shadow-sm cursor-pointer"
+                            title="Remove image"
+                            >
+                            ✕
+                            </button>
+
+                            <img
                             src={URL.createObjectURL(file)}
                             alt={file.name}
                             className="h-20 w-full object-cover"
-                          />
-    
-                          <div className="flex items-center gap-1 truncate px-2 py-1.5 text-[8px] text-[#5b5361]">
+                            />
+
+                            <div className="flex items-center gap-1 truncate px-2 py-1.5 text-[8px] text-[#5b5361]">
                             <Icon name="image" size={11} />
                             <span className="truncate">
-                              {file.name}
+                                {file.name}
                             </span>
-                          </div>
+                            </div>
                         </div>
-                      ))}
+                        ))}
                     </div>
-                  )}
+                    )}
+
                 </section>
     
                 
