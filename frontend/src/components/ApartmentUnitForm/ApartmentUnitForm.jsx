@@ -26,7 +26,7 @@ const emptyUnit = {
   bedrooms: "0",
   maxOccupants: "1",
   images: [],
-  amenities: [],
+  unitAmenities: [],
 };
 
 function FormField({
@@ -84,12 +84,12 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
     setUnit((prev) => ({
       ...prev,
 
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter(
+      unitAmenities: prev.unitAmenities.includes(amenity)
+        ? prev.unitAmenities.filter(
             (item) => item !== amenity
           )
         : [
-            ...prev.amenities,
+            ...prev.unitAmenities,
             amenity,
           ],
     }));
@@ -98,7 +98,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
    const resetForm = () => {
     setUnit({
       ...emptyUnit,
-      amenities: [],
+      unitAmenities: [],
     });
 
     setEditingId(null);
@@ -436,12 +436,12 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
           </FormField>
 
 
-              {/* AMENITIES */}
+              {/* unitAmenities */}
 
               <div className="mt-5">
 
                 <h4 className="mb-3 text-[10px] font-semibold text-[#353039]">
-                  Additional Amenities
+                  Additional Unit Amenities
                 </h4>
 
                 <div className="grid gap-x-7 gap-y-3 sm:grid-cols-3">
@@ -449,7 +449,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
                   {amenityOptions.map((amenity) => {
 
                     const checked =
-                      unit.amenities.includes(amenity);
+                      unit.unitAmenities.includes(amenity);
 
                     return (
                       <label
