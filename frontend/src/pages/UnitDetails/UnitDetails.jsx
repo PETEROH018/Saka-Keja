@@ -4,17 +4,21 @@ import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import './UnitDetails.css';
 import { API_BASE_URL } from '../../config/api';
+import { useAuth } from '../../context/useAuth';
 
 
 export default function UnitDetails() {
   // Extract both route parameters
   const { apartmentId, unitId } = useParams();
+  const { user } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
+  const [bookingMessage, setBookingMessage] = useState('');
 
   useEffect(() => {
     setLoading(true);
