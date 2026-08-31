@@ -130,8 +130,7 @@ export default function SearchResults() {
     } else {
       navigate(`/unit-details/${unit.id}`);
     }
-  };
-
+};
   return (
     <div className="search-page-bg">
       <Navbar showSearch={true} searchValue={locationSearch} setSearchValue={setLocationSearch} />
