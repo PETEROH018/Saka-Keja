@@ -3,5 +3,15 @@ import { AuthContext } from "./AuthContext";
 
 
 export function useAuth() {
-    return useContext(AuthContext);
+    const authContext = useContext(AuthContext);
+
+    if (!authContext) {
+        return {
+            user: null,
+            setUser: () => {},
+            logout: () => {},
+        };
+    }
+
+    return authContext;
 }
