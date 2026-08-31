@@ -19,7 +19,8 @@ export default function SearchResults() {
   const [maxRent, setMaxRent] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
-  const [hasWardrobe, setHasWardrobe] = useState(false); // NEW: Wardrobe filter state
+  const [hasWardrobe, setHasWardrobe] = useState(false);
+  const [hasBalcony, setHasBalcony] = useState(false); // Balcony filter state
   
   // Pagination & Sorting
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,6 +53,7 @@ export default function SearchResults() {
     setBedrooms('');
     setBathrooms('');
     setHasWardrobe(false);
+    setHasBalcony(false);
     setFilteredApartments(allApartments);
   };
 
@@ -66,7 +68,7 @@ export default function SearchResults() {
     return 0;
   };
 
-  // Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms, Wardrobe)
+  // Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms, Wardrobe, Balcony)
   const handleApplyFilters = () => {
     let result = allApartments.filter(item => {
       const rent = getPropertyRent(item);
@@ -90,14 +92,21 @@ export default function SearchResults() {
         ? Number(item.bathrooms) === Number(bathrooms) 
         : true;
 
-      // 5. Wardrobe match (Checks apartment or unit level wardrobe attributes/amenities)
+      // 5. Wardrobe match
       const matchWardrobe = hasWardrobe
         ? item.has_wardrobe === true || 
           item.wardrobe === true || 
           (item.units && item.units.some(u => u.has_wardrobe || u.wardrobe))
         : true;
 
-      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms && matchWardrobe;
+      // 6. Balcony match
+      const matchBalcony = hasBalcony
+        ? item.has_balcony === true || 
+          item.balcony === true || 
+          (item.units && item.units.some(u => u.has_balcony || u.balcony))
+        : true;
+
+      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms && matchWardrobe && matchBalcony;
     });
 
     setFilteredApartments(result);
@@ -192,15 +201,24 @@ export default function SearchResults() {
             </div>
           </div>
 
-          {/* NEW: Amenities / Features Filter (Wardrobe) */}
+          {/* Features & Amenities Filters */}
           <div className="filter-group">
             <label className="group-label">Features & Amenities</label>
-            <label className="checkbox-label">
+            
+            <label className="checkbox-label mb-2">
               <input 
                 type="checkbox" 
                 checked={hasWardrobe} 
                 onChange={(e) => setHasWardrobe(e.target.checked)} 
               /> Includes Wardrobe 🚪
+            </label>
+
+            <label className="checkbox-label">
+              <input 
+                type="checkbox" 
+                checked={hasBalcony} 
+                onChange={(e) => setHasBalcony(e.target.checked)} 
+              /> Includes Balcony 🌅
             </label>
           </div>
 
