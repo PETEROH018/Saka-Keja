@@ -1,6 +1,10 @@
 import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+import { API_BASE_URL } from "../../config/api";
 
 export default function UnitCard({
+  id,
   name,
   description,
   location,
@@ -14,6 +18,30 @@ export default function UnitCard({
   unit_amenity_links: amenityLinks = [],
 }) {
   const imageUrl = imageUrls[0];
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+
+  const handleViewDetails = async () => {
+
+    if (user?.id) {
+      try {
+        await fetch(
+          `${API_BASE_URL}/students/${user.id}/units/${id}/view`,
+          {
+            method: "POST",
+          }
+        );
+
+      } catch (error) {
+        console.error("Failed to record view:", error);
+      }
+    }
+
+
+    navigate(`/unit/${id}`);
+  };
 
   const hasAmenity = (name) =>
     amenityLinks.some((link) => link.amenity?.name === name);
@@ -106,7 +134,10 @@ export default function UnitCard({
         </div>
 
         {/* Action Button */}
-        <button className="mt-2 w-full rounded-lg border border-outline-variant bg-white py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary">
+        <button
+          onClick={handleViewDetails}
+          className="mt-2 w-full rounded-lg border border-outline-variant bg-white py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary"
+        >
           View Details
         </button>
       </div>
