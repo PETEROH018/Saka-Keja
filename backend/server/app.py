@@ -166,6 +166,16 @@ def get_apartment_units(id):
     except Exception as e:
         return jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}), 500
 
+@app.route("/units/<int:id>", methods=['GET'])
+def get_unit_by_id(id):
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+    try:
+        return jsonify(UnitSchema().dump(unit)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve unit due to this error: {str(e)}"}), 500
+
 @app.route('/owners/<int:id>', methods=['PATCH','PUT'])
 def update_owner(id):
     owner = ApartmentOwner.query.get(id)
