@@ -437,6 +437,22 @@ def get_student_favorite_units(id):
     return jsonify(UnitSchema(many=True).dump(favorite_units))
 
 
+@app.route("/students/<int:id>/viewed-units", methods=["GET"])
+def get_student_viewed_units(id):
+
+    viewed_units = (
+        db.session.query(Unit)
+        .join(StudentUnit)
+        .filter(
+            StudentUnit.student_id == id,
+            StudentUnit.viewed == True
+        )
+        .all()
+    )
+
+    return jsonify(UnitSchema(many=True).dump(viewed_units))
+
+
 @app.route("/payments", methods=["POST"])
 def add_payment():
 
@@ -677,6 +693,30 @@ def mark_unit_view(student_id, unit_id):
     db.session.commit()
 
     return jsonify({"message": "Unit view recorded"}), 200
+
+
+@app.route("/students/<int:student_id>/units/<int:unit_id>/favorite", methods=["POST"])
+def mark_unit_favorite(student_id, unit_id):
+
+    student_unit = StudentUnit.query.filter_by(
+        student_id=student_id, unit_id=unit_id
+    ).first()
+
+    if not student_unit:
+
+        student_unit = StudentUnit(
+            student_id=student_id, unit_id=unit_id, favorite=True
+        )
+
+        db.session.add(student_unit)
+
+    else:
+
+        student_unit.favorite = not student_unit.favorite
+
+    db.session.commit()
+
+    return jsonify({"favorite": student_unit.favorite}), 200
 
 
 if __name__ == "__main__":
