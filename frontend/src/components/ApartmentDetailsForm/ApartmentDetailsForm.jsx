@@ -20,7 +20,7 @@ const labelClass =
 
 
 export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities}){
-
+        const [uploadComplete,setUploadComplete] = useState(false)
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
     
@@ -392,7 +392,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
             </section>
             </section>
 
-            <ImageUploader form={form} setForm={setForm} /> 
+            <ImageUploader type={'apartment'} form={form} setForm={setForm} /> 
 
             <section className="mb-8">
 
@@ -484,6 +484,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
 
               <button
                 type="submit"
+                disabled = {uploadComplete}
                 className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084]"
               >
                 Continue to Units
