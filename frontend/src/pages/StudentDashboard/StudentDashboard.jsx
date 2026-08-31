@@ -94,7 +94,7 @@ function StudentDashboard() {
             items: favoriteUnits,
         },
         {
-            title: "View Units",
+            title: "Viewed Units",
             items: availableUnits,
         },
     ];
