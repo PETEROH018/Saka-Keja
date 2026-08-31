@@ -258,7 +258,10 @@ def update_apartment(id):
         return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
 @app.route("/units/<int:id>", methods=['PATCH','POST'])
-def update_unit(id):
+def handle_unit_by_id(id):
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
 
 
 @app.route("/units/promoted", methods=["GET"])
