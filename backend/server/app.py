@@ -12,32 +12,35 @@ apartment_owner_schema = ApartmentOwnerSchema()
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
     data = request.get_json()
+    print (data)
 
-    if not data:
-        return jsonify({"error": "No input data provided"}), 400
+    return jsonify({"message" : f"Added apartment and its units"}),201
 
-    try:
-        new_apartment = apartment_schema.load(data)
-        db.session.add(new_apartment)
-        db.session.commit()
-        return (
-            jsonify(
-                "message", f"Added apartment with id {new_apartment.id} and its units"
-            ),
-            201,
-        )
+    # if not data:
+    #     return jsonify({"error": "No input data provided"}), 400
 
-    except ValidationError as err:
-        return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+    # try:
+    #     new_apartment = apartment_schema.load(data)
+    #     db.session.add(new_apartment)
+    #     db.session.commit()
+    #     return (
+    #         jsonify(
+    #             "message", f"Added apartment with id {new_apartment.id} and its units"
+    #         ),
+    #         201,
+    #     )
 
-    except Exception as e:
-        db.session.rollback()
-        return (
-            jsonify(
-                {"error", f"Could not add the apartment due to this error, {str(e)}"}
-            ),
-            500,
-        )
+    # except ValidationError as err:
+    #     return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+
+    # except Exception as e:
+    #     db.session.rollback()
+    #     return (
+    #         jsonify(
+    #             {"error", f"Could not add the apartment due to this error, {str(e)}"}
+    #         ),
+    #         500,
+    #     )
 
 
 @app.route("/owners", methods=["POST"])
