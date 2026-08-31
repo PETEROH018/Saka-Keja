@@ -284,9 +284,7 @@ export default function SearchResults() {
                             <h2>Saka Keja</h2>
                           </div>
                         )}
-                        <span className="match-badge">
-                          🎯 {index % 2 === 0 ? '94%' : '88%'} Match
-                        </span>
+                        
                         {item.promoted && <span className="verified-badge">⭐ Promoted</span>}
                       </div>
 
