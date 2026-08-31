@@ -280,6 +280,29 @@ def handle_unit_by_id(id):
             return jsonify(UnitSchema().dump(unit)), 200
         except Exception as e:
             return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
+# Handle PATCH/PUT/POST requests for updating Unit
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    new_image_urls = data.pop("imageURLs", None)
+
+    try:
+        unit_schema.load(data, instance=unit, partial=True)
+        if new_image_urls is not None:
+            existing_image_urls = unit.imageURLS or []
+            unit.imageURLS = existing_image_urls + new_image_urls
+            flag_modified(unit, "imageURLS")
+        db.session.commit()
+        return jsonify({"message": "Unit updated successfully", "data": unit_schema.dump(unit)}), 200
+
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
+
 
 @app.route("/units/promoted", methods=["GET"])
 def get_promoted_units():
