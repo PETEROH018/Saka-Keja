@@ -98,7 +98,7 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
                   <label className="relative flex min-h-[125px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#9b82bb] bg-[#fdf9ff] text-center hover:bg-[#faf3ff]">
     
                     <div className="mb-2 grid h-8 w-8 place-items-center rounded-full bg-[#ede4f6] text-[#603d96]">
-                      <Icon name="upload" size={16} />
+                      <Icon name="plus" size={15} />
                     </div>
     
                     <strong className="text-[10px] font-semibold text-[#553589]">
