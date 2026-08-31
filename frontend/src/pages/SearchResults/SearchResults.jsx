@@ -118,7 +118,7 @@ export default function SearchResults() {
   const displayedUnits = getSortedUnits(filteredUnits);
 
   // Pagination Slicing (4 items per page for clean 2-column grid layout)
-  const ITEMS_PER_PAGE = 4;
+  const ITEMS_PER_PAGE = 6;
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedUnits = displayedUnits.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   const totalPages = Math.ceil(displayedUnits.length / ITEMS_PER_PAGE) || 1;
