@@ -124,6 +124,21 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
 
                 <div>
                   <label className={labelClass}>
+                    Building Location
+                  </label>
+
+                  <input
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Juja,Nakuru,Kisumu"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
                     Property Type
                   </label>
 
