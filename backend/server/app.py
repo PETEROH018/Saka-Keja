@@ -12,35 +12,47 @@ apartment_owner_schema = ApartmentOwnerSchema()
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
     data = request.get_json()
-    print (data)
+    
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
 
-    return jsonify({"message" : "Added apartment and its units"}),201
+    try:
+        new_apartment_details = {
+            'name': data.get('buildingName'),
+            'type': data.get('propertyType'),
+            'description': data.get('description'),
+            'location': data.get('location'),
+            'imageURLs': data.get('images'),
+            'owner_id': 1
+            }
+        
+        new_apartment = apartment_schema.load(new_apartment_details)
+        db.session.add(new_apartment)
+        db.session.flush()
 
-    # if not data:
-    #     return jsonify({"error": "No input data provided"}), 400
+        apartment_amenities_details = {
+            
+        }
 
-    # try:
-    #     new_apartment = apartment_schema.load(data)
-    #     db.session.add(new_apartment)
-    #     db.session.commit()
-    #     return (
-    #         jsonify(
-    #             "message", f"Added apartment with id {new_apartment.id} and its units"
-    #         ),
-    #         201,
-    #     )
 
-    # except ValidationError as err:
-    #     return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+        return (
+            jsonify(
+                "message", f"Added apartment with id {new_apartment.id} and its units"
+            ),
+            201,
+        )
 
-    # except Exception as e:
-    #     db.session.rollback()
-    #     return (
-    #         jsonify(
-    #             {"error", f"Could not add the apartment due to this error, {str(e)}"}
-    #         ),
-    #         500,
-    #     )
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "messages": err.messages}), 422
+
+    except Exception as e:
+        db.session.rollback()
+        return (
+            jsonify(
+                {"error", f"Could not add the apartment due to this error, {str(e)}"}
+            ),
+            500,
+        )
 
 
 @app.route("/owners", methods=["POST"])
