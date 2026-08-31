@@ -257,33 +257,46 @@ def update_apartment(id):
         db.session.rollback()
         return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
-@app.route("/units/<int:id>", methods=['PATCH','POST'])
-def update_unit(id):
-    unit=Unit.query.get(id)
-
+# 1. GET SINGLE UNIT DETAILS
+@app.route("/units/<int:id>", methods=['GET'])
+def get_unit_by_id(id):
+    unit = Unit.query.get(id)
     if not unit:
         return jsonify({"error": "Unit not found"}), 404
-    data=request.get_json()
+
+    try:
+        return jsonify(UnitSchema().dump(unit)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
+
+# 2. UPDATE EXISTING UNIT
+@app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
+def update_unit(id):
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+
+    data = request.get_json()
     if not data:
-            return jsonify({"error": "No data provided"}), 400
+        return jsonify({"error": "No data provided"}), 400
 
     new_image_urls = data.pop("imageURLs", None)
 
     try:
-        unit_schema.load( data, instance=unit, partial=True )
+        unit_schema.load(data, instance=unit, partial=True)
         if new_image_urls is not None:
             existing_image_urls = unit.imageURLS or []
-            unit.imageURLs = existing_image_urls + new_image_urls
+            unit.imageURLS = existing_image_urls + new_image_urls
             flag_modified(unit, "imageURLS")
         db.session.commit()
-        return jsonify({ "message": "Unit updated successfully", "data": apartment_schema.dump(unit) }), 200
+        return jsonify({ "message": "Unit updated successfully", "data": unit_schema.dump(unit) }), 200
 
     except ValidationError as err:
-            return jsonify({"validation_errors": err.messages}), 422
+        return jsonify({"validation_errors": err.messages}), 422
         
     except Exception as e:
-            db.session.rollback()
-            return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
+        db.session.rollback()
+        return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
 
 
 @app.route("/units/promoted", methods=["GET"])
@@ -306,17 +319,13 @@ def get_all_units():
     try:
         query = Unit.query
 
-        # Filter by shared status
         shared = request.args.get("shared")
         if shared is not None and shared != "":
             query = query.filter(Unit.shared == (shared.lower() == "true"))
-
-        # Filter by max rent
         max_rent = request.args.get("max_rent")
         if max_rent and max_rent.isdigit():
             query = query.filter(Unit.rent <= int(max_rent))
 
-        # Filter by bedrooms/category
         bedrooms = request.args.get("bedrooms")
         if bedrooms:
             if bedrooms.lower() == "bedsitter":
@@ -326,41 +335,15 @@ def get_all_units():
             elif bedrooms.isdigit():
                 query = query.filter(Unit.bedrooms == int(bedrooms))
 
-        # Safely execute query
         units = query.all()
-
-        # Amenity filtering post-fetch (prevents ORM relationship joins from throwing 500 errors)
-        kitchenette = request.args.get("kitchenette") == "true"
-        wardrobe = request.args.get("wardrobe") == "true"
-        balcony = request.args.get("balcony") == "true"
-
-        if kitchenette or wardrobe or balcony:
-            filtered_units = []
-            for u in units:
-                # Safely inspect amenities array/relationship
-                unit_amenities = [
-                    link.amenity.name.lower() 
-                    for link in getattr(u, 'unit_amenity_links', getattr(u, 'unit_amenities', [])) 
-                    if getattr(link, 'amenity', None)
-                ]
-                
-                match = True
-                if kitchenette and not any("kitchen" in a for a in unit_amenities):
-                    match = False
-                if wardrobe and not any("wardrobe" in a for a in unit_amenities):
-                    match = False
-                if balcony and not any("balcony" in a for a in unit_amenities):
-                    match = False
-
-                if match:
-                    filtered_units.append(u)
-            units = filtered_units
-
         return jsonify(UnitSchema(many=True).dump(units)), 200
 
     except Exception as e:
-        print(f"Error in GET /units: {str(e)}") # Prints exact trace in your terminal
+        import traceback
+        print("=== ERROR IN GET /units ===")
+        traceback.print_exc()
         return jsonify({"error": f"Could not retrieve units: {str(e)}"}), 500
+
 
 # ========================
 # STUDENT ENDPOINTS
@@ -655,9 +638,6 @@ def student_login():
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
