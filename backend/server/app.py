@@ -286,6 +286,21 @@ def update_unit(id):
             return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
 
 
+@app.route("/units/promoted", methods=["GET"])
+def get_promoted_units():
+    try:
+        promoted_units = Unit.query.filter_by(promoted=True).all()
+
+        return jsonify({
+            "total": len(promoted_units),
+            "items": UnitSchema(many=True).dump(promoted_units)
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": f"Could not retrieve promoted units due to this error: {str(e)}"
+        }), 500
+
 @app.route("/units", methods=["GET"])
 def get_all_units():
     try:

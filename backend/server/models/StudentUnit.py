@@ -24,7 +24,7 @@ class StudentUnit(db.Model):
 
     date_occupied = Column(
         DateTime,
-        nullable=False
+        nullable= True
     )
 
     favorite = Column(
