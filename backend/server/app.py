@@ -8,6 +8,8 @@ from sqlalchemy.orm.attributes import flag_modified
 apartment_schema = ApartmentSchema()
 unit_schema = UnitSchema()
 apartment_owner_schema = ApartmentOwnerSchema()
+apartment_amenities_schema = ApartmentAmenitySchema()
+apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema()
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -30,10 +32,30 @@ def add_apartment():
         db.session.add(new_apartment)
         db.session.flush()
 
-        apartment_amenities_details = {
-            
+        # Adding the new amenities added by a user to the apartment amenities table
+        new_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
+        db.session.add(new_apartment_amenities)
+        db.session.flush()
+
+        amenity_mapping = {
+            "furnished": "Furnished",
+            "wifiIncluded": "WiFi Available",
+            "waterReliable": "Water Reliable",
+            "securityGuard": "Security Guard"
         }
 
+        # Getting the names of default amenities that the client selected
+        selected_names = [ amenity_name for field, amenity_name in amenity_mapping.items() if data.get(field) is True ]
+        existing_apartment_amenities = ApartmentAmenity.query.filter(ApartmentAmenity.name.in_(selected_names)).all()
+
+        all_apartment_amenities = [*new_apartment_amenities,*existing_apartment_amenities]
+
+        for amenity in all_apartment_amenities:
+            association = ApartmentAmenityJoining(amenity=amenity,apartment=new_apartment)
+            db.session.add(association)
+
+        db.session.add_all(all_apartment_amenities)
+        db.session.flash
 
         return (
             jsonify(
