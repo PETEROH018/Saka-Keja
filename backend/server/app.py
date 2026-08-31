@@ -14,7 +14,7 @@ def add_apartment():
     data = request.get_json()
     print (data)
 
-    return jsonify({"message" : f"Added apartment and its units"}),201
+    return jsonify({"message" : "Added apartment and its units"}),201
 
     # if not data:
     #     return jsonify({"error": "No input data provided"}), 400
