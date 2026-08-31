@@ -1,108 +1,70 @@
-
-body {
-  background-color: #f4f5f7; /* Light mode background */
-  color: #1a1a1a;
+/* ==========================================
+   PAGE BASE & LAYOUT
+   ========================================== */
+.search-page-bg {
+  background-color: #f8f9fc;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .search-container {
   display: flex;
-  gap: 20px;
+  gap: 28px;
   max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 15px;
+  margin: 30px auto;
+  padding: 0 20px;
 }
 
-/* SIDEBAR STYLES */
+/* ==========================================
+   LEFT SIDEBAR FILTERS
+   ========================================== */
 .filter-sidebar {
-  width: 280px;
+  width: 290px;
   background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
   height: fit-content;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
 }
 
 .filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .filter-header h2 {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 .clear-btn {
   background: none;
   border: none;
-  color: #5c4eb4;
+  color: #6b46c1;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  font-size: 13px;
+  padding: 0;
 }
 
 .clear-btn:hover {
   text-decoration: underline;
 }
 
-.toggle-box {
-  background: #f8f6fc;
-  border: 1px solid #e7e0f4;
-  border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 36px;
-  height: 20px;
-}
-
-.switch input { opacity: 0; width: 0; height: 0; }
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #cbd5e1;
-  transition: .3s;
-  border-radius: 20px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 14px; width: 14px;
-  left: 3px; bottom: 3px;
-  background-color: white;
-  transition: .3s;
-  border-radius: 50%;
-}
-
-input:checked + .slider { background-color: #5c4eb4; }
-input:checked + .slider:before { transform: translateX(16px); }
-
 .filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  margin-bottom: 22px;
 }
 
 .group-label {
-  font-size: 13px;
+  display: block;
   font-weight: 600;
+  font-size: 0.9rem;
   color: #333;
+  margin-bottom: 10px;
 }
 
 .range-inputs {
@@ -113,118 +75,126 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .range-inputs input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
   outline: none;
+}
+
+.range-inputs input:focus {
+  border-color: #6b46c1;
+}
+
+.dash {
+  color: #a0aec0;
+  font-weight: 600;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 0.9rem;
   color: #4a5568;
+  margin-bottom: 8px;
   cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-  accent-color: #5c4eb4;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-
-.select-input {
-  padding: 10px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  outline: none;
-  background: white;
-  color: #4a5568;
 }
 
 .apply-btn {
-  background: #5c4eb4;
-  color: white;
+  width: 100%;
+  background: #6b46c1;
+  color: #ffffff;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
 }
 
 .apply-btn:hover {
-  background: #4a3e99;
+  background: #553c9a;
 }
 
-/* MAIN SECTION STYLES */
+/* ==========================================
+   RIGHT CONTENT AREA & CARDS GRID
+   ========================================== */
 .results-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .results-header {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
 }
 
 .results-header h1 {
-  font-size: 24px;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #1a202c;
+  margin: 0;
 }
 
 .subtext {
-  font-size: 13px;
   color: #718096;
+  font-size: 0.875rem;
+  margin-top: 4px;
 }
 
 .sort-box {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 0.9rem;
   color: #4a5568;
 }
 
 .sort-box select {
   padding: 8px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 0.9rem;
+  color: #2d3748;
   outline: none;
-  background: white;
+  cursor: pointer;
 }
 
-/* CARDS GRID */
-.cards-grid {
+.cards-grid-two-col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 
+/* ==========================================
+   PROPERTY CARD STYLING
+   ========================================== */
 .property-card {
-  background: white;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 16px;
   overflow: hidden;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.property-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Image Wrapper & Overlay Badges */
 .card-image-wrapper {
   position: relative;
-  height: 180px;
+  width: 100%;
+  height: 200px;
+  background-color: #f3effe;
 }
 
 .card-image-wrapper img {
@@ -233,16 +203,31 @@ input:checked + .slider:before { transform: translateX(16px); }
   object-fit: cover;
 }
 
+.placeholder-brand {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #553c9a;
+  background: #f3effe;
+}
+
+.placeholder-brand h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
 .match-badge {
   position: absolute;
   top: 12px;
   right: 12px;
   background: rgba(255, 255, 255, 0.95);
-  color: #5c4eb4;
+  color: #5b3cc4;
+  font-size: 0.8rem;
   font-weight: 700;
-  font-size: 12px;
   padding: 4px 10px;
   border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .verified-badge {
@@ -250,127 +235,146 @@ input:checked + .slider:before { transform: translateX(16px); }
   bottom: 12px;
   left: 12px;
   background: rgba(255, 255, 255, 0.95);
-  color: #5c4eb4;
-  font-size: 12px;
+  color: #2b6cb0;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
+/* Card Body */
 .card-body {
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  flex: 1;
 }
 
 .card-title-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-.card-title-row h3 {
-  font-size: 18px;
-  color: #1a202c;
+.occupancy-tag {
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 .price-tag {
   text-align: right;
 }
 
-.amount {
-  display: block;
-  font-size: 18px;
-  font-weight: 800;
-  color: #5c4eb4;
+.price-tag .amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #5b3cc4;
 }
 
-.period {
-  font-size: 11px;
+.price-tag .period {
+  font-size: 0.8rem;
   color: #718096;
 }
 
-.location-text {
-  font-size: 13px;
-  color: #718096;
+.description-text {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin: 6px 0 12px 0;
+  line-height: 1.4;
 }
 
+/* Purple Recommendation Note */
 .fit-note {
-  background: #f8f6fc;
-  border: 1px solid #e7e0f4;
-  padding: 10px;
+  background: #f3effe;
+  color: #4c2fb3;
+  padding: 10px 12px;
   border-radius: 8px;
   display: flex;
+  align-items: center;
   gap: 8px;
-  font-size: 12px;
-  color: #2d3748;
+  font-size: 0.825rem;
+  margin-bottom: 16px;
 }
 
+.fit-note p {
+  margin: 0;
+}
+
+/* Card Footer & Details Button */
 .card-footer {
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
+  padding-top: 12px;
+  border-top: 1px solid #edf2f7;
 }
 
 .specs {
   display: flex;
   gap: 12px;
-  font-size: 12px;
-  color: #4a5568;
-}
-
-.details-btn {
-  border: 1px solid #cbd5e1;
-  background: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.details-btn:hover {
-  background: #f1f5f9;
-}
-
-.no-results {
-  grid-column: span 2;
-  text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
+  font-size: 0.85rem;
   color: #718096;
 }
 
-/* PAGINATION */
+.details-btn {
+  background: #ffffff;
+  color: #2d3748;
+  border: 1px solid #cbd5e0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.details-btn:hover {
+  background: #f7fafc;
+  border-color: #5b3cc4;
+  color: #5b3cc4;
+}
+
+/* ==========================================
+   PAGINATION CONTROLS
+   ========================================== */
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 32px;
 }
 
-.pagination button {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
-  background: white;
-  color: #2d3748;
+.page-nav, .page-num {
+  padding: 8px 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
+  color: #4a5568;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.pagination button:disabled {
+.page-num.active {
+  background: #6b46c1;
+  color: #ffffff;
+  border-color: #6b46c1;
+}
+
+.page-nav:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.pagination button.active {
-  background: #5c4eb4;
-  color: white;
-  border-color: #5c4eb4;
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+  font-size: 1rem;
 }
