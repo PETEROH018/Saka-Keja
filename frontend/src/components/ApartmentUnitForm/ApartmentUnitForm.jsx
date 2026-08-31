@@ -1,6 +1,8 @@
 import { useState } from "react";
 import AddedUnitSummary from "./AddedUnitSummary";
 import Icon from "../Icon/Icon";
+import ImageUploader from "../../utils/ImageUploader";
+
 
 const unitTypeOptions = [
   "Single",
@@ -61,6 +63,7 @@ const inputClass =
 export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
   const [unit, setUnit] = useState(emptyUnit);
   const [editingId, setEditingId] = useState(null);
+  const [uploadCompleted, setUploadCompleted] = useState(false)
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -495,64 +498,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
           
           {/*Unit images*/}
 
-           <section className="mb-8 mt-1">
-                        <h3 className="mb-1 text-[11px] font-semibold">
-                          Unit Photos
-                        </h3>
-          
-                        <p className="mb-3 text-[9px] text-[#8b858f]">
-                          Upload photos of the unit to show the interior and the rooms in the unit
-                        </p>
-          
-                        <label className="relative flex min-h-[125px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#9b82bb] bg-[#fdf9ff] text-center hover:bg-[#faf3ff]">
-          
-                          <div className="mb-2 grid h-8 w-8 place-items-center rounded-full bg-[#ede4f6] text-[#603d96]">
-                            <Icon name="upload" size={16} />
-                          </div>
-          
-                          <strong className="text-[10px] font-semibold text-[#553589]">
-                            Upload  Images of the Unit
-                          </strong>
-          
-                          <span className="mt-1 text-[8px] text-[#99929d]">
-                            PNG, JPG or WEBP · You can select multiple images
-                          </span>
-          
-                          <input
-                            type="file"
-                            name="images"
-                            accept="image/png,image/jpeg,image/webp"
-                            multiple
-                            onChange={handleChange}
-                            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                          />
-                        </label>
-          
-                        {/* Selected images */}
-                        {unit.images.length > 0 && (
-                          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                            {unit.images.map((file, index) => (
-                              <div
-                                key={`${file.name}-${index}`}
-                                className="relative overflow-hidden rounded-md border border-[#e2dce6] bg-[#fcf8fd]"
-                              >
-                                <img
-                                  src={URL.createObjectURL(file)}
-                                  alt={file.name}
-                                  className="h-20 w-full object-cover"
-                                />
-          
-                                <div className="flex items-center gap-1 truncate px-2 py-1.5 text-[8px] text-[#5b5361]">
-                                  <Icon name="image" size={11} />
-                                  <span className="truncate">
-                                    {file.name}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-            </section>
+           <ImageUploader type={'unit'} form={unit} setForm={setUnit} uploadCompleted={uploadCompleted} setUploadCompleted={setUploadCompleted} />
 
 
             {/* ADD / UPDATE UNIT  */}
@@ -562,7 +508,8 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
               <button
                 type="button"
                 onClick={handleAddUnit}
-                className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
+                disabled = {uploadCompleted}
+                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] mt-2"
               >
 
                 <Icon
