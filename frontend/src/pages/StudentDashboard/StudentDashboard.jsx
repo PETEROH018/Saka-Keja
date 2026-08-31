@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import StudentSidebar from "../../components/StudentSidebar/StudentSidebar";
 import UnitCard from "../../components/UnitCard/UnitCard";
 import { useAuth } from "../../context/useAuth";
 import { API_BASE_URL } from "../../config/api";
+import Navbar from "../../components/Navbar/Navbar";
 
 function StudentDashboard() {
     const { user } = useAuth();
@@ -14,7 +14,28 @@ function StudentDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [stats, setStats] = useState({
+        totalViewed: 0,
+        savedProperties: 0
+    });
+
     useEffect(() => {
+
+        fetch("http://localhost:5000/students/1/stats")
+            .then(response => response.json())
+            .then(data => {
+                setStats(data);
+            })
+            .catch(error => {
+                console.error("Error fetching stats:", error);
+            });
+
+    }, []);
+
+    console.log(stats);
+
+    useEffect(() => {
+        console.log("CURRENT USER:", user);
         if (!user?.id) {
             setLoading(false);
             return;
@@ -47,6 +68,10 @@ function StudentDashboard() {
                 const favoritesData = await favoritesResponse.json();
                 const unitsData = await unitsResponse.json();
 
+                console.log("PROMOTED DATA:", promotedData);
+                console.log("FAVORITES DATA:", favoritesData);
+                console.log("UNITS DATA:", unitsData);
+
                 setPromotedUnits(promotedData.items || []);
                 setFavoriteUnits(favoritesData || []);
                 setAvailableUnits(unitsData || []);
@@ -76,71 +101,99 @@ function StudentDashboard() {
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <StudentSidebar />
+        <>
+            <Navbar showSearch={true} />
+            <div className="flex min-h-screen bg-gray-50">
 
-            <main className="min-w-0 flex-1 p-6 lg:p-8">
-                <header className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Welcome back
-                    </h1>
+                <main className="min-w-0 flex-1 p-6 lg:p-8">
+                    <header className="mb-8">
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            Welcome back
+                        </h1>
 
-                    <p className="mt-1 text-sm text-gray-500">
-                        Here is a summary of your housing activity.
-                    </p>
-                </header>
+                        <p className="mt-1 text-sm text-gray-500">
+                            Here is a summary of your housing activity.
+                        </p>
+                    </header>
 
-                {loading && (
-                    <p className="text-sm text-gray-500">
-                        Loading your dashboard...
-                    </p>
-                )}
+                    <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2">
 
-                {error && (
-                    <p className="rounded-lg bg-red-50 p-4 text-sm text-red-600">
-                        {error}
-                    </p>
-                )}
+                        <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <p className="text-sm text-gray-500">
+                                Total Units Viewed
+                            </p>
 
-                {!loading && !error && (
-                    <div className="space-y-8">
-                        {dashboardSections.map((section) => (
-                            <section key={section.title}>
-                                <div className="mb-4 flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-gray-900">
-                                        {section.title}
-                                    </h2>
+                            <h3 className="mt-2 text-3xl font-bold text-gray-900">
+                                {stats.totalViewed}
+                            </h3>
+                        </div>
 
-                                    <a
-                                        href="#/search"
-                                        className="text-sm font-medium text-purple-700 hover:text-purple-900"
-                                    >
-                                        View All
-                                    </a>
-                                </div>
 
-                                {section.items.length === 0 ? (
-                                    <div className="rounded-xl border border-gray-200 bg-white p-6">
-                                        <p className="text-sm text-gray-500">
-                                            No units available in this section.
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                                        {section.items.map((unit) => (
-                                            <UnitCard
-                                                key={unit.id}
-                                                {...unit}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
-                            </section>
-                        ))}
+                        <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <p className="text-sm text-gray-500">
+                                Saved Properties
+                            </p>
+
+                            <h3 className="mt-2 text-3xl font-bold text-gray-900">
+                                {stats.savedProperties}
+                            </h3>
+                        </div>
+
                     </div>
-                )}
-            </main>
-        </div>
+
+                    {loading && (
+                        <p className="text-sm text-gray-500">
+                            Loading your dashboard...
+                        </p>
+                    )}
+
+                    {error && (
+                        <p className="rounded-lg bg-red-50 p-4 text-sm text-red-600">
+                            {error}
+                        </p>
+                    )}
+
+                    {!loading && !error && (
+                        <div className="space-y-8">
+                            {dashboardSections.map((section) => (
+                                <section key={section.title}>
+                                    <div className="mb-4 flex items-center justify-between">
+                                        <h2 className="text-lg font-semibold text-gray-900">
+                                            {section.title}
+                                        </h2>
+
+                                        <a
+                                            href="#/search"
+                                            className="text-sm font-medium text-purple-700 hover:text-purple-900"
+                                        >
+                                            View All
+                                        </a>
+                                    </div>
+
+                                    {section.items.length === 0 ? (
+                                        <div className="rounded-xl border border-gray-200 bg-white p-6">
+                                            <p className="text-sm text-gray-500">
+                                                No units available in this section.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                            {section.items.map((unit) => (
+                                                <UnitCard
+                                                    key={unit.id}
+                                                    {...unit}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </section>
+                            ))}
+                        </div>
+                    )}
+                </main>
+            </div>
+
+        </>
     );
 }
 
