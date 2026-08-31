@@ -22,9 +22,9 @@ export default function SearchResults() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Default');
 
-  // Fetch Data from JSON Server
+  // Fetch Data from Flask Backend API
   useEffect(() => {
-    fetch('http://localhost:3000/apartments')
+    fetch('http://localhost:5000/apartments')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch apartments');
         return res.json();
@@ -35,7 +35,26 @@ export default function SearchResults() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching db.json:', err);
+        console.error('Error fetching apartments:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  // Fetch Data from Flask Backend API
+  useEffect(() => {
+    fetch('http://localhost:5000/apartments')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch apartments');
+        return res.json();
+      })
+      .then((data) => {
+        setAllApartments(data);
+        setFilteredApartments(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching apartments:', err);
         setError(err.message);
         setLoading(false);
       });
@@ -64,38 +83,42 @@ export default function SearchResults() {
     setFilteredApartments(allApartments);
   };
 
-  // Apply Filters
+  // Apply Filters based on Flask Apartment + Units schema
   const handleApplyFilters = () => {
     let result = allApartments.filter(item => {
-      const rent = item["monthly-expense-breakdown"]?.rent || 0;
+      // Get lowest unit rent or default to 0
+      const lowestRent = item.units && item.units.length > 0 
+        ? Math.min(...item.units.map(u => u.rent)) 
+        : 0;
+
+      const matchMin = minRent ? lowestRent >= Number(minRent) : true;
+      const matchMax = maxRent ? lowestRent <= Number(maxRent) : true;
       
-      const matchMin = minRent ? rent >= Number(minRent) : true;
-      const matchMax = maxRent ? rent <= Number(maxRent) : true;
-      
-      // Property type matching
+      // Property type matching against Flask field 'type'
       const matchType = propertyTypes.length > 0 
-        ? propertyTypes.some(t => item.property_type.toLowerCase().includes(t.toLowerCase())) 
+        ? propertyTypes.some(t => (item.type || '').toLowerCase().includes(t.toLowerCase())) 
         : true;
 
-      // Amenities check
-      const matchWifi = amenities.includes('Wi-Fi Included') ? item["WiFi included"] : true;
-      const matchWater = amenities.includes('Water Reliable') ? item["Water reliable"] : true;
-      const matchSecurity = amenities.includes('Security Guard') ? item["Security Guard"] : true;
-
-      return matchMin && matchMax && matchType && matchWifi && matchWater && matchSecurity;
+      return matchMin && matchMax && matchType;
     });
 
     setFilteredApartments(result);
   };
 
-  // Sort Logic
+  // Sort Logic based on unit rents
   const getSortedApartments = (items) => {
     const sorted = [...items];
+
+    const getMinRent = (apt) => {
+      if (!apt.units || apt.units.length === 0) return 0;
+      return Math.min(...apt.units.map(u => u.rent));
+    };
+
     if (sortBy === 'Price: Low to High') {
-      return sorted.sort((a, b) => (a["monthly-expense-breakdown"]?.rent || 0) - (b["monthly-expense-breakdown"]?.rent || 0));
+      return sorted.sort((a, b) => getMinRent(a) - getMinRent(b));
     }
     if (sortBy === 'Price: High to Low') {
-      return sorted.sort((a, b) => (b["monthly-expense-breakdown"]?.rent || 0) - (a["monthly-expense-breakdown"]?.rent || 0));
+      return sorted.sort((a, b) => getMinRent(b) - getMinRent(a));
     }
     return sorted;
   };
@@ -112,18 +135,6 @@ export default function SearchResults() {
             <h2>Filters</h2>
             <button className="clear-btn" onClick={handleClearAll}>Clear all</button>
           </div>
-
-          {/*<div className="toggle-box">
-            <span>🗺️ Map View</span>
-            <label className="switch">
-              <input 
-                type="checkbox" 
-                checked={mapView} 
-                onChange={() => setMapView(!mapView)} 
-              />
-              <span className="slider"></span>
-            </label>
-          </div>*/}
 
           <div className="filter-group">
             <label className="group-label">Monthly Rent (KES)</label>
@@ -150,7 +161,7 @@ export default function SearchResults() {
               { label: 'Single Room', value: 'single' },
               { label: 'Bedsitter', value: 'bedsitter' },
               { label: '1 Bedroom', value: 'one bedroom' },
-              { label: '2 Bedroom', value: 'two bed room' }
+              { label: '2 Bedroom', value: 'two bedroom' }
             ].map(type => (
               <label key={type.value} className="checkbox-label">
                 <input 
@@ -182,8 +193,8 @@ export default function SearchResults() {
         <main className="results-main">
           <header className="results-header">
             <div>
-              <h1>{displayedApartments.length} homes found</h1>
-              <p className="subtext">Showing available units</p>
+              <h1>{displayedApartments.length} properties found</h1>
+              <p className="subtext">Select a property to view available units</p>
             </div>
             <div className="sort-box">
               <span>Sort by:</span>
@@ -195,7 +206,7 @@ export default function SearchResults() {
             </div>
           </header>
 
-{/* DYNAMIC CONTENT GRID */}
+          {/* DYNAMIC CONTENT GRID */}
           {loading ? (
             <div className="no-results">Loading available properties...</div>
           ) : error ? (
@@ -204,11 +215,18 @@ export default function SearchResults() {
             <div className="cards-grid">
               {displayedApartments.length > 0 ? (
                 displayedApartments.map((item) => {
-                  const rent = item["monthly-expense-breakdown"]?.rent || 0;
-                  const firstImage = item.image_Urls && item.image_Urls.length > 0 
-                    ? item.image_Urls[0] 
+                  // Fallback pricing calculation based on nested units
+                  const lowestRent = item.units && item.units.length > 0 
+                    ? Math.min(...item.units.map(u => u.rent)) 
+                    : 0;
+
+                  const firstImage = item.imageURLs && item.imageURLs.length > 0 
+                    ? item.imageURLs[0] 
                     : 'https://via.placeholder.com/800x600';
-                  const primaryAmenity = item["nearby amenities"]?.[0]?.distance || '';
+
+                  const nearbyNote = item.nearby_facilities && item.nearby_facilities.length > 0
+                    ? `${item.nearby_facilities[0].title} (${item.nearby_facilities[0].distance})`
+                    : '';
 
                   return (
                     <article key={item.id} className="property-card">
@@ -221,12 +239,14 @@ export default function SearchResults() {
                         <div className="card-title-row">
                           <h3>{item.name}</h3>
                           <div className="price-tag">
-                            <span className="amount">KES {rent.toLocaleString()}</span>
-                            <span className="period">/ month</span>
+                            <span className="amount">
+                              {lowestRent > 0 ? `KES ${lowestRent.toLocaleString()}` : 'Contact for Price'}
+                            </span>
+                            {lowestRent > 0 && <span className="period">/ month</span>}
                           </div>
                         </div>
 
-                        <p className="location-text">📍 {item.location} {primaryAmenity ? `· ${primaryAmenity}` : ''}</p>
+                        <p className="location-text">📍 {item.location} {nearbyNote ? `· ${nearbyNote}` : ''}</p>
 
                         <div className="fit-note">
                           <span>✔️</span>
@@ -235,14 +255,16 @@ export default function SearchResults() {
 
                         <div className="card-footer">
                           <div className="specs">
-                            <span>🛏️ {item.property_type}</span>
-                            <span>🚿 {item.bathrooms} Bath</span>
+                            <span>🏢 {item.type}</span>
+                            <span>🚪 {item.units ? item.units.length : 0} Units</span>
                           </div>
+                          
+                          {/* DYNAMIC ROUTE NAVIGATION TO APARTMENT UNITS */}
                           <button 
                             className="details-btn" 
-                            onClick={() => navigate('/apartment-details', { state: { property: item } })}
+                            onClick={() => navigate(`/apartment-details/${item.id}`)}
                           >
-                            View Details
+                            View Units
                           </button>
                         </div>
                       </div>
