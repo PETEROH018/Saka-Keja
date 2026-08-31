@@ -27,14 +27,15 @@ def add_apartment():
             'imageURLs': data.get('images'),
             'owner_id': 1
             }
-        
+
+        # Adding an apartment's details to the apartments table
         new_apartment = apartment_schema.load(new_apartment_details)
         db.session.add(new_apartment)
         db.session.flush()
 
         # Adding the new amenities added by a user to the apartment amenities table
-        new_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
-        db.session.add(new_apartment_amenities)
+        added_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
+        db.session.add(added_apartment_amenities)
         db.session.flush()
 
         amenity_mapping = {
@@ -46,23 +47,46 @@ def add_apartment():
 
         # Getting the names of default amenities that the client selected
         selected_names = [ amenity_name for field, amenity_name in amenity_mapping.items() if data.get(field) is True ]
-        existing_apartment_amenities = ApartmentAmenity.query.filter(ApartmentAmenity.name.in_(selected_names)).all()
+        selected_apartment_amenities = ApartmentAmenity.query.filter(ApartmentAmenity.name.in_(selected_names)).all()
 
-        all_apartment_amenities = [*new_apartment_amenities,*existing_apartment_amenities]
+        new_apartment_amenities = [*added_apartment_amenities,*selected_apartment_amenities]
 
-        for amenity in all_apartment_amenities:
+        # Adding all amenities of a particular apartment to the apartment amenities joining table
+        for amenity in new_apartment_amenities:
             association = ApartmentAmenityJoining(amenity=amenity,apartment=new_apartment)
             db.session.add(association)
 
-        db.session.add_all(all_apartment_amenities)
-        db.session.flash
+        db.session.add_all(new_apartment_amenities)
+        db.session.flush()
 
-        return (
-            jsonify(
-                "message", f"Added apartment with id {new_apartment.id} and its units"
-            ),
-            201,
-        )
+        for unit in data.get('units'):
+            new_unit_details = {
+                        'category':unit.get('unitType'),
+                        'description':unit.get('description'),
+                        'rent':unit.get('monthlyRent'),
+                        'deposit':unit.get('depositAmount'),
+                        'bedrooms':unit.get('bedrooms'),
+                        'bathrooms':unit.get('bathrooms'),
+                        'size':unit.get('size'),
+                        'maximum_occupants':unit.get('maxOccupants'),
+                        'image_URLS':unit.get('images'),
+                        'apartment_id':new_apartment.id
+                }
+            new_unit = unit_schema.load(new_unit_details)
+            db.session.add(new_unit)
+            db.session.flush()
+
+            selected_unit_amenities = UnitAmenity.query.filter(UnitAmenity.name.in_(unit.get('unitAmenities'))).all()
+            for amenity in selected_unit_amenities:
+                    association = UnitAmenityJoining(amenity=amenity,unit=new_unit)
+                    db.session.add(association)
+            
+            db.session.add_all(selected_unit_amenities)
+            db.session.flush()
+
+        db.session.commit()
+
+        return (jsonify("message", f"Added apartment with id {new_apartment.id} and its units"),201,)
 
     except ValidationError as err:
         return jsonify({"error": "Validation failed", "messages": err.messages}), 422
@@ -70,11 +94,7 @@ def add_apartment():
     except Exception as e:
         db.session.rollback()
         return (
-            jsonify(
-                {"error", f"Could not add the apartment due to this error, {str(e)}"}
-            ),
-            500,
-        )
+            jsonify({"error", f"Could not add the apartment or units due to this error, {str(e)}"}),500,)
 
 
 @app.route("/owners", methods=["POST"])
