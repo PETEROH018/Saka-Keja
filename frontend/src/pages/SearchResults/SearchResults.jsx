@@ -78,3 +78,19 @@ export default function SearchResults() {
       const matchMinRent = minRent ? rent >= Number(minRent) : true;
       const matchMaxRent = maxRent ? rent <= Number(maxRent) : true;
 
+// 3. Bedrooms match
+      const matchBedrooms = bedrooms 
+        ? Number(item.bedrooms) === Number(bedrooms) 
+        : true;
+
+      // 4. Bathrooms match
+      const matchBathrooms = bathrooms 
+        ? Number(item.bathrooms) === Number(bathrooms) 
+        : true;
+
+      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms;
+    });
+
+    setFilteredApartments(result);
+    setCurrentPage(1);
+  };
