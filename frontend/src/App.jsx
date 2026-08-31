@@ -6,7 +6,7 @@ import ApartmentDetails from './pages/ApartmentDetails'
 import SearchResults from './pages/SearchResults/SearchResults'
 import AddApartment from './pages/AddApartment/AddApartment'
 import MyProperties from './pages/MyProperties/MyProperties.jsx'
-import { BrowserRouter as HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import ComparePage from "./pages/Compare/ComparePage"
 import StudentProfile from "./components/StudentProfile/StudentProfile.jsx"
 import StudentEditProfile from "./components/EditProfile/StudentEditProfile.jsx"
