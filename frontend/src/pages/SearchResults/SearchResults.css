@@ -1,6 +1,10 @@
+/* ==========================================
+   PAGE BASE & LAYOUT
+   ========================================== */
 .search-page-bg {
   background-color: #f8f9fc;
   min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .search-container {
@@ -11,7 +15,9 @@
   padding: 0 20px;
 }
 
-/* Sidebar Styles */
+/* ==========================================
+   LEFT SIDEBAR FILTERS
+   ========================================== */
 .filter-sidebar {
   width: 290px;
   background: #ffffff;
@@ -32,6 +38,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: #1a1a1a;
+  margin: 0;
 }
 
 .clear-btn {
@@ -41,6 +48,11 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
+  padding: 0;
+}
+
+.clear-btn:hover {
+  text-decoration: underline;
 }
 
 .filter-group {
@@ -67,6 +79,16 @@
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 0.9rem;
+  outline: none;
+}
+
+.range-inputs input:focus {
+  border-color: #6b46c1;
+}
+
+.dash {
+  color: #a0aec0;
+  font-weight: 600;
 }
 
 .checkbox-label {
@@ -87,6 +109,7 @@
   padding: 12px;
   border-radius: 10px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -95,7 +118,9 @@
   background: #553c9a;
 }
 
-/* Right Content & Grid */
+/* ==========================================
+   RIGHT CONTENT AREA & CARDS GRID
+   ========================================== */
 .results-main {
   flex: 1;
 }
@@ -110,11 +135,33 @@
 .results-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
+  color: #1a202c;
+  margin: 0;
 }
 
 .subtext {
   color: #718096;
   font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.sort-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.sort-box select {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 0.9rem;
+  color: #2d3748;
+  outline: none;
+  cursor: pointer;
 }
 
 .cards-grid-two-col {
@@ -123,30 +170,211 @@
   gap: 24px;
 }
 
+/* ==========================================
+   PROPERTY CARD STYLING
+   ========================================== */
 .property-card {
   background: #ffffff;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid #edf2f7;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Image Wrapper & Overlay Badges */
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #f3effe;
+}
+
+.card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .placeholder-brand {
-  height: 200px;
-  background: #f3effe;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #553c9a;
+  background: #f3effe;
 }
 
+.placeholder-brand h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.match-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #5b3cc4;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.verified-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2b6cb0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Card Body */
+.card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.occupancy-tag {
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.price-tag {
+  text-align: right;
+}
+
+.price-tag .amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #5b3cc4;
+}
+
+.price-tag .period {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.description-text {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin: 6px 0 12px 0;
+  line-height: 1.4;
+}
+
+/* Purple Recommendation Note */
 .fit-note {
   background: #f3effe;
   color: #4c2fb3;
   padding: 10px 12px;
   border-radius: 8px;
   display: flex;
+  align-items: center;
   gap: 8px;
+  font-size: 0.825rem;
+  margin-bottom: 16px;
+}
+
+.fit-note p {
+  margin: 0;
+}
+
+/* Card Footer & Details Button */
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #edf2f7;
+}
+
+.specs {
+  display: flex;
+  gap: 12px;
   font-size: 0.85rem;
-  margin: 12px 0;
+  color: #718096;
+}
+
+.details-btn {
+  background: #ffffff;
+  color: #2d3748;
+  border: 1px solid #cbd5e0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.details-btn:hover {
+  background: #f7fafc;
+  border-color: #5b3cc4;
+  color: #5b3cc4;
+}
+
+/* ==========================================
+   PAGINATION CONTROLS
+   ========================================== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.page-nav, .page-num {
+  padding: 8px 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-num.active {
+  background: #6b46c1;
+  color: #ffffff;
+  border-color: #6b46c1;
+}
+
+.page-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+  font-size: 1rem;
 }
