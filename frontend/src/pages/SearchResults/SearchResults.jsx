@@ -14,15 +14,19 @@ export default function SearchResults() {
   const [error, setError] = useState(null);
 
   // Filter States
-  const [mapView, setMapView] = useState(false);
+  const [location, setLocation] = useState('');
   const [minRent, setMinRent] = useState('');
   const [maxRent, setMaxRent] = useState('');
-  const [propertyTypes, setPropertyTypes] = useState([]);
-  const [amenities, setAmenities] = useState([]);
+  const [bedrooms, setBedrooms] = useState('');
+  const [bathrooms, setBathrooms] = useState('');
+  const [hasWardrobe, setHasWardrobe] = useState(false);
+  const [hasBalcony, setHasBalcony] = useState(false); // Balcony filter state
+  
+  // Pagination & Sorting
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Default');
 
-  // Fetch Data from Flask Backend API
+  // Fetch Data from Backend API
   useEffect(() => {
     fetch('http://localhost:5000/apartments')
       .then((res) => {
@@ -40,95 +44,100 @@ export default function SearchResults() {
         setLoading(false);
       });
   }, []);
-
-  // Fetch Data from Flask Backend API
-  useEffect(() => {
-    fetch('http://localhost:5000/apartments')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch apartments');
-        return res.json();
-      })
-      .then((data) => {
-        setAllApartments(data);
-        setFilteredApartments(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching apartments:', err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  // Handle Checkboxes
-  const handleTypeChange = (type) => {
-    setPropertyTypes(prev => 
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
-  };
-
-  const handleAmenityChange = (amenity) => {
-    setAmenities(prev => 
-      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
-    );
-  };
 
   // Clear All Filters
   const handleClearAll = () => {
-    setMapView(false);
+    setLocation('');
     setMinRent('');
     setMaxRent('');
-    setPropertyTypes([]);
-    setAmenities([]);
+    setBedrooms('');
+    setBathrooms('');
+    setHasWardrobe(false);
+    setHasBalcony(false);
     setFilteredApartments(allApartments);
   };
 
-  // Apply Filters based on Flask Apartment + Units schema
+  // Helper to resolve property rent
+  const getPropertyRent = (item) => {
+    if (item["monthly-expense-breakdown"]?.rent) {
+      return Number(item["monthly-expense-breakdown"].rent);
+    }
+    if (item.units && item.units.length > 0) {
+      return Math.min(...item.units.map(u => u.rent));
+    }
+    return 0;
+  };
+
+  // Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms, Wardrobe, Balcony)
   const handleApplyFilters = () => {
     let result = allApartments.filter(item => {
-      // Get lowest unit rent or default to 0
-      const lowestRent = item.units && item.units.length > 0 
-        ? Math.min(...item.units.map(u => u.rent)) 
-        : 0;
+      const rent = getPropertyRent(item);
 
-      const matchMin = minRent ? lowestRent >= Number(minRent) : true;
-      const matchMax = maxRent ? lowestRent <= Number(maxRent) : true;
-      
-      // Property type matching against Flask field 'type'
-      const matchType = propertyTypes.length > 0 
-        ? propertyTypes.some(t => (item.type || '').toLowerCase().includes(t.toLowerCase())) 
+      // 1. Location match
+      const matchLocation = location 
+        ? (item.location || '').toLowerCase().includes(location.toLowerCase().trim()) 
         : true;
 
-      return matchMin && matchMax && matchType;
+      // 2. Rent Range match
+      const matchMinRent = minRent ? rent >= Number(minRent) : true;
+      const matchMaxRent = maxRent ? rent <= Number(maxRent) : true;
+
+      // 3. Bedrooms match
+      const matchBedrooms = bedrooms 
+        ? Number(item.bedrooms) === Number(bedrooms) 
+        : true;
+
+      // 4. Bathrooms match
+      const matchBathrooms = bathrooms 
+        ? Number(item.bathrooms) === Number(bathrooms) 
+        : true;
+
+      // 5. Wardrobe match
+      const matchWardrobe = hasWardrobe
+        ? item.has_wardrobe === true || 
+          item.wardrobe === true || 
+          (item.units && item.units.some(u => u.has_wardrobe || u.wardrobe))
+        : true;
+
+      // 6. Balcony match
+      const matchBalcony = hasBalcony
+        ? item.has_balcony === true || 
+          item.balcony === true || 
+          (item.units && item.units.some(u => u.has_balcony || u.balcony))
+        : true;
+
+      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms && matchWardrobe && matchBalcony;
     });
 
     setFilteredApartments(result);
+    setCurrentPage(1);
   };
 
-  // Sort Logic based on unit rents
+  // Sort Logic
   const getSortedApartments = (items) => {
     const sorted = [...items];
-
-    const getMinRent = (apt) => {
-      if (!apt.units || apt.units.length === 0) return 0;
-      return Math.min(...apt.units.map(u => u.rent));
-    };
-
     if (sortBy === 'Price: Low to High') {
-      return sorted.sort((a, b) => getMinRent(a) - getMinRent(b));
+      return sorted.sort((a, b) => getPropertyRent(a) - getPropertyRent(b));
     }
     if (sortBy === 'Price: High to Low') {
-      return sorted.sort((a, b) => getMinRent(b) - getMinRent(a));
+      return sorted.sort((a, b) => getPropertyRent(b) - getPropertyRent(a));
     }
     return sorted;
   };
 
   const displayedApartments = getSortedApartments(filteredApartments);
 
+  // Pagination Slicing
+  const ITEMS_PER_PAGE = 6;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedApartments = displayedApartments.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(displayedApartments.length / ITEMS_PER_PAGE) || 1;
+
   return (
     <>
       <Navbar showSearch={true} />
       <div className="search-container">
+        
         {/* LEFT SIDEBAR - FILTERS */}
         <aside className="filter-sidebar">
           <div className="filter-header">
@@ -136,6 +145,19 @@ export default function SearchResults() {
             <button className="clear-btn" onClick={handleClearAll}>Clear all</button>
           </div>
 
+          {/* Location Filter */}
+          <div className="filter-group">
+            <label className="group-label">Location</label>
+            <input 
+              type="text" 
+              placeholder="e.g. Kileleshwa, Juja" 
+              value={location} 
+              onChange={(e) => setLocation(e.target.value)} 
+              className="text-filter-input"
+            />
+          </div>
+
+          {/* Rent Range Filter */}
           <div className="filter-group">
             <label className="group-label">Monthly Rent (KES)</label>
             <div className="range-inputs">
@@ -155,35 +177,49 @@ export default function SearchResults() {
             </div>
           </div>
 
-          <div className="filter-group">
-            <label className="group-label">Property Type</label>
-            {[
-              { label: 'Single Room', value: 'single' },
-              { label: 'Bedsitter', value: 'bedsitter' },
-              { label: '1 Bedroom', value: 'one bedroom' },
-              { label: '2 Bedroom', value: 'two bedroom' }
-            ].map(type => (
-              <label key={type.value} className="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  checked={propertyTypes.includes(type.value)} 
-                  onChange={() => handleTypeChange(type.value)} 
-                /> {type.label}
-              </label>
-            ))}
+          {/* Bedrooms & Bathrooms Filters */}
+          <div className="filter-group two-col">
+            <div>
+              <label className="group-label">Bedrooms</label>
+              <input 
+                type="number" 
+                placeholder="Any" 
+                value={bedrooms} 
+                onChange={(e) => setBedrooms(e.target.value)} 
+                className="number-filter-input"
+              />
+            </div>
+            <div>
+              <label className="group-label">Bathrooms</label>
+              <input 
+                type="number" 
+                placeholder="Any" 
+                value={bathrooms} 
+                onChange={(e) => setBathrooms(e.target.value)} 
+                className="number-filter-input"
+              />
+            </div>
           </div>
 
+          {/* Features & Amenities Filters */}
           <div className="filter-group">
-            <label className="group-label">Amenities</label>
-            {['Wi-Fi Included', 'Water Reliable', 'Security Guard'].map(item => (
-              <label key={item} className="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  checked={amenities.includes(item)} 
-                  onChange={() => handleAmenityChange(item)} 
-                /> {item}
-              </label>
-            ))}
+            <label className="group-label">Features & Amenities</label>
+            
+            <label className="checkbox-label mb-2">
+              <input 
+                type="checkbox" 
+                checked={hasWardrobe} 
+                onChange={(e) => setHasWardrobe(e.target.checked)} 
+              /> Includes Wardrobe 🚪
+            </label>
+
+            <label className="checkbox-label">
+              <input 
+                type="checkbox" 
+                checked={hasBalcony} 
+                onChange={(e) => setHasBalcony(e.target.checked)} 
+              /> Includes Balcony 🌅
+            </label>
           </div>
 
           <button className="apply-btn" onClick={handleApplyFilters}>Apply Filters</button>
@@ -194,7 +230,7 @@ export default function SearchResults() {
           <header className="results-header">
             <div>
               <h1>{displayedApartments.length} properties found</h1>
-              <p className="subtext">Select a property to view available units</p>
+              <p className="subtext">Select a property to view details</p>
             </div>
             <div className="sort-box">
               <span>Sort by:</span>
@@ -213,20 +249,12 @@ export default function SearchResults() {
             <div className="no-results">Error loading data: {error}</div>
           ) : (
             <div className="cards-grid">
-              {displayedApartments.length > 0 ? (
-                displayedApartments.map((item) => {
-                  // Fallback pricing calculation based on nested units
-                  const lowestRent = item.units && item.units.length > 0 
-                    ? Math.min(...item.units.map(u => u.rent)) 
-                    : 0;
-
-                  const firstImage = item.imageURLs && item.imageURLs.length > 0 
-                    ? item.imageURLs[0] 
-                    : 'https://via.placeholder.com/800x600';
-
-                  const nearbyNote = item.nearby_facilities && item.nearby_facilities.length > 0
-                    ? `${item.nearby_facilities[0].title} (${item.nearby_facilities[0].distance})`
-                    : '';
+              {paginatedApartments.length > 0 ? (
+                paginatedApartments.map((item) => {
+                  const rent = getPropertyRent(item);
+                  const firstImage = (item.imageURLs && item.imageURLs.length > 0 ? item.imageURLs[0] : null) || 
+                                     (item.image_Urls && item.image_Urls.length > 0 ? item.image_Urls[0] : null) || 
+                                     'https://via.placeholder.com/800x600';
 
                   return (
                     <article key={item.id} className="property-card">
@@ -240,13 +268,13 @@ export default function SearchResults() {
                           <h3>{item.name}</h3>
                           <div className="price-tag">
                             <span className="amount">
-                              {lowestRent > 0 ? `KES ${lowestRent.toLocaleString()}` : 'Contact for Price'}
+                              {rent > 0 ? `KES ${rent.toLocaleString()}` : 'Contact for Price'}
                             </span>
-                            {lowestRent > 0 && <span className="period">/ month</span>}
+                            {rent > 0 && <span className="period">/ month</span>}
                           </div>
                         </div>
 
-                        <p className="location-text">📍 {item.location} {nearbyNote ? `· ${nearbyNote}` : ''}</p>
+                        <p className="location-text">📍 {item.location}</p>
 
                         <div className="fit-note">
                           <span>✔️</span>
@@ -255,11 +283,10 @@ export default function SearchResults() {
 
                         <div className="card-footer">
                           <div className="specs">
-                            <span>🏢 {item.type}</span>
-                            <span>🚪 {item.units ? item.units.length : 0} Units</span>
+                            {item.bedrooms && <span>🛏️ {item.bedrooms} Bed</span>}
+                            {item.bathrooms && <span>🚿 {item.bathrooms} Bath</span>}
                           </div>
                           
-                          {/* DYNAMIC ROUTE NAVIGATION TO APARTMENT UNITS */}
                           <button 
                             className="details-btn" 
                             onClick={() => navigate(`/apartment-details/${item.id}`)}
@@ -277,32 +304,34 @@ export default function SearchResults() {
             </div>
           )}
 
-          {/* PAGINATION */}
-          <div className="pagination">
-            <button 
-              className="page-nav" 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              &lt;
-            </button>
-            {[1, 2, 3].map(num => (
+          {/* PAGINATION CONTROLS */}
+          {totalPages > 1 && (
+            <div className="pagination">
               <button 
-                key={num} 
-                className={`page-num ${currentPage === num ? 'active' : ''}`}
-                onClick={() => setCurrentPage(num)}
+                className="page-nav" 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
               >
-                {num}
+                &lt;
               </button>
-            ))}
-            <button 
-              className="page-nav" 
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, 3))}
-              disabled={currentPage === 3}
-            >
-              &gt;
-            </button>
-          </div>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+                <button 
+                  key={num} 
+                  className={`page-num ${currentPage === num ? 'active' : ''}`}
+                  onClick={() => setCurrentPage(num)}
+                >
+                  {num}
+                </button>
+              ))}
+              <button 
+                className="page-nav" 
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
+            </div>
+          )}
         </main>
       </div>
       <Footer />
