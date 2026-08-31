@@ -285,7 +285,6 @@ export default function SearchResults() {
                           </div>
                         )}
                         
-                        {item.promoted && <span className="verified-badge">⭐ Promoted</span>}
                       </div>
 
                       <div className="card-body">
