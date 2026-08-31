@@ -42,3 +42,13 @@ export default function SearchResults() {
         setLoading(false);
       });
   }, []);
+
+// Clear All Filters
+  const handleClearAll = () => {
+    setLocation('');
+    setMinRent('');
+    setMaxRent('');
+    setBedrooms('');
+    setBathrooms('');
+    setFilteredApartments(allApartments);
+  };
