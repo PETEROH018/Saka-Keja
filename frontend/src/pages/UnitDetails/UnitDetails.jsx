@@ -28,3 +28,18 @@ export default function UnitDetails() {
       })
       .then((unitData) => {
         setUnit(unitData);
+
+// Fetch parent apartment details if apartmentId or unit.apartment_id exists
+        const parentApartmentId = apartmentId || unitData.apartment_id;
+        if (parentApartmentId) {
+          return fetch(`${API_BASE_URL}/apartments/${parentApartmentId}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((aptData) => {
+              setApartment(aptData);
+            });
+        }
+      })
+      .then(() => {
+        setLoading(false);
+
+
