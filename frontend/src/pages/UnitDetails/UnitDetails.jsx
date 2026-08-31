@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import './UnitDetails.css';
 import { API_BASE_URL } from '../../config/api';
+import { useAuth } from '../../context/useAuth';
 
 export default function UnitDetails() {
-  // Extract parameters from route
+  const navigate = useNavigate();
   const params = useParams();
-  const unitId = params.unitId || params.id;
-  const apartmentId = params.apartmentId;
+  const unitId = params.unitId ?? params.id;
+  const apartmentId = params.apartmentId ?? params.apartment_id;
+  const { user } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
+  const [bookingMessage, setBookingMessage] = useState('');
 
   useEffect(() => {
+    if (!unitId) {
+      setError('Unit ID is missing');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
     // Fetch Unit details
@@ -49,6 +59,8 @@ export default function UnitDetails() {
       .catch((err) => {
         console.error('Fetch error:', err);
         setError(err.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [apartmentId, unitId]);
@@ -66,6 +78,62 @@ const handleToggleSave = () => {
 
     localStorage.setItem('favorites', JSON.stringify(updated));
     setIsSaved(!isSaved);
+  };
+
+  const handleBookOrJoinWaitlist = async () => {
+    if (!user?.id) {
+      alert('Please log in to book a unit or join the waiting list.');
+      navigate('/auth');
+      return;
+    }
+
+    if (user.role !== 'student') {
+      alert('Only students can book units or join the waitlist.');
+      return;
+    }
+
+    if (!unit) return;
+
+    const action = unit.current_occupants >= unit.maximum_occupants ? 'waitlist' : 'book';
+    setBookingStatus('booking');
+    setBookingMessage('');
+
+    try {
+      const endpoint = `${API_BASE_URL}/units/${unit.id}/${action}`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_id: user.id,
+          userRole: user.role,
+        }),
+      });
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+
+      if (!response.ok) {
+        throw new Error(data.error || `Unable to ${action} this unit.`);
+      }
+
+      setBookingStatus('success');
+      setBookingMessage(
+        action === 'book'
+          ? 'Booking successful! Your unit has been reserved.'
+          : 'You have been added to the waiting list.'
+      );
+
+      if (action === 'book') {
+        setUnit((currentUnit) => ({
+          ...currentUnit,
+          current_occupants: Number(currentUnit.current_occupants || 0) + 1,
+        }));
+      }
+    } catch (error) {
+      console.error(`Failed to ${action}:`, error);
+      setBookingStatus('error');
+      setBookingMessage(error.message || 'Something went wrong. Please try again.');
+    }
   };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
@@ -203,9 +271,27 @@ return (
               <strong className="occupied-tag">📅 {unit.status || 'Available'}</strong>
             </div>
 
-            <button className="primary-booking-btn">
-              {unit.current_occupants >= unit.maximum_occupants ? 'Join Waitlist' : 'Book Now'}
+            <button
+              className="primary-booking-btn"
+              onClick={handleBookOrJoinWaitlist}
+              disabled={bookingStatus === 'booking'}
+              type="button"
+            >
+              {bookingStatus === 'booking'
+                ? 'Processing...'
+                : unit.current_occupants >= unit.maximum_occupants
+                  ? 'Join Waitlist'
+                  : 'Book Now'}
             </button>
+
+            {bookingMessage && (
+              <p
+                className={`booking-status ${bookingStatus === 'error' ? 'error' : 'success'}`}
+                role="status"
+              >
+                {bookingMessage}
+              </p>
+            )}
           </aside>
         </div>
       </main>

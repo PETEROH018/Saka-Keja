@@ -363,6 +363,87 @@ def get_student_favorite_units(id):
     return jsonify(UnitSchema(many=True).dump(favorite_units))
 
 
+@app.route("/units/<int:id>/book", methods=["POST"])
+def book_unit(id):
+    data = request.get_json(silent=True) or {}
+    student_id = data.get("student_id")
+
+    if not student_id:
+        return jsonify({"error": "Student ID is required."}), 400
+
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found."}), 404
+
+    student = Student.query.get(student_id)
+    if not student:
+        return jsonify({"error": "Student not found."}), 404
+
+    existing_booking = StudentUnit.query.filter_by(student_id=student_id, unit_id=id).first()
+    if existing_booking:
+        return jsonify({"error": "You already booked or joined the waitlist for this unit."}), 409
+
+    if unit.current_occupants >= unit.maximum_occupants:
+        return jsonify({"error": "This unit is fully occupied. Please join the waiting list instead."}), 409
+
+    try:
+        student_unit = StudentUnit(student_id=student_id, unit_id=id, favorite=False, viewed=False)
+        db.session.add(student_unit)
+        unit.current_occupants = (unit.current_occupants or 0) + 1
+        if unit.current_occupants >= unit.maximum_occupants:
+            unit.status = "Occupied"
+        db.session.commit()
+        return jsonify({
+            "message": "Booking successful.",
+            "student_unit": {
+                "id": student_unit.id,
+                "student_id": student_id,
+                "unit_id": id,
+            },
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not book this unit: {str(e)}"}), 500
+
+
+@app.route("/units/<int:id>/waitlist", methods=["POST"])
+def join_waitlist(id):
+    data = request.get_json(silent=True) or {}
+    student_id = data.get("student_id")
+
+    if not student_id:
+        return jsonify({"error": "Student ID is required."}), 400
+
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found."}), 404
+
+    student = Student.query.get(student_id)
+    if not student:
+        return jsonify({"error": "Student not found."}), 404
+
+    existing_booking = StudentUnit.query.filter_by(student_id=student_id, unit_id=id).first()
+    if existing_booking:
+        return jsonify({"error": "You already joined this unit's waitlist or booked it."}), 409
+
+    try:
+        student_unit = StudentUnit(student_id=student_id, unit_id=id, favorite=False, viewed=False)
+        db.session.add(student_unit)
+        unit.status = "Waitlist"
+        db.session.commit()
+        return jsonify({
+            "message": "You have been added to the waiting list.",
+            "student_unit": {
+                "id": student_unit.id,
+                "student_id": student_id,
+                "unit_id": id,
+            },
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not join the waiting list: {str(e)}"}), 500
+
+
 @app.route("/payments", methods=["POST"])
 def add_payment():
 
