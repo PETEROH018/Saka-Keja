@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import './UnitDetails.css';
@@ -8,8 +8,10 @@ import { useAuth } from '../../context/useAuth';
 
 
 export default function UnitDetails() {
-  // Extract both route parameters
-  const { apartmentId, unitId } = useParams();
+  const navigate = useNavigate();
+  const params = useParams();
+  const unitId = params.unitId ?? params.id;
+  const apartmentId = params.apartmentId ?? params.apartment_id;
   const { user } = useAuth();
 
   const [unit, setUnit] = useState(null);
@@ -21,31 +23,45 @@ export default function UnitDetails() {
   const [bookingMessage, setBookingMessage] = useState('');
 
   useEffect(() => {
+    if (!unitId) {
+      setError('Unit ID is missing');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
-    // Fetch Unit details and Parent Apartment details in parallel
-    Promise.all([
-      fetch(`${API_BASE_URL}/units/${unitId}`).then((res) => {
-        if (!res.ok) throw new Error('Unit not found');
-        return res.json();
-      }),
-      fetch(`${API_BASE_URL}/apartments/${apartmentId}`).then((res) => {
-        if (!res.ok) throw new Error('Apartment not found');
-        return res.json();
-      })
-    ])
-      .then(([unitData, apartmentData]) => {
-        setUnit(unitData);
-        setApartment(apartmentData);
-        setLoading(false);
+    fetch(`${API_BASE_URL}/units/${unitId}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error('Unit not found');
+        }
 
-        // Sync with local storage favorites
+        const unitData = await res.json();
+        setUnit(unitData);
+
+        const apartmentIdToLoad = apartmentId ?? unitData.apartment_id;
+        if (!apartmentIdToLoad) {
+          setApartment(null);
+          return;
+        }
+
+        const apartmentRes = await fetch(`${API_BASE_URL}/apartments/${apartmentIdToLoad}`);
+        if (!apartmentRes.ok) {
+          throw new Error('Apartment not found');
+        }
+
+        const apartmentData = await apartmentRes.json();
+        setApartment(apartmentData);
+
         const saved = JSON.parse(localStorage.getItem('favorites')) || [];
         setIsSaved(saved.some((item) => item.id === unitData.id));
       })
       .catch((err) => {
         console.error('Fetch error:', err);
         setError(err.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [apartmentId, unitId]);
@@ -63,6 +79,62 @@ export default function UnitDetails() {
 
     localStorage.setItem('favorites', JSON.stringify(updated));
     setIsSaved(!isSaved);
+  };
+
+  const handleBookOrJoinWaitlist = async () => {
+    if (!user?.id) {
+      alert('Please log in to book a unit or join the waiting list.');
+      navigate('/auth');
+      return;
+    }
+
+    if (user.role !== 'student') {
+      alert('Only students can book units or join the waitlist.');
+      return;
+    }
+
+    if (!unit) return;
+
+    const action = unit.current_occupants >= unit.maximum_occupants ? 'waitlist' : 'book';
+    setBookingStatus('booking');
+    setBookingMessage('');
+
+    try {
+      const endpoint = `${API_BASE_URL}/units/${unit.id}/${action}`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_id: user.id,
+          userRole: user.role,
+        }),
+      });
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+
+      if (!response.ok) {
+        throw new Error(data.error || `Unable to ${action} this unit.`);
+      }
+
+      setBookingStatus('success');
+      setBookingMessage(
+        action === 'book'
+          ? 'Booking successful! Your unit has been reserved.'
+          : 'You have been added to the waiting list.'
+      );
+
+      if (action === 'book') {
+        setUnit((currentUnit) => ({
+          ...currentUnit,
+          current_occupants: Number(currentUnit.current_occupants || 0) + 1,
+        }));
+      }
+    } catch (error) {
+      console.error(`Failed to ${action}:`, error);
+      setBookingStatus('error');
+      setBookingMessage(error.message || 'Something went wrong. Please try again.');
+    }
   };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
@@ -195,9 +267,27 @@ export default function UnitDetails() {
               <strong className="occupied-tag">📅 {unit.status}</strong>
             </div>
 
-            <button className="primary-booking-btn">
-              {unit.current_occupants >= unit.maximum_occupants ? 'Join Waitlist' : 'Book Now'}
+            <button
+              className="primary-booking-btn"
+              onClick={handleBookOrJoinWaitlist}
+              disabled={bookingStatus === 'booking'}
+              type="button"
+            >
+              {bookingStatus === 'booking'
+                ? 'Processing...'
+                : unit.current_occupants >= unit.maximum_occupants
+                  ? 'Join Waitlist'
+                  : 'Book Now'}
             </button>
+
+            {bookingMessage && (
+              <p
+                className={`booking-status ${bookingStatus === 'error' ? 'error' : 'success'}`}
+                role="status"
+              >
+                {bookingMessage}
+              </p>
+            )}
           </aside>
         </div>
       </main>
