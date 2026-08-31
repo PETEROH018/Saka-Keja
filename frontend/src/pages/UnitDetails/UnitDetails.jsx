@@ -16,3 +16,15 @@ export default function UnitDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    // Fetch Unit details
+    fetch(`${API_BASE_URL}/units/${unitId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Unit not found');
+        return res.json();
+      })
+      .then((unitData) => {
+        setUnit(unitData);
