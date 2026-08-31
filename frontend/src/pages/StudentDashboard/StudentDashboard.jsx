@@ -19,6 +19,10 @@ function StudentDashboard() {
         savedProperties: 0
     });
 
+    const [viewedPage, setViewedPage] = useState(1);
+
+    const viewedPerPage = 3;
+
     useEffect(() => {
 
         if (!user?.id) return;
@@ -51,29 +55,29 @@ function StudentDashboard() {
                 const [
                     promotedResponse,
                     favoritesResponse,
-                    unitsResponse,
+                    viewedResponse,
                 ] = await Promise.all([
                     fetch(`${API_BASE_URL}/units/promoted`),
                     fetch(`${API_BASE_URL}/students/${user.id}/favorites`),
-                    fetch(`${API_BASE_URL}/units`),
+                    fetch(`${API_BASE_URL}/students/${user.id}/viewed-units`),
                 ]);
 
                 if (
                     !promotedResponse.ok ||
                     !favoritesResponse.ok ||
-                    !unitsResponse.ok
+                    !viewedResponse.ok
                 ) {
                     throw new Error("Failed to load dashboard data.");
                 }
 
                 const promotedData = await promotedResponse.json();
                 const favoritesData = await favoritesResponse.json();
-                const unitsData = await unitsResponse.json();
+                const viewedData = await viewedResponse.json();
 
 
                 setPromotedUnits(promotedData.items || []);
                 setFavoriteUnits(favoritesData || []);
-                setAvailableUnits(unitsData || []);
+                setAvailableUnits(viewedData || []);
             } catch (err) {
                 setError(err.message);
             } finally {
