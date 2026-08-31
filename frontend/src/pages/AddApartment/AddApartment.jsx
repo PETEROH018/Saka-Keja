@@ -8,6 +8,7 @@ import { API_BASE_URL } from "../../config/api";
 export default function AddApartment(){
   const emptyForm= {
               buildingName: "",
+              location: "",
               propertyType: "",
               address: "",
               description: "",
