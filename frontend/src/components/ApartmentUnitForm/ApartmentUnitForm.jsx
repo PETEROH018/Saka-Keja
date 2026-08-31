@@ -112,7 +112,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
       !unit.unitType ||
       !unit.monthlyRent
     ) {
-      return;
+      return alert("Please fill in the required fields");
     }
 
     const unitData = {
@@ -215,6 +215,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
                 <select
                   name="unitType"
                   value={unit.unitType}
+                  required
                   onChange={handleChange}
                   className={`${inputClass} appearance-none pr-9`}
                 >
@@ -498,7 +499,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
           
           {/*Unit images*/}
 
-           <ImageUploader type={'unit'} form={unit} setForm={setUnit} uploadCompleted={uploadCompleted} setUploadCompleted={setUploadCompleted} />
+           <ImageUploader type={'unit'} form={unit} setForm={setUnit} uploadComplete={uploadCompleted} setUploadComplete={setUploadCompleted} />
 
 
             {/* ADD / UPDATE UNIT  */}
@@ -508,8 +509,8 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
               <button
                 type="button"
                 onClick={handleAddUnit}
-                disabled = {uploadCompleted}
-                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] mt-2"
+                disabled = {!uploadCompleted}
+                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] mt-2 disabled:cursor-not-allowed disabled:opacity-40"
               >
 
                 <Icon
