@@ -262,7 +262,24 @@ def handle_unit_by_id(id):
     unit = Unit.query.get(id)
     if not unit:
         return jsonify({"error": "Unit not found"}), 404
+    
+# Handle GET request for Unit Details
+    if request.method == 'GET':
+        try:
+            return jsonify(UnitSchema().dump(unit)), 200
+        except Exception as e:
+            return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
+def handle_unit_by_id(id):
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
 
+    # Handle GET request for Unit Details
+    if request.method == 'GET':
+        try:
+            return jsonify(UnitSchema().dump(unit)), 200
+        except Exception as e:
+            return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
 
 @app.route("/units/promoted", methods=["GET"])
 def get_promoted_units():
