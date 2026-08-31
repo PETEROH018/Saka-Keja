@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Icon from "../components/Icon/Icon";
 
-export default function ImageUploader({form,setForm}) {
+export default function ImageUploader({type,form,setForm}) {
     const [imageUrl, setImageUrl] = useState("");
     const [loading, setLoading] = useState(false);
     const [imageFiles, setImageFiles] = useState([])
@@ -20,10 +20,10 @@ export default function ImageUploader({form,setForm}) {
         );
     };
 
-    const uploadImage = async () => {
+    const uploadImage = () => {
     if (imageFiles.length < 0) return alert("Please select an image first!");
 
-    for (const image of imageFiles) {
+    imageFiles.forEach(async(image,index) => {
         setLoading(true);
         const formData = new FormData();
         formData.append("file", image);
@@ -56,9 +56,9 @@ export default function ImageUploader({form,setForm}) {
 
         } finally {
         setLoading(false);
+        removeImageFile(index)
         }
-    }
-    setImageFiles([])
+    })
 
   };
     
@@ -66,14 +66,23 @@ export default function ImageUploader({form,setForm}) {
 
   return(
     <section className="mb-8">
-                  <h3 className="mb-1 text-[13px] font-semibold">
-                    Property Photos
-                  </h3>
-    
-                  <p className="mb-3 text-[9px] text-[#8b858f]">
+        {type === 'apartment' 
+                   ?<>
+                   <h3 className="mb-1 text-[13px] font-semibold"> Property Photos </h3>
+                   <p className="mb-3 text-[9px] text-[#8b858f]">
                     Upload photos of the building, rooms, compound and
                     other useful areas.
+                   </p>
+                   </>
+                   :<>
+                   <h3 className="mb-1 text-[13px] font-semibold"> Unit Photos </h3>
+                   <p className="mb-3 text-[9px] text-[#8b858f]">
+                    Upload photos of the unit's interior, rooms, kitchen, washroom and balcony
                   </p>
+                   </>
+        }
+    
+                  
     
                   <label className="relative flex min-h-[125px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#9b82bb] bg-[#fdf9ff] text-center hover:bg-[#faf3ff]">
     
@@ -82,7 +91,7 @@ export default function ImageUploader({form,setForm}) {
                     </div>
     
                     <strong className="text-[10px] font-semibold text-[#553589]">
-                      Upload Property Images
+                      Select Images to Upload
                     </strong>
     
                     <span className="mt-1 text-[8px] text-[#99929d]">
