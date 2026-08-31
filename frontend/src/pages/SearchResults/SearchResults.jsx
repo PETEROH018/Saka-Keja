@@ -7,24 +7,25 @@ import './SearchResults.css';
 export default function SearchResults() {
   const navigate = useNavigate();
 
-// Data & Load States
+  // Data & Load States
   const [allApartments, setAllApartments] = useState([]);
   const [filteredApartments, setFilteredApartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filter States (Cleaned: Status and Property Type removed)
+  // Filter States
   const [location, setLocation] = useState('');
   const [minRent, setMinRent] = useState('');
   const [maxRent, setMaxRent] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
+  const [hasWardrobe, setHasWardrobe] = useState(false); // NEW: Wardrobe filter state
   
   // Pagination & Sorting
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Default');
 
-// Fetch Data from Backend API
+  // Fetch Data from Backend API
   useEffect(() => {
     fetch('http://localhost:5000/apartments')
       .then((res) => {
@@ -43,17 +44,18 @@ export default function SearchResults() {
       });
   }, []);
 
-// Clear All Filters
+  // Clear All Filters
   const handleClearAll = () => {
     setLocation('');
     setMinRent('');
     setMaxRent('');
     setBedrooms('');
     setBathrooms('');
+    setHasWardrobe(false);
     setFilteredApartments(allApartments);
   };
 
-// Helper to resolve property rent
+  // Helper to resolve property rent
   const getPropertyRent = (item) => {
     if (item["monthly-expense-breakdown"]?.rent) {
       return Number(item["monthly-expense-breakdown"].rent);
@@ -64,7 +66,7 @@ export default function SearchResults() {
     return 0;
   };
 
-// Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms)
+  // Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms, Wardrobe)
   const handleApplyFilters = () => {
     let result = allApartments.filter(item => {
       const rent = getPropertyRent(item);
@@ -78,7 +80,7 @@ export default function SearchResults() {
       const matchMinRent = minRent ? rent >= Number(minRent) : true;
       const matchMaxRent = maxRent ? rent <= Number(maxRent) : true;
 
-// 3. Bedrooms match
+      // 3. Bedrooms match
       const matchBedrooms = bedrooms 
         ? Number(item.bedrooms) === Number(bedrooms) 
         : true;
@@ -88,14 +90,21 @@ export default function SearchResults() {
         ? Number(item.bathrooms) === Number(bathrooms) 
         : true;
 
-      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms;
+      // 5. Wardrobe match (Checks apartment or unit level wardrobe attributes/amenities)
+      const matchWardrobe = hasWardrobe
+        ? item.has_wardrobe === true || 
+          item.wardrobe === true || 
+          (item.units && item.units.some(u => u.has_wardrobe || u.wardrobe))
+        : true;
+
+      return matchLocation && matchMinRent && matchMaxRent && matchBedrooms && matchBathrooms && matchWardrobe;
     });
 
     setFilteredApartments(result);
     setCurrentPage(1);
   };
 
-// Sort Logic
+  // Sort Logic
   const getSortedApartments = (items) => {
     const sorted = [...items];
     if (sortBy === 'Price: Low to High') {
@@ -120,7 +129,7 @@ export default function SearchResults() {
       <Navbar showSearch={true} />
       <div className="search-container">
         
-        {/* LEFT SIDEBAR - UPDATED FILTERS */}
+        {/* LEFT SIDEBAR - FILTERS */}
         <aside className="filter-sidebar">
           <div className="filter-header">
             <h2>Filters</h2>
@@ -181,6 +190,18 @@ export default function SearchResults() {
                 className="number-filter-input"
               />
             </div>
+          </div>
+
+          {/* NEW: Amenities / Features Filter (Wardrobe) */}
+          <div className="filter-group">
+            <label className="group-label">Features & Amenities</label>
+            <label className="checkbox-label">
+              <input 
+                type="checkbox" 
+                checked={hasWardrobe} 
+                onChange={(e) => setHasWardrobe(e.target.checked)} 
+              /> Includes Wardrobe 🚪
+            </label>
           </div>
 
           <button className="apply-btn" onClick={handleApplyFilters}>Apply Filters</button>
