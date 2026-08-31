@@ -190,7 +190,7 @@ export function AuthPage() {
       location,
     };
 
-    const endpoint = signUpFormData.userRole === "manager" ? "/owners" : "/students";
+    const endpoint = signUpFormData.userRole === "manager" ? "http://localhost:5000/owners" : "http://localhost:5000/students";
 
     try {
       const res = await fetch(endpoint, {
