@@ -5,11 +5,11 @@ from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
 
-apartment_schema = ApartmentSchema()
-unit_schema = UnitSchema()
+apartment_schema = ApartmentSchema(session=db.session)
+unit_schema = UnitSchema(session=db.session)
 apartment_owner_schema = ApartmentOwnerSchema()
-apartment_amenities_schema = ApartmentAmenitySchema()
-apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema()
+apartment_amenities_schema = ApartmentAmenitySchema(session=db.session)
+apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema(session=db.session)
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -25,7 +25,7 @@ def add_apartment():
             'description': data.get('description'),
             'location': data.get('location'),
             'imageURLs': data.get('images'),
-            'owner_id': 1
+            'owner_id': 40
             }
 
         # Adding an apartment's details to the apartments table
@@ -35,7 +35,7 @@ def add_apartment():
 
         # Adding the new amenities added by a user to the apartment amenities table
         added_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
-        db.session.add(added_apartment_amenities)
+        db.session.add_all(added_apartment_amenities)
         db.session.flush()
 
         amenity_mapping = {
@@ -69,7 +69,7 @@ def add_apartment():
                         'bathrooms':unit.get('bathrooms'),
                         'size':unit.get('size'),
                         'maximum_occupants':unit.get('maxOccupants'),
-                        'image_URLS':unit.get('images'),
+                        'imageURLS':unit.get('images'),
                         'apartment_id':new_apartment.id
                 }
             new_unit = unit_schema.load(new_unit_details)
