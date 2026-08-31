@@ -15,9 +15,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import { useAuth } from "../../context/useAuth";
 
 
 function OwnerProfile() {
+  const { user } = useAuth();
   const managerId = 1
   const metrics = useFetch(`/manager/${managerId}/metrics`)
   const EXAMPLE_LISTINGS = useFetch('http://localhost:3000/apartments');
@@ -81,7 +83,7 @@ function OwnerProfile() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                 <div className="relative">
                   <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white shadow-md border-4 border-surface-container-low">
-                    JD
+                    {user?.name?.charAt(0) || "J"}
                   </div>
                   <span className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs" title="Verified Landlord">
                     <ShieldCheck className="h-4 w-4" />
@@ -90,7 +92,7 @@ function OwnerProfile() {
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <h2 className="text-2xl font-bold text-on-surface">John Doe</h2>
+                    <h2 className="text-2xl font-bold text-on-surface">{user?.name || "Manager"}</h2>
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
                       <ShieldCheck className="h-3.5 w-3.5" />
                       Verified Property Owner
