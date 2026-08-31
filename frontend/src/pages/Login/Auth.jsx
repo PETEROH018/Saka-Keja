@@ -162,7 +162,7 @@ export function AuthPage() {
         if (data.user_type === "manager") {
           navigate("/admin-dash");
         } else if (data.user_type === "student") {
-          navigate("/student-dash");
+          navigate("/student-dashboard");
         }
       } catch (err) {
         console.error("Login failed:", err);
