@@ -83,16 +83,22 @@ export default function AddApartment(){
             }
             response.json()
           })
-          .then( data => console.log(data))
-          .catch( error => console.error(error))
+          .then( data => {
+            console.log(data)
+            setApartmentData({})
+            setForm(emptyForm)
+            setUnits([])
+            setSocialAmenities(emptySocialAmenities)
+            setCurrentStep(1)
+          })
+          .catch( (error) => {
+            console.error(error)
+            alert("An error occured and the apartment and units could not be listed!")
+          })
 
           console.log(apartmentData)
-          alert("Apartment added successfully")
-          setApartmentData({})
-          setForm(emptyForm)
-          setUnits([])
-          setSocialAmenities(emptySocialAmenities)
-          setCurrentStep(1)
+          
+          
         }
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
