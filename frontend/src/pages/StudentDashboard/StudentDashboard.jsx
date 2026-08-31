@@ -21,7 +21,9 @@ function StudentDashboard() {
 
     useEffect(() => {
 
-        fetch("http://localhost:5000/students/1/stats")
+        if (!user?.id) return;
+
+        fetch(`${API_BASE_URL}/students/${user.id}/stats`)
             .then(response => response.json())
             .then(data => {
                 setStats(data);
@@ -30,7 +32,7 @@ function StudentDashboard() {
                 console.error("Error fetching stats:", error);
             });
 
-    }, []);
+    }, [user?.id]);
 
     console.log(stats);
 
@@ -68,9 +70,6 @@ function StudentDashboard() {
                 const favoritesData = await favoritesResponse.json();
                 const unitsData = await unitsResponse.json();
 
-                console.log("PROMOTED DATA:", promotedData);
-                console.log("FAVORITES DATA:", favoritesData);
-                console.log("UNITS DATA:", unitsData);
 
                 setPromotedUnits(promotedData.items || []);
                 setFavoriteUnits(favoritesData || []);
