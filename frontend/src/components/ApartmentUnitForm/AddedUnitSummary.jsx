@@ -7,9 +7,9 @@ export default function({units,setUnit,setUnits,setEditingId,editingId}){
 
         setUnit({
         unitType: item.unitType,
+        description: item.description,
         monthlyRent: item.monthlyRent,
-        depositAmount:
-            item.depositAmount,
+        depositAmount:item.depositAmount,
         size: item.size,
         shared: item.shared ?? false,
         bathrooms: String(item.bathrooms ?? 0),

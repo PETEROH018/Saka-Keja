@@ -20,6 +20,7 @@ const amenityOptions = [
 
 const emptyUnit = {
   unitType:"",
+  description:"",
   monthlyRent: "",
   depositAmount: "",
   size: "",
@@ -39,7 +40,7 @@ function FormField({
   return (
     <div>
 
-      <label className="mb-1.5 block text-[9px] font-medium text-[#3e3842]">
+      <label className="mb-1.5 block text-[9px] font-medium text-[#3e3842] mt-2">
 
         {label}
 
@@ -240,6 +241,17 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
                 />
 
               </div>
+            </FormField>
+            <FormField label="Unit Description" required >
+                <div>
+                      <input
+                        name="description"
+                        value={unit.description}
+                        onChange={handleChange}
+                        placeholder="e.g. Spacious unit with two rooms"
+                        className={inputClass}
+                      />
+                  </div>
             </FormField>
 
 
