@@ -62,17 +62,19 @@ export default function Navbar({ showSearch = false }) {
             Discover
           </NavLink>
 
-          <NavLink
-            to="/savedproperties"
-            className={({ isActive }) =>
-              `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
-                ? "border-violet-700 text-violet-700"
-                : "border-transparent text-gray-700 hover:text-violet-700"
-              }`
-            }
-          >
-            Favorites
-          </NavLink>
+          {user && (
+            <NavLink
+              to="/savedproperties"
+              className={({ isActive }) =>
+                `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
+                  ? "border-violet-700 text-violet-700"
+                  : "border-transparent text-gray-700 hover:text-violet-700"
+                }`
+              }
+            >
+              Favorites
+            </NavLink>
+          )}
 
           <NavLink
             to="/compare"
@@ -178,12 +180,14 @@ export default function Navbar({ showSearch = false }) {
                 : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
               }`
             } >Discover</NavLink>
-            <NavLink to="/savedproperties" onClick={closeMenu} className={({ isActive }) =>
-              `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
-                ? "bg-violet-50 text-violet-700"
-                : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
-              }`
-            }>Favorites</NavLink>
+            {user && (
+              <NavLink to="/savedproperties" onClick={closeMenu} className={({ isActive }) =>
+                `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
+                  ? "bg-violet-50 text-violet-700"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-violet-700"
+                }`
+              }>Favorites</NavLink>
+            )}
             <NavLink to="/about" onClick={closeMenu} className={({ isActive }) =>
               `rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive
                 ? "bg-violet-50 text-violet-700"
