@@ -80,10 +80,10 @@ export default function AdminSideBar() {
               {/* Profile Card */}
               <div className="flex items-center gap-3 rounded-xl border border-outline-variant/60 bg-white p-3 shadow-2xs mb-6">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shadow-xs">
-                  JD
+                  {user?.name?.charAt(0) || "J"}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-bold text-on-surface">John Doe</div>
+                  <div className="truncate text-sm font-bold text-on-surface">{user?.name || "Manager"}</div>
                   <div className="flex items-center gap-1 text-xs font-medium text-emerald-600">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     <span>Verified Landlord</span>
