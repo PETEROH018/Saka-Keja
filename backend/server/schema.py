@@ -30,9 +30,10 @@ class UnitSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-    student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
-    unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
-
+    # Expressly define nested apartment with reciprocal fields excluded
+    apartment = fields.Nested('ApartmentSchema', exclude=('units', 'apartment_amenity_links', 'nearby_facilities'))
+    student_units = fields.Nested('StudentUnitSchema', many=True, exclude=('unit',))
+    unit_amenity_links = fields.Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
         model = UnitAmenity

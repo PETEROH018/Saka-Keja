@@ -306,17 +306,13 @@ def get_all_units():
     try:
         query = Unit.query
 
-        # Filter by shared status
         shared = request.args.get("shared")
         if shared is not None and shared != "":
             query = query.filter(Unit.shared == (shared.lower() == "true"))
-
-        # Filter by max rent
         max_rent = request.args.get("max_rent")
         if max_rent and max_rent.isdigit():
             query = query.filter(Unit.rent <= int(max_rent))
 
-        # Filter by bedrooms/category
         bedrooms = request.args.get("bedrooms")
         if bedrooms:
             if bedrooms.lower() == "bedsitter":
@@ -326,41 +322,15 @@ def get_all_units():
             elif bedrooms.isdigit():
                 query = query.filter(Unit.bedrooms == int(bedrooms))
 
-        # Safely execute query
         units = query.all()
-
-        # Amenity filtering post-fetch (prevents ORM relationship joins from throwing 500 errors)
-        kitchenette = request.args.get("kitchenette") == "true"
-        wardrobe = request.args.get("wardrobe") == "true"
-        balcony = request.args.get("balcony") == "true"
-
-        if kitchenette or wardrobe or balcony:
-            filtered_units = []
-            for u in units:
-                # Safely inspect amenities array/relationship
-                unit_amenities = [
-                    link.amenity.name.lower() 
-                    for link in getattr(u, 'unit_amenity_links', getattr(u, 'unit_amenities', [])) 
-                    if getattr(link, 'amenity', None)
-                ]
-                
-                match = True
-                if kitchenette and not any("kitchen" in a for a in unit_amenities):
-                    match = False
-                if wardrobe and not any("wardrobe" in a for a in unit_amenities):
-                    match = False
-                if balcony and not any("balcony" in a for a in unit_amenities):
-                    match = False
-
-                if match:
-                    filtered_units.append(u)
-            units = filtered_units
-
         return jsonify(UnitSchema(many=True).dump(units)), 200
 
     except Exception as e:
-        print(f"Error in GET /units: {str(e)}") # Prints exact trace in your terminal
+        import traceback
+        print("=== ERROR IN GET /units ===")
+        traceback.print_exc()
         return jsonify({"error": f"Could not retrieve units: {str(e)}"}), 500
+
 
 # ========================
 # STUDENT ENDPOINTS
