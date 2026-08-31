@@ -257,30 +257,25 @@ def update_apartment(id):
         db.session.rollback()
         return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
-@app.route("/units/<int:id>", methods=['PATCH','POST'])
-def handle_unit_by_id(id):
-    unit = Unit.query.get(id)
-    if not unit:
-        return jsonify({"error": "Unit not found"}), 404
-    
-# Handle GET request for Unit Details
-    if request.method == 'GET':
-        try:
-            return jsonify(UnitSchema().dump(unit)), 200
-        except Exception as e:
-            return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
-def handle_unit_by_id(id):
+# 1. GET SINGLE UNIT DETAILS
+@app.route("/units/<int:id>", methods=['GET'])
+def get_unit_by_id(id):
     unit = Unit.query.get(id)
     if not unit:
         return jsonify({"error": "Unit not found"}), 404
 
-    # Handle GET request for Unit Details
-    if request.method == 'GET':
-        try:
-            return jsonify(UnitSchema().dump(unit)), 200
-        except Exception as e:
-            return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
-# Handle PATCH/PUT/POST requests for updating Unit
+    try:
+        return jsonify(UnitSchema().dump(unit)), 200
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
+
+# 2. UPDATE EXISTING UNIT
+@app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
+def update_unit(id):
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
@@ -294,14 +289,14 @@ def handle_unit_by_id(id):
             unit.imageURLS = existing_image_urls + new_image_urls
             flag_modified(unit, "imageURLS")
         db.session.commit()
-        return jsonify({"message": "Unit updated successfully", "data": unit_schema.dump(unit)}), 200
+        return jsonify({ "message": "Unit updated successfully", "data": unit_schema.dump(unit) }), 200
 
     except ValidationError as err:
         return jsonify({"validation_errors": err.messages}), 422
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
+        return jsonify({ "message": "Failed to update unit", "error": str(e) }), 400
 
 
 @app.route("/units/promoted", methods=["GET"])
@@ -562,9 +557,6 @@ def student_login():
 
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
