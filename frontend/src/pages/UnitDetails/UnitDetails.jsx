@@ -42,4 +42,24 @@ export default function UnitDetails() {
       .then(() => {
         setLoading(false);
 
+// Sync with local storage favorites
+        const saved = JSON.parse(localStorage.getItem('favorites')) || [];
+        setIsSaved(saved.some((item) => item.id === Number(unitId)));
+      })
+      .catch((err) => {
+        console.error('Fetch error:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [apartmentId, unitId]);
 
+  const handleToggleSave = () => {
+    if (!unit) return;
+    const existing = JSON.parse(localStorage.getItem('favorites')) || [];
+    let updated;
+
+    if (isSaved) {
+      updated = existing.filter((item) => item.id !== unit.id);
+    } else {
+      updated = [...existing, unit];
+    }
