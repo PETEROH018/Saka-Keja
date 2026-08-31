@@ -53,7 +53,7 @@ export default function UnitDetails() {
       });
   }, [apartmentId, unitId]);
 
-  const handleToggleSave = () => {
+const handleToggleSave = () => {
     if (!unit) return;
     const existing = JSON.parse(localStorage.getItem('favorites')) || [];
     let updated;
@@ -63,3 +63,15 @@ export default function UnitDetails() {
     } else {
       updated = [...existing, unit];
     }
+
+    localStorage.setItem('favorites', JSON.stringify(updated));
+    setIsSaved(!isSaved);
+  };
+  
+  if (loading) return <div className="unit-loading">Loading unit details...</div>;
+  if (error || !unit) return <div className="unit-error">Error: {error || 'Unit not found'}</div>;
+
+  const images =
+    unit.imageURLS && unit.imageURLS.length > 0
+      ? unit.imageURLS
+      : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
