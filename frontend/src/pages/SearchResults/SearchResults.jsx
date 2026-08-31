@@ -52,3 +52,14 @@ export default function SearchResults() {
     setBathrooms('');
     setFilteredApartments(allApartments);
   };
+
+// Helper to resolve property rent
+  const getPropertyRent = (item) => {
+    if (item["monthly-expense-breakdown"]?.rent) {
+      return Number(item["monthly-expense-breakdown"].rent);
+    }
+    if (item.units && item.units.length > 0) {
+      return Math.min(...item.units.map(u => u.rent));
+    }
+    return 0;
+  };
