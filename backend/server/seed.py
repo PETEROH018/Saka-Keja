@@ -288,10 +288,7 @@ with app.app_context():
         raw_password = student_data.pop("password_hash", None)
         student = Student(**student_data)
         if raw_password:
-            if hasattr(student, "password_hash"):
-                student.password_hash = raw_password
-            elif hasattr(student, "_password_hash"):
-                student._password_hash = raw_password
+            student.password_hash = raw_password
         db.session.add(student)
 
     db.session.commit()
