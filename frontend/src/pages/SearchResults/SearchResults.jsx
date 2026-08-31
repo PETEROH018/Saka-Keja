@@ -63,3 +63,18 @@ export default function SearchResults() {
     }
     return 0;
   };
+
+// Apply Filter Logic (Location, Rent Range, Bedrooms, Bathrooms)
+  const handleApplyFilters = () => {
+    let result = allApartments.filter(item => {
+      const rent = getPropertyRent(item);
+
+      // 1. Location match
+      const matchLocation = location 
+        ? (item.location || '').toLowerCase().includes(location.toLowerCase().trim()) 
+        : true;
+
+      // 2. Rent Range match
+      const matchMinRent = minRent ? rent >= Number(minRent) : true;
+      const matchMaxRent = maxRent ? rent <= Number(maxRent) : true;
+
