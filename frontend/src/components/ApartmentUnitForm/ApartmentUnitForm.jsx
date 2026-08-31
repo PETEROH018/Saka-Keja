@@ -14,8 +14,8 @@ const unitTypeOptions = [
 
 const amenityOptions = [
   "Balcony",
-  "Kitchenette",
-  "Built-in Wardrobes",
+  "Kitchen",
+  "Wardrobes",
 ];
 
 const emptyUnit = {
