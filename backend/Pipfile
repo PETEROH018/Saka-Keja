@@ -17,6 +17,7 @@ flask-bcrypt = "*"
 psycopg2-binary = "*"
 flask-cors = "*"
 sqlalchemy = "*"
+pyjwt = "*"
 
 [dev-packages]
 pytest = "*"

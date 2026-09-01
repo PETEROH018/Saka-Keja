@@ -160,3 +160,95 @@ def test_get_student_favorites_returns_only_favorited_units(client):
 
     assert len(data) == 1
     assert data[0]["id"] == favorite_unit.id
+
+
+def test_login_returns_jwt_and_protected_route_accepts_bearer_token(client):
+    student = Student(
+        full_name="JWT Student",
+        email="jwtstudent@test.com",
+        phone_number=700000004,
+        username="jwtstudent",
+    )
+    student.password_hash = "password123"
+
+    db.session.add(student)
+    db.session.commit()
+
+    response = client.post(
+        "/login",
+        json={"userRole": "student", "userName": "jwtstudent", "password": "password123"},
+    )
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+    assert isinstance(data["token"], str)
+    assert data["token"].count(".") == 2
+
+    protected = client.get(
+        f"/students/{student.id}/stats",
+        headers={"Authorization": f"Bearer {data['token']}"},
+    )
+
+    assert protected.status_code == 200
+
+
+def test_sync_guest_viewed_units_marks_them_as_viewed_for_logged_in_user(client):
+    student = Student(
+        full_name="Guest Sync Student",
+        email="syncstudent@test.com",
+        phone_number=700000005,
+        username="syncstudent",
+    )
+    student.password_hash = "password123"
+    db.session.add(student)
+    db.session.commit()
+
+    owner = ApartmentOwner(
+        full_name="Owner Sync",
+        email="ownersync@test.com",
+        phone_number=700000006,
+        username="ownersync",
+    )
+    owner.password_hash = "password123"
+    db.session.add(owner)
+    db.session.commit()
+
+    apartment = Apartment(
+        name="Guest Sync Apartment",
+        type="Apartment",
+        description="Test apartment",
+        location="Ruiru",
+        owner_id=owner.id,
+    )
+    db.session.add(apartment)
+    db.session.commit()
+
+    unit = Unit(
+        category="bedsitter",
+        description="Sync viewed unit",
+        rent=8000,
+        bedrooms=0,
+        bathrooms=1,
+        apartment_id=apartment.id,
+        promoted=False,
+    )
+    db.session.add(unit)
+    db.session.commit()
+
+    login_response = client.post(
+        "/login",
+        json={"userRole": "student", "userName": "syncstudent", "password": "password123"},
+    )
+    token = login_response.get_json()["token"]
+
+    sync_response = client.post(
+        "/students/viewed-units/sync",
+        json={"unit_ids": [unit.id]},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert sync_response.status_code == 200
+    assert sync_response.get_json()["count"] == 1
+
+    assert StudentUnit.query.filter_by(student_id=student.id, unit_id=unit.id, viewed=True).count() == 1

@@ -8,7 +8,10 @@ export function useAuth() {
     if (!authContext) {
         return {
             user: null,
+            token: null,
             setUser: () => {},
+            setAuth: () => {},
+            setToken: () => {},
             logout: () => {},
         };
     }

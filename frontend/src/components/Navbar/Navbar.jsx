@@ -121,7 +121,7 @@ export default function Navbar({ showSearch = false }) {
           {user ? (
             <>
               <button
-                onClick={() => {logout();navigate('/auth')}}
+                onClick={() => {logout(); navigate('/auth')}}
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
               >
                 Logout
@@ -143,7 +143,7 @@ export default function Navbar({ showSearch = false }) {
                 aria-label="User profile"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
               >
-                {user.name.charAt(0)}
+                {user.name?.charAt(0) || "U"}
               </NavLink>
             </>
           ) : (
@@ -152,7 +152,7 @@ export default function Navbar({ showSearch = false }) {
                 onClick={() => navigate("/auth")}
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
               >
-                Login/Sign Up
+                Login
               </button>
             </div>
           )}
@@ -224,45 +224,49 @@ export default function Navbar({ showSearch = false }) {
             )}
 
             {user ? (
-              <NavLink
-                to={
-                  user.role === "student"
-                    ? "/student-profile"
-                    : "/owner-profile"
-                }
-                onClick={closeMenu}
-                className="flex items-center gap-3"
-              >
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    navigate('/auth');
+                    closeMenu();
+                  }}
+                  className="w-full rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
                 >
-                  {user.name.charAt(0)}
-                </div>
+                  Logout
+                </button>
 
-                <span className="text-sm text-gray-700">
-                  Profile
-                </span>
-              </NavLink>
+                <NavLink
+                  to={
+                    user.role === "student"
+                      ? "/student-profile"
+                      : "/owner-profile"
+                  }
+                  onClick={closeMenu}
+                  className="flex items-center gap-3"
+                >
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
+                  >
+                    {user.name?.charAt(0) || "U"}
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    Profile
+                  </span>
+                </NavLink>
+              </>
             ) : (
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => {
-                    navigate("/login")
-                    closeMenu()
-                  }}
-                  className="text-left text-sm font-medium text-gray-700"
-                >
-                  Login
-                </button>
-
-                <button
-                  onClick={() => {
-                    navigate("/signup")
+                    navigate("/auth")
                     closeMenu()
                   }}
                   className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white"
                 >
-                  Sign Up
+                  Login
                 </button>
               </div>
             )}
