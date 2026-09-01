@@ -160,3 +160,34 @@ def test_get_student_favorites_returns_only_favorited_units(client):
 
     assert len(data) == 1
     assert data[0]["id"] == favorite_unit.id
+
+
+def test_login_returns_jwt_and_protected_route_accepts_bearer_token(client):
+    student = Student(
+        full_name="JWT Student",
+        email="jwtstudent@test.com",
+        phone_number=700000004,
+        username="jwtstudent",
+    )
+    student.password_hash = "password123"
+
+    db.session.add(student)
+    db.session.commit()
+
+    response = client.post(
+        "/login",
+        json={"userRole": "student", "userName": "jwtstudent", "password": "password123"},
+    )
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+    assert isinstance(data["token"], str)
+    assert data["token"].count(".") == 2
+
+    protected = client.get(
+        f"/students/{student.id}/stats",
+        headers={"Authorization": f"Bearer {data['token']}"},
+    )
+
+    assert protected.status_code == 200
