@@ -974,6 +974,51 @@ def mark_unit_view(student_id, unit_id):
     return jsonify({"message": "Unit view recorded"}), 200
 
 
+@app.route("/students/viewed-units/sync", methods=["POST"])
+def sync_guest_viewed_units():
+    current_user, auth_error = require_authentication()
+    if auth_error:
+        return auth_error
+
+    data = request.get_json(silent=True) or {}
+    unit_ids = data.get("unit_ids") or []
+
+    if not isinstance(unit_ids, list):
+        return jsonify({"error": "unit_ids must be a list"}), 400
+
+    synced_count = 0
+
+    for raw_id in unit_ids:
+        try:
+            unit_id = int(raw_id)
+        except (TypeError, ValueError):
+            continue
+
+        unit = Unit.query.get(unit_id)
+        if not unit:
+            continue
+
+        student_unit = StudentUnit.query.filter_by(
+            student_id=current_user.id,
+            unit_id=unit_id,
+        ).first()
+
+        if student_unit is None:
+            student_unit = StudentUnit(
+                student_id=current_user.id,
+                unit_id=unit_id,
+                viewed=True,
+            )
+            db.session.add(student_unit)
+        else:
+            student_unit.viewed = True
+
+        synced_count += 1
+
+    db.session.commit()
+    return jsonify({"message": "Guest viewed units synced", "count": synced_count}), 200
+
+
 @app.route("/students/<int:student_id>/units/<int:unit_id>/favorite", methods=["POST"])
 def mark_unit_favorite(student_id, unit_id):
 
