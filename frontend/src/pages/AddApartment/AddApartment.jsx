@@ -84,6 +84,7 @@ export default function AddApartment(){
             response.json()
           })
           .then( data => {
+            alert("Apartment and units added successfuly")
             console.log(data)
             setApartmentData({})
             setForm(emptyForm)
