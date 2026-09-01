@@ -53,7 +53,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/available-units/:id" element={<AvailableUnits />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
-        <Route path="/apartments/:apartmentId/units/:unitId" element={<UnitDetails />} />
+        {/* <Route path="/apartments/:apartmentId/units/:unitId" element={<UnitDetails />} /> */}
         <Route path="/unit-details/:id" element={<UnitDetails />} />      </Routes>
     </HashRouter>
 

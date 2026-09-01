@@ -157,7 +157,7 @@ export default function UnitCard({
 
             </div>
 
-
+            {user &&
             <button
               onClick={handleFavorite}
               className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-purple-700 hover:bg-purple-100 transition"
@@ -170,7 +170,7 @@ export default function UnitCard({
                   }`}
               />
             </button>
-
+          }
           </div>
         </div>
 
@@ -217,7 +217,8 @@ export default function UnitCard({
 
         {/* Action Button */}
         <Link
-          to={`/apartments/${apartmentId}/units/${id}`}
+          to={`/unit-details/${id}`}
+          onClick={handleViewDetails}
           className="mt-2 block w-full rounded-lg border border-outline-variant bg-white py-2 text-center text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary"
         >
           View Details

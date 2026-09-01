@@ -125,11 +125,7 @@ export default function SearchResults() {
 
   // View Details Navigation Handler
   const handleViewDetails = (unit) => {
-    if (unit.apartment_id) {
-      navigate(`/apartments/${unit.apartment_id}/units/${unit.id}`);
-    } else {
       navigate(`/unit-details/${unit.id}`);
-    }
 };
   return (
     <div className="search-page-bg">

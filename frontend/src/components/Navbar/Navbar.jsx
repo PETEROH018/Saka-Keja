@@ -49,8 +49,22 @@ export default function Navbar({ showSearch = false }) {
           )}
         </div>
 
+          
         <div className="hidden h-full items-center gap-8 md:flex">
-          <NavLink
+          {user?.role == 'student'
+          ? <NavLink
+            to="/student-dashboard"
+            className={({ isActive }) =>
+              `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
+                ? "border-violet-700 text-violet-700"
+                : "border-transparent text-gray-700 hover:text-violet-700"
+              }`
+            }
+          >
+            Dashboard
+          </NavLink>
+          
+          :<NavLink
             to="/"
             className={({ isActive }) =>
               `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
@@ -61,10 +75,11 @@ export default function Navbar({ showSearch = false }) {
           >
             Discover
           </NavLink>
+          }
 
           {user && (
             <NavLink
-              to="/savedproperties"
+              to="/saved-properties"
               className={({ isActive }) =>
                 `flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors ${isActive
                   ? "border-violet-700 text-violet-700"
