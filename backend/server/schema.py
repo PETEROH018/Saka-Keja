@@ -30,17 +30,12 @@ class UnitSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-<<<<<<< Updated upstream
     # Expressly define nested apartment with reciprocal fields excluded
     apartment = fields.Nested('ApartmentSchema', exclude=('units', 'apartment_amenity_links', 'nearby_facilities'))
     student_units = fields.Nested('StudentUnitSchema', many=True, exclude=('unit',))
     unit_amenity_links = fields.Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
-=======
-    student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
-    unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
 
 
->>>>>>> Stashed changes
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
         model = UnitAmenity
@@ -112,9 +107,9 @@ class StudentSchema(Schema):
     dob = fields.DateTime(required=False, allow_none=True)
     institution = fields.Str(required=False, allow_none=True)
     course = fields.Str(required=False, allow_none=True)
-    year_of_study = fields.Str(required=False, allow_none=True)
+    year_of_study = fields.Int(required=False, allow_none=True)
     student_number = fields.Str(required=False, allow_none=True)
-    graduation_year = fields.Str(required=False, allow_none=True)
+    graduation_year = fields.Int(required=False, allow_none=True)
     location = fields.Str(required=False, allow_none=True)
     username = fields.Str(required=True, validate=validate.Length(min=1))
     password = fields.Str(

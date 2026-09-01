@@ -110,7 +110,6 @@ def add_apartment_owner():
         )
 
 
-# get/aparments for a particular owner
 @app.route("/owners/<int:id>/aparments")
 def get_owner_aparments(id):
     apartments = Apartment.query.filter_by(owner_id=id).all()
@@ -267,7 +266,6 @@ def update_apartment(id):
         db.session.rollback()
         return jsonify({ "message": "Failed to update apartment", "error": str(e) }), 400
 
-# 1. GET SINGLE UNIT DETAILS
 @app.route("/units/<int:id>", methods=['GET'])
 def get_unit_by_id(id):
     unit = Unit.query.get(id)
@@ -279,7 +277,6 @@ def get_unit_by_id(id):
     except Exception as e:
         return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
 
-# 2. UPDATE EXISTING UNIT
 @app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
 def update_unit(id):
     unit = Unit.query.get(id)
@@ -359,21 +356,17 @@ def get_all_units():
 # STUDENT ENDPOINTS
 # ========================
 
-
 @app.route("/students/<int:id>/favorites", methods=["GET"])
 def get_student_favorite_units(id):
-
     favorite_units = (
         db.session.query(Unit)
         .join(StudentUnit)
         .filter(StudentUnit.student_id == id, StudentUnit.favorite == True)
         .all()
     )
-
     return jsonify(UnitSchema(many=True).dump(favorite_units))
 
 
-<<<<<<< Updated upstream
 @app.route("/units/<int:id>/book", methods=["POST"])
 def book_unit(id):
     data = request.get_json(silent=True) or {}
@@ -453,7 +446,8 @@ def join_waitlist(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Could not join the waiting list: {str(e)}"}), 500
-=======
+
+
 @app.route('/students/<int:id>', methods=['GET', 'PATCH', 'PUT'])
 def update_student(id):
     student = Student.query.get(id)
@@ -496,19 +490,16 @@ def update_student(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
->>>>>>> Stashed changes
 
 
 @app.route("/payments", methods=["POST"])
 def add_payment():
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     required_fields = ["student_unit_id", "amount", "payment_method"]
-
     missing_fields = [field for field in required_fields if field not in data]
 
     if missing_fields:
@@ -533,9 +524,7 @@ def add_payment():
         )
 
         db.session.add(new_payment)
-
         student_unit.deposit_paid += data["amount"]
-
         db.session.commit()
 
         return (
@@ -557,18 +546,15 @@ def add_payment():
 
     except IntegrityError:
         db.session.rollback()
-
         return jsonify({"error": "Transaction reference already exists"}), 400
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create payment: {str(e)}"}), 500
 
 
 @app.route("/students", methods=["POST"])
 def add_student():
-
     data = request.get_json()
 
     if not data:
@@ -632,12 +618,10 @@ def add_student():
 
     except IntegrityError:
         db.system.rollback() if hasattr(db, 'system') else db.session.rollback()
-
         return jsonify({"error": "Student already exists"}), 409
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
@@ -693,8 +677,6 @@ def student_login():
     except Exception as e:
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
-<<<<<<< Updated upstream
-=======
 
 @app.errorhandler(Exception)
 def handle_global_exception(e):
@@ -711,6 +693,5 @@ def handle_global_exception(e):
     }), 500
 
 
->>>>>>> Stashed changes
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
