@@ -152,14 +152,24 @@ export default function UnitDetails() {
     setBookingMessage('Booking successful! Your deposit payment was recorded.');
   };
 
-  // Status Color Logic for Green (Vacant), Orange (Partially Occupied), Red (Occupied)
-  const getStatusClass = (statusStr = '') => {
-    const statusLower = statusStr.toLowerCase();
-    if (statusLower.includes('vacant') || statusLower.includes('available')) return 'status-green';
-    if (statusLower.includes('partially')) return 'status-orange';
-    if (statusLower.includes('occupied')) return 'status-red';
-    return 'status-green';
-  };
+const getUnitStatus = (unitObj) => {
+  if (!unitObj) return 'Vacant';
+  const occupants = Number(unitObj.current_occupants || 0);
+  const maxCapacity = Number(unitObj.maximum_occupants || 1);
+
+  if (occupants >= maxCapacity) return 'Occupied';
+  if (unitObj.shared && occupants > 0 && occupants < maxCapacity) return 'Partially Occupied';
+  return 'Vacant';
+};
+
+const statusText = getUnitStatus(unit);
+
+const getStatusClass = (statusStr = '') => {
+  const statusLower = statusStr.toLowerCase();
+  if (statusLower.includes('partially')) return 'status-orange';
+  if (statusLower.includes('occupied')) return 'status-red';
+  return 'status-green'; // Vacant / Available
+};
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
   if (error || !unit) return <div className="unit-error">Error: {error || 'Unit not found'}</div>;
