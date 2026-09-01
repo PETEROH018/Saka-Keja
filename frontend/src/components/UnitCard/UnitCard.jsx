@@ -1,6 +1,9 @@
+import { Link } from "react-router-dom";
 import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun } from 'lucide-react';
 
 export default function UnitCard({
+  id,
+  apartment_id: apartmentId,
   name,
   description,
   location,
@@ -106,9 +109,12 @@ export default function UnitCard({
         </div>
 
         {/* Action Button */}
-        <button className="mt-2 w-full rounded-lg border border-outline-variant bg-white py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary">
+        <Link
+          to={`/apartments/${apartmentId}/units/${id}`}
+          className="mt-2 block w-full rounded-lg border border-outline-variant bg-white py-2 text-center text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );
