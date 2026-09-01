@@ -296,16 +296,6 @@ def get_apartment_units(id):
         )
 
 
-@app.route("/units/<int:id>", methods=['GET'])
-def get_unit_by_id(id):
-    unit = Unit.query.get(id)
-    if not unit:
-        return jsonify({"error": "Unit not found"}), 404
-    try:
-        return jsonify(UnitSchema().dump(unit)), 200
-    except Exception as e:
-        return jsonify({"error": f"Could not retrieve unit due to this error: {str(e)}"}), 500
-
 @app.route('/owners/<int:id>', methods=['PATCH','PUT'])
 def update_owner(id):
     owner = ApartmentOwner.query.get(id)
@@ -439,36 +429,6 @@ def update_unit(id):
 
     except Exception as e:
 
-        db.session.rollback()
-
-        return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
-
-    new_image_urls = data.pop("imageURLs", None)
-
-    try:
-        unit_schema.load(data, instance=unit, partial=True)
-        if new_image_urls is not None:
-            existing_image_urls = unit.imageURLS or []
-            unit.imageURLS = existing_image_urls + new_image_urls
-            flag_modified(unit, "imageURLS")
-        db.session.commit()
-        return (
-            jsonify(
-                {
-                    "message": "Unit updated successfully",
-                    "data": apartment_schema.dump(unit),
-                }
-            ),
-            200,
-        )
-
-    except ValidationError as err:
-        return jsonify({"validation_errors": err.messages}), 422
-
-    except Exception as e:
         db.session.rollback()
 
         return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
