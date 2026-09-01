@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
 function Check() {
   return (
@@ -76,9 +77,7 @@ export default function CompareProperties({ properties, onBack }) {
   //   );
   // }, [properties]);
 
-  function handleViewDetails(){
-    
-  }
+ 
   if (properties.length === 0) {
     return <p className="compare-empty">No properties selected for comparison.</p>;
   }
@@ -113,7 +112,8 @@ export default function CompareProperties({ properties, onBack }) {
                       <Check /> Verified
                     </span>
                   )}
-                  <button className="compare-view-btn">View Details</button>
+                  <Link className="compare-view-btn" to={`/apartment-details/${p.id}`}
+                  > View Details </Link>
                 </th>
               ))}
             </tr>
