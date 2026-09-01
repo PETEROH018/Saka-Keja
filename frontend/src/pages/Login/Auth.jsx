@@ -125,6 +125,30 @@ export function AuthPage() {
     }
   }
 
+  async function syncGuestViewedUnits(authToken) {
+    const guestViewedUnits = JSON.parse(localStorage.getItem("guest_viewed_units") || "[]");
+    if (!authToken || !guestViewedUnits.length) {
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/students/viewed-units/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ unit_ids: guestViewedUnits }),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("guest_viewed_units");
+      }
+    } catch (error) {
+      console.error("Failed to sync guest viewed units:", error);
+    }
+  }
+
   
   async function handleSubmit(event, formType) {
     event.preventDefault();
@@ -158,6 +182,7 @@ export function AuthPage() {
           return;
         }
 
+        await syncGuestViewedUnits(data.token);
         setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
         if (data.user_type === "manager") {
           navigate("/admin-dash");
@@ -204,6 +229,7 @@ export function AuthPage() {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
+      await syncGuestViewedUnits(data.token);
       setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
       if (data.user_type === "manager") {
         navigate("/admin-dash");
