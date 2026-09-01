@@ -5,7 +5,7 @@ import { API_BASE_URL } from "../../config/api";
 import Navbar from "../../components/Navbar/Navbar";
 
 function StudentDashboard() {
-    const { user } = useAuth();
+    const { user, token } = useAuth();
 
     const [promotedUnits, setPromotedUnits] = useState([]);
     const [favoriteUnits, setFavoriteUnits] = useState([]);
@@ -34,7 +34,11 @@ function StudentDashboard() {
 
         if (!user?.id) return;
 
-        fetch(`${API_BASE_URL}/students/${user.id}/stats`)
+        fetch(`${API_BASE_URL}/students/${user.id}/stats`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
             .then(response => response.json())
             .then(data => {
                 setStats(data);
@@ -43,7 +47,7 @@ function StudentDashboard() {
                 console.error("Error fetching stats:", error);
             });
 
-    }, [user?.id]);
+    }, [user?.id, token]);
 
     console.log(stats);
 
@@ -65,8 +69,16 @@ function StudentDashboard() {
                     viewedResponse,
                 ] = await Promise.all([
                     fetch(`${API_BASE_URL}/units/promoted`),
-                    fetch(`${API_BASE_URL}/students/${user.id}/favorites`),
-                    fetch(`${API_BASE_URL}/students/${user.id}/viewed-units`),
+                    fetch(`${API_BASE_URL}/students/${user.id}/favorites`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }),
+                    fetch(`${API_BASE_URL}/students/${user.id}/viewed-units`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }),
                 ]);
 
                 if (
