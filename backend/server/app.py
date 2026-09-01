@@ -1099,7 +1099,7 @@ def process_booking_payment():
         return jsonify({"error": "No input data provided"}), 400
 
     unit_id = data.get("unit_id")
-    student_id = data.get("student_id", 1)  # Falls back to active logged-in student
+    student_id = data.get("student_id", 1)  # Default fallback student ID
     amount = data.get("amount")
     payment_method = data.get("payment_method", "mpesa")
 
@@ -1115,11 +1115,11 @@ def process_booking_payment():
         ).first()
 
         if not student_unit:
+            # FIX: Removed rent_paid=0 argument to match your StudentUnit model schema
             student_unit = StudentUnit(
                 student_id=student_id,
                 unit_id=unit_id,
-                deposit_paid=amount,
-                rent_paid=0
+                deposit_paid=amount
             )
             db.session.add(student_unit)
             db.session.flush()
@@ -1157,8 +1157,6 @@ def process_booking_payment():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
-
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
