@@ -1,4 +1,5 @@
 import jwt
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from configs import *
@@ -1090,8 +1091,6 @@ def mark_unit_favorite(student_id, unit_id):
     db.session.commit()
 
     return jsonify({"favorite": student_unit.favorite}), 200
-
-import uuid
 
 @app.route("/bookings/pay", methods=["POST"])
 def process_booking_payment():

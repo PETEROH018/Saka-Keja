@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
+import PaymentPopup from '../../components/PaymentPopup/PaymentPopup';
 import './UnitDetails.css';
 import { API_BASE_URL } from '../../config/api';
 import { useAuth } from '../../context/useAuth';
@@ -20,6 +21,7 @@ export default function UnitDetails() {
   const [isSaved, setIsSaved] = useState(false);
   const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
   const [bookingMessage, setBookingMessage] = useState('');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
   useEffect(() => {
     if (!unitId) {
@@ -39,7 +41,7 @@ export default function UnitDetails() {
       .then((unitData) => {
         setUnit(unitData);
 
-// Fetch parent apartment details if apartmentId or unit.apartment_id exists
+        // Fetch parent apartment details if apartmentId or unit.apartment_id exists
         const parentApartmentId = apartmentId || unitData.apartment_id;
         if (parentApartmentId) {
           return fetch(`${API_BASE_URL}/apartments/${parentApartmentId}`)
@@ -52,7 +54,7 @@ export default function UnitDetails() {
       .then(() => {
         setLoading(false);
 
-// Sync with local storage favorites
+        // Sync with local storage favorites
         const saved = JSON.parse(localStorage.getItem('favorites')) || [];
         setIsSaved(saved.some((item) => item.id === Number(unitId)));
       })
@@ -65,7 +67,7 @@ export default function UnitDetails() {
       });
   }, [apartmentId, unitId]);
 
-const handleToggleSave = () => {
+  const handleToggleSave = () => {
     if (!unit) return;
     const existing = JSON.parse(localStorage.getItem('favorites')) || [];
     let updated;
@@ -94,12 +96,20 @@ const handleToggleSave = () => {
 
     if (!unit) return;
 
-    const action = unit.current_occupants >= unit.maximum_occupants ? 'waitlist' : 'book';
+    const isFull = unit.current_occupants >= unit.maximum_occupants;
+
+    // If unit is available, trigger Payment Popup
+    if (!isFull) {
+      setIsPaymentOpen(true);
+      return;
+    }
+
+    // If unit is full, handle Join Waitlist directly
     setBookingStatus('booking');
     setBookingMessage('');
 
     try {
-      const endpoint = `${API_BASE_URL}/units/${unit.id}/${action}`;
+      const endpoint = `${API_BASE_URL}/units/${unit.id}/waitlist`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,31 +119,44 @@ const handleToggleSave = () => {
         }),
       });
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || `Unable to ${action} this unit.`);
+        throw new Error(data.error || 'Unable to join waitlist.');
       }
 
       setBookingStatus('success');
-      setBookingMessage(
-        action === 'book'
-          ? 'Booking successful! Your unit has been reserved.'
-          : 'You have been added to the waiting list.'
-      );
-
-      if (action === 'book') {
-        setUnit((currentUnit) => ({
-          ...currentUnit,
-          current_occupants: Number(currentUnit.current_occupants || 0) + 1,
-        }));
-      }
+      setBookingMessage('You have been added to the waiting list.');
     } catch (error) {
-      console.error(`Failed to ${action}:`, error);
+      console.error('Failed to join waitlist:', error);
       setBookingStatus('error');
       setBookingMessage(error.message || 'Something went wrong. Please try again.');
     }
+  };
+
+  // Called when payment is submitted inside PaymentPopup
+  const handlePaymentSubmit = async (paymentDetails) => {
+    const response = await fetch(`${API_BASE_URL}/bookings/pay`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        unit_id: unit.id,
+        student_id: user.id,
+        amount: paymentDetails.amount,
+        payment_method: paymentDetails.payment_method,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Payment failed. Please try again.');
+    }
+
+    // Update state with newly returned unit (occupants & status updated)
+    setUnit(data.unit);
+    setBookingStatus('success');
+    setBookingMessage('Booking successful! Your deposit payment was recorded.');
   };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
@@ -144,7 +167,7 @@ const handleToggleSave = () => {
       ? unit.imageURLS
       : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
 
-return (
+  return (
     <>
       <Navbar showSearch={true} />
 
@@ -177,16 +200,17 @@ return (
                 👥 {unit.shared ? 'Shared' : 'Private'}
               </span>
               <span className="unit-badge occupancy">
-                {unit.current_occupants >= unit.maximum_occupants ? 'Occupied (Waitlist)' : 'Available'}
+                {unit.current_occupants >= unit.maximum_occupants ? 'Occupied (Waitlist)' : unit.status || 'Available'}
               </span>
             </div>
           </div>
 
           <div className="header-actions">
-            <button className="action-btn share-btn">🔗 Share</button>
+            <button className="action-btn share-btn" type="button">🔗 Share</button>
             <button 
               className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
               onClick={handleToggleSave}
+              type="button"
             >
               {isSaved ? '💜 Saved' : '🤍 Save'}
             </button>
@@ -294,6 +318,15 @@ return (
           </aside>
         </div>
       </main>
+
+      {/* PAYMENT POPUP MODAL */}
+      <PaymentPopup
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        amount={unit.deposit || unit.rent}
+        unitName={`${unit.category} - Unit ${unit.id}`}
+        onPaymentRequest={handlePaymentSubmit}
+      />
 
       <Footer />
     </>
