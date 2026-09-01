@@ -200,6 +200,56 @@ it("shows an error message when saving changes fails", async () => {
     await screen.findByText(/failed to update property/i)
   ).toBeInTheDocument();
 });
+
+it("handles empty signup responses without crashing", async () => {
+  window.history.pushState({}, "", "/auth");
+
+  const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+  Object.defineProperty(navigator, "geolocation", {
+    value: {
+      getCurrentPosition: (success) =>
+        success({
+          coords: { latitude: -1.286389, longitude: 36.817223 },
+        }),
+    },
+    configurable: true,
+  });
+
+  vi.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        address: { city: "Nairobi", county: "Nairobi County" },
+      }),
+    })
+    .mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      text: async () => "",
+      json: async () => {
+        throw new SyntaxError("Unexpected end of JSON input");
+      },
+    });
+
+  render(<App />);
+
+  await userEvent.click(screen.getByRole("button", { name: /create account/i }));
+
+  await userEvent.type(screen.getByPlaceholderText(/john doe/i), "Jane Doe");
+  await userEvent.type(screen.getByPlaceholderText(/username123/i), "janedoe");
+  await userEvent.type(screen.getByPlaceholderText(/you@example.com/i), "jane@example.com");
+  await userEvent.type(screen.getByPlaceholderText(/712 345 678/i), "712345678");
+  await userEvent.type(screen.getByPlaceholderText(/create a password/i), "StrongPass1!");
+  await userEvent.type(screen.getByPlaceholderText(/confirm your password/i), "StrongPass1!");
+
+  const signupSubmitBtn = screen.getAllByRole("button", { name: /^sign up$/i })[1];
+  await userEvent.click(signupSubmitBtn);
+
+  expect(alertSpy).toHaveBeenCalledWith(
+    expect.stringContaining("Something went wrong")
+  );
+});
+
 it("disables the save button while the property update is in progress", async () => {
   window.history.pushState({}, "", "/edit-property/1");
 

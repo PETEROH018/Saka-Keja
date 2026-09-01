@@ -8,263 +8,323 @@ export default function SearchResults() {
   const navigate = useNavigate();
 
   // Data & Load States
-  const [allApartments, setAllApartments] = useState([]);
-  const [filteredApartments, setFilteredApartments] = useState([]);
+  const [allUnits, setAllUnits] = useState([]);
+  const [filteredUnits, setFilteredUnits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filter States
-  const [mapView, setMapView] = useState(false);
+  // Search Location & Rent States
+  const [locationSearch, setLocationSearch] = useState('');
   const [minRent, setMinRent] = useState('');
   const [maxRent, setMaxRent] = useState('');
-  const [propertyTypes, setPropertyTypes] = useState([]);
-  const [amenities, setAmenities] = useState([]);
+
+  // Unit Type / Category Checkbox States
+  const [categoryFilters, setCategoryFilters] = useState({
+    single: false,
+    double: false,
+    studio: false,
+    bedsitter: false,
+  });
+
+  // Amenity Checkbox States
+  const [hasKitchenette, setHasKitchenette] = useState(false);
+  const [hasWardrobe, setHasWardrobe] = useState(false);
+  const [hasBalcony, setHasBalcony] = useState(false);
+
+  // Pagination & Sorting States
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState('Default');
+  const [sortBy, setSortBy] = useState('Best Match');
 
-  // Fetch Data from Flask Backend API
+  // Fetch Units Data from Backend API
   useEffect(() => {
-    fetch('http://localhost:5000/apartments')
+    fetch('http://localhost:5000/units')
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch apartments');
+        if (!res.ok) throw new Error('Failed to fetch units');
         return res.json();
       })
       .then((data) => {
-        setAllApartments(data);
-        setFilteredApartments(data);
+        setAllUnits(data);
+        setFilteredUnits(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching apartments:', err);
+        console.error('Error fetching units:', err);
         setError(err.message);
         setLoading(false);
       });
   }, []);
 
-  // Fetch Data from Flask Backend API
-  useEffect(() => {
-    fetch('http://localhost:5000/apartments')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch apartments');
-        return res.json();
-      })
-      .then((data) => {
-        setAllApartments(data);
-        setFilteredApartments(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching apartments:', err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  // Handle Checkboxes
-  const handleTypeChange = (type) => {
-    setPropertyTypes(prev => 
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
-  };
-
-  const handleAmenityChange = (amenity) => {
-    setAmenities(prev => 
-      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
-    );
-  };
-
-  // Clear All Filters
-  const handleClearAll = () => {
-    setMapView(false);
+  // Clear All Filters Handler
+  const handleClearAll = (e) => {
+    e.preventDefault();
     setMinRent('');
     setMaxRent('');
-    setPropertyTypes([]);
-    setAmenities([]);
-    setFilteredApartments(allApartments);
+    setCategoryFilters({ single: false, double: false, studio: false, bedsitter: false });
+    setHasKitchenette(false);
+    setHasWardrobe(false);
+    setHasBalcony(false);
+    setFilteredUnits(allUnits);
+    setCurrentPage(1);
   };
 
-  // Apply Filters based on Flask Apartment + Units schema
-  const handleApplyFilters = () => {
-    let result = allApartments.filter(item => {
-      // Get lowest unit rent or default to 0
-      const lowestRent = item.units && item.units.length > 0 
-        ? Math.min(...item.units.map(u => u.rent)) 
-        : 0;
+  // Apply Filter Logic Handler
+  const handleApplyFilters = (e) => {
+    if (e) e.preventDefault();
+    let result = allUnits.filter((unit) => {
+      const rent = Number(unit.rent || 0);
 
-      const matchMin = minRent ? lowestRent >= Number(minRent) : true;
-      const matchMax = maxRent ? lowestRent <= Number(maxRent) : true;
-      
-      // Property type matching against Flask field 'type'
-      const matchType = propertyTypes.length > 0 
-        ? propertyTypes.some(t => (item.type || '').toLowerCase().includes(t.toLowerCase())) 
-        : true;
+      // 1. Rent Range match
+      const matchMinRent = minRent ? rent >= Number(minRent) : true;
+      const matchMaxRent = maxRent ? rent <= Number(maxRent) : true;
 
-      return matchMin && matchMax && matchType;
+      // 2. Unit Type / Category match
+      const selectedCategories = Object.keys(categoryFilters).filter((k) => categoryFilters[k]);
+      const matchCategory =
+        selectedCategories.length > 0
+          ? selectedCategories.some((cat) => (unit.category || '').toLowerCase().includes(cat))
+          : true;
+
+      // 3. Amenities match
+      const matchKitchenette = hasKitchenette ? (unit.kitchenette || unit.has_kitchenette) : true;
+      const matchWardrobe = hasWardrobe ? (unit.wardrobe || unit.has_wardrobe) : true;
+      const matchBalcony = hasBalcony ? (unit.balcony || unit.has_balcony) : true;
+
+      return (
+        matchMinRent &&
+        matchMaxRent &&
+        matchCategory &&
+        matchKitchenette &&
+        matchWardrobe &&
+        matchBalcony
+      );
     });
 
-    setFilteredApartments(result);
+    setFilteredUnits(result);
+    setCurrentPage(1);
   };
 
-  // Sort Logic based on unit rents
-  const getSortedApartments = (items) => {
+  // Sort Logic Handler
+  const getSortedUnits = (items) => {
     const sorted = [...items];
-
-    const getMinRent = (apt) => {
-      if (!apt.units || apt.units.length === 0) return 0;
-      return Math.min(...apt.units.map(u => u.rent));
-    };
-
     if (sortBy === 'Price: Low to High') {
-      return sorted.sort((a, b) => getMinRent(a) - getMinRent(b));
+      return sorted.sort((a, b) => Number(a.rent) - Number(b.rent));
     }
     if (sortBy === 'Price: High to Low') {
-      return sorted.sort((a, b) => getMinRent(b) - getMinRent(a));
+      return sorted.sort((a, b) => Number(b.rent) - Number(a.rent));
     }
     return sorted;
   };
 
-  const displayedApartments = getSortedApartments(filteredApartments);
+  const displayedUnits = getSortedUnits(filteredUnits);
 
+  // Pagination Slicing (4 items per page for clean 2-column grid layout)
+  const ITEMS_PER_PAGE = 6;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedUnits = displayedUnits.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(displayedUnits.length / ITEMS_PER_PAGE) || 1;
+
+  // View Details Navigation Handler
+  const handleViewDetails = (unit) => {
+    if (unit.apartment_id) {
+      navigate(`/apartments/${unit.apartment_id}/units/${unit.id}`);
+    } else {
+      navigate(`/unit-details/${unit.id}`);
+    }
+};
   return (
-    <>
-      <Navbar showSearch={true} />
+    <div className="search-page-bg">
+      <Navbar showSearch={true} searchValue={locationSearch} setSearchValue={setLocationSearch} />
+
       <div className="search-container">
-        {/* LEFT SIDEBAR - FILTERS */}
+        {/* LEFT SIDEBAR FILTERS */}
         <aside className="filter-sidebar">
           <div className="filter-header">
             <h2>Filters</h2>
-            <button className="clear-btn" onClick={handleClearAll}>Clear all</button>
+            <button type="button" className="clear-btn" onClick={handleClearAll}>
+              Clear all
+            </button>
           </div>
 
+          {/* Monthly Rent (KES) Range */}
           <div className="filter-group">
             <label className="group-label">Monthly Rent (KES)</label>
             <div className="range-inputs">
-              <input 
-                type="number" 
-                placeholder="Min" 
-                value={minRent} 
-                onChange={(e) => setMinRent(e.target.value)} 
+              <input
+                type="number"
+                placeholder="Min"
+                value={minRent}
+                onChange={(e) => setMinRent(e.target.value)}
               />
-              <span>-</span>
-              <input 
-                type="number" 
-                placeholder="Max" 
-                value={maxRent} 
-                onChange={(e) => setMaxRent(e.target.value)} 
+              <span className="dash">-</span>
+              <input
+                type="number"
+                placeholder="Max"
+                value={maxRent}
+                onChange={(e) => setMaxRent(e.target.value)}
               />
             </div>
           </div>
 
+          {/* Unit Type / Category Checkboxes */}
           <div className="filter-group">
-            <label className="group-label">Property Type</label>
-            {[
-              { label: 'Single Room', value: 'single' },
-              { label: 'Bedsitter', value: 'bedsitter' },
-              { label: '1 Bedroom', value: 'one bedroom' },
-              { label: '2 Bedroom', value: 'two bedroom' }
-            ].map(type => (
-              <label key={type.value} className="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  checked={propertyTypes.includes(type.value)} 
-                  onChange={() => handleTypeChange(type.value)} 
-                /> {type.label}
-              </label>
-            ))}
+            <label className="group-label">Unit Type</label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={categoryFilters.single}
+                onChange={(e) =>
+                  setCategoryFilters({ ...categoryFilters, single: e.target.checked })
+                }
+              />
+              Single Room
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={categoryFilters.double}
+                onChange={(e) =>
+                  setCategoryFilters({ ...categoryFilters, double: e.target.checked })
+                }
+              />
+              Double Room
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={categoryFilters.studio}
+                onChange={(e) =>
+                  setCategoryFilters({ ...categoryFilters, studio: e.target.checked })
+                }
+              />
+              Studio Apartment
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={categoryFilters.bedsitter}
+                onChange={(e) =>
+                  setCategoryFilters({ ...categoryFilters, bedsitter: e.target.checked })
+                }
+              />
+              Bedsitter
+            </label>
           </div>
 
+          {/* Amenities Checkboxes */}
           <div className="filter-group">
             <label className="group-label">Amenities</label>
-            {['Wi-Fi Included', 'Water Reliable', 'Security Guard'].map(item => (
-              <label key={item} className="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  checked={amenities.includes(item)} 
-                  onChange={() => handleAmenityChange(item)} 
-                /> {item}
-              </label>
-            ))}
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={hasKitchenette}
+                onChange={(e) => setHasKitchenette(e.target.checked)}
+              />
+              Kitchenette 🍳
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={hasWardrobe}
+                onChange={(e) => setHasWardrobe(e.target.checked)}
+              />
+              Wardrobe 🚪
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={hasBalcony}
+                onChange={(e) => setHasBalcony(e.target.checked)}
+              />
+              Balcony 🌅
+            </label>
           </div>
 
-          <button className="apply-btn" onClick={handleApplyFilters}>Apply Filters</button>
+          <button type="button" className="apply-btn" onClick={handleApplyFilters}>
+            Apply Filters
+          </button>
         </aside>
 
-        {/* RIGHT MAIN CONTENT */}
+        {/* RIGHT MAIN CONTENT AREA */}
         <main className="results-main">
           <header className="results-header">
             <div>
-              <h1>{displayedApartments.length} properties found</h1>
-              <p className="subtext">Select a property to view available units</p>
+              <h1>{displayedUnits.length} units found</h1>
+              <p className="subtext">Select a unit to view details and options</p>
             </div>
             <div className="sort-box">
               <span>Sort by:</span>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="Default">Default</option>
+                <option value="Best Match">Best Match</option>
                 <option value="Price: Low to High">Price: Low to High</option>
                 <option value="Price: High to Low">Price: High to Low</option>
               </select>
             </div>
           </header>
 
-          {/* DYNAMIC CONTENT GRID */}
+          {/* 2-COLUMN CARDS GRID */}
           {loading ? (
-            <div className="no-results">Loading available properties...</div>
+            <div className="no-results">Loading available units...</div>
           ) : error ? (
             <div className="no-results">Error loading data: {error}</div>
           ) : (
-            <div className="cards-grid">
-              {displayedApartments.length > 0 ? (
-                displayedApartments.map((item) => {
-                  // Fallback pricing calculation based on nested units
-                  const lowestRent = item.units && item.units.length > 0 
-                    ? Math.min(...item.units.map(u => u.rent)) 
-                    : 0;
-
-                  const firstImage = item.imageURLs && item.imageURLs.length > 0 
-                    ? item.imageURLs[0] 
-                    : 'https://via.placeholder.com/800x600';
-
-                  const nearbyNote = item.nearby_facilities && item.nearby_facilities.length > 0
-                    ? `${item.nearby_facilities[0].title} (${item.nearby_facilities[0].distance})`
-                    : '';
+            <div className="cards-grid-two-col">
+              {paginatedUnits.length > 0 ? (
+                paginatedUnits.map((item, index) => {
+                  const image =
+                    (item.imageURLS && item.imageURLS.length > 0 ? item.imageURLS[0] : null) ||
+                    (item.image_Urls && item.image_Urls.length > 0 ? item.image_Urls[0] : null);
 
                   return (
                     <article key={item.id} className="property-card">
                       <div className="card-image-wrapper">
-                        <img src={firstImage} alt={item.name} />
-                        {item.isVerified && <span className="verified-badge">🛡️ Verified</span>}
+                        {image ? (
+                          <img src={image} alt={item.category} />
+                        ) : (
+                          <div className="placeholder-brand">
+                            <h2>Saka Keja</h2>
+                          </div>
+                        )}
+                        
                       </div>
 
                       <div className="card-body">
                         <div className="card-title-row">
-                          <h3>{item.name}</h3>
+                          <span className="occupancy-tag">
+                            📍 {item.shared ? 'Shared' : 'Private'}
+                          </span>
                           <div className="price-tag">
                             <span className="amount">
-                              {lowestRent > 0 ? `KES ${lowestRent.toLocaleString()}` : 'Contact for Price'}
+                              KSh {Number(item.rent).toLocaleString()}
                             </span>
-                            {lowestRent > 0 && <span className="period">/ month</span>}
+                            <span className="period">/ month</span>
                           </div>
                         </div>
 
-                        <p className="location-text">📍 {item.location} {nearbyNote ? `· ${nearbyNote}` : ''}</p>
+                        <p className="description-text">{item.description}</p>
 
                         <div className="fit-note">
-                          <span>✔️</span>
-                          <p>{item.description}</p>
+                          <span className="check-icon">✔</span>
+                          <p>
+                            Fits your preferences: {item.category} •{' '}
+                            {item.shared ? 'Shared Space' : 'Private Space'}
+                          </p>
                         </div>
 
                         <div className="card-footer">
                           <div className="specs">
-                            <span>🏢 {item.type}</span>
-                            <span>🚪 {item.units ? item.units.length : 0} Units</span>
+                            <span>🛏️ {item.bedrooms || 1} Bedroom</span>
+                            <span>🚿 {item.bathrooms || 1} Bathroom</span>
                           </div>
-                          
-                          {/* DYNAMIC ROUTE NAVIGATION TO APARTMENT UNITS */}
-                          <button 
-                            className="details-btn" 
-                            onClick={() => navigate(`/apartment-details/${item.id}`)}
+
+                          <button
+                            type="button"
+                            className="details-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDetails(item);
+                            }}
                           >
-                            View Units
+                            View Details
                           </button>
                         </div>
                       </div>
@@ -272,40 +332,46 @@ export default function SearchResults() {
                   );
                 })
               ) : (
-                <p className="no-results">No properties match your filter criteria.</p>
+                <p className="no-results">No units match your filter criteria.</p>
               )}
             </div>
           )}
 
-          {/* PAGINATION */}
-          <div className="pagination">
-            <button 
-              className="page-nav" 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              &lt;
-            </button>
-            {[1, 2, 3].map(num => (
-              <button 
-                key={num} 
-                className={`page-num ${currentPage === num ? 'active' : ''}`}
-                onClick={() => setCurrentPage(num)}
+          {/* PAGINATION NUMERIC BAR */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                type="button"
+                className="page-nav"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
               >
-                {num}
+                &lt;
               </button>
-            ))}
-            <button 
-              className="page-nav" 
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, 3))}
-              disabled={currentPage === 3}
-            >
-              &gt;
-            </button>
-          </div>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                <button
+                  type="button"
+                  key={num}
+                  className={`page-num ${currentPage === num ? 'active' : ''}`}
+                  onClick={() => setCurrentPage(num)}
+                >
+                  {num}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="page-nav"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
+            </div>
+          )}
         </main>
       </div>
+
       <Footer />
-    </>
+    </div>
   );
 }

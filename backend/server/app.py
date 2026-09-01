@@ -310,12 +310,66 @@ def update_apartment(id):
         return jsonify({"message": "Failed to update apartment", "error": str(e)}), 400
 
 
-@app.route("/units/<int:id>", methods=["PATCH", "POST"])
-def update_unit(id):
+@app.route("/units/<int:id>", methods=["GET"])
+def get_unit_by_id(id):
+
     unit = Unit.query.get(id)
 
     if not unit:
         return jsonify({"error": "Unit not found"}), 404
+
+    try:
+        return jsonify(UnitSchema().dump(unit)), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
+
+
+@app.route("/units/<int:id>", methods=["PATCH", "PUT", "POST"])
+def update_unit(id):
+
+    unit = Unit.query.get(id)
+
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    new_image_urls = data.pop("imageURLs", None)
+
+    try:
+
+        unit_schema.load(data, instance=unit, partial=True)
+
+        if new_image_urls is not None:
+
+            existing_image_urls = unit.imageURLS or []
+
+            unit.imageURLS = existing_image_urls + new_image_urls
+
+            flag_modified(unit, "imageURLS")
+
+        db.session.commit()
+
+        return (
+            jsonify(
+                {"message": "Unit updated successfully", "data": unit_schema.dump(unit)}
+            ),
+            200,
+        )
+
+    except ValidationError as err:
+
+        return jsonify({"validation_errors": err.messages}), 422
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
@@ -326,7 +380,7 @@ def update_unit(id):
         unit_schema.load(data, instance=unit, partial=True)
         if new_image_urls is not None:
             existing_image_urls = unit.imageURLS or []
-            unit.imageURLs = existing_image_urls + new_image_urls
+            unit.imageURLS = existing_image_urls + new_image_urls
             flag_modified(unit, "imageURLS")
         db.session.commit()
         return (
@@ -344,6 +398,7 @@ def update_unit(id):
 
     except Exception as e:
         db.session.rollback()
+
         return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
 
 
@@ -381,9 +436,8 @@ def get_all_units():
         shared = request.args.get("shared")
         if shared is not None and shared != "":
             query = query.filter(Unit.shared == (shared.lower() == "true"))
-
         max_rent = request.args.get("max_rent")
-        if max_rent:
+        if max_rent and max_rent.isdigit():
             query = query.filter(Unit.rent <= int(max_rent))
 
         bedrooms = request.args.get("bedrooms")
@@ -392,31 +446,19 @@ def get_all_units():
                 query = query.filter(Unit.category.ilike("bedsitter"))
             elif bedrooms == "3+":
                 query = query.filter(Unit.bedrooms >= 3)
-            else:
+            elif bedrooms.isdigit():
                 query = query.filter(Unit.bedrooms == int(bedrooms))
-
-        amenity_names = []
-        if request.args.get("kitchenette") == "true":
-            amenity_names.append("Kitchen")
-        if request.args.get("wardrobe") == "true":
-            amenity_names.append("Wardrobes")
-        if request.args.get("balcony") == "true":
-            amenity_names.append("Balcony")
-
-        for name in amenity_names:
-            query = query.filter(
-                Unit.unit_amenity_links.any(
-                    UnitAmenityJoining.amenity.has(UnitAmenity.name == name)
-                )
-            )
 
         units = query.all()
         return jsonify(UnitSchema(many=True).dump(units)), 200
+
     except Exception as e:
-        return (
-            jsonify({"error": f"Could not retrieve units due to this error: {str(e)}"}),
-            500,
-        )
+
+        import traceback
+
+        traceback.print_exc()
+
+        return jsonify({"error": f"Could not retrieve units: {str(e)}"}), 500
 
 
 # ========================
@@ -443,14 +485,125 @@ def get_student_viewed_units(id):
     viewed_units = (
         db.session.query(Unit)
         .join(StudentUnit)
-        .filter(
-            StudentUnit.student_id == id,
-            StudentUnit.viewed == True
-        )
+        .filter(StudentUnit.student_id == id, StudentUnit.viewed == True)
         .all()
     )
 
     return jsonify(UnitSchema(many=True).dump(viewed_units))
+
+
+@app.route("/units/<int:id>/book", methods=["POST"])
+def book_unit(id):
+    data = request.get_json(silent=True) or {}
+    student_id = data.get("student_id")
+
+    if not student_id:
+        return jsonify({"error": "Student ID is required."}), 400
+
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found."}), 404
+
+    student = Student.query.get(student_id)
+    if not student:
+        return jsonify({"error": "Student not found."}), 404
+
+    existing_booking = StudentUnit.query.filter_by(
+        student_id=student_id, unit_id=id
+    ).first()
+    if existing_booking:
+        return (
+            jsonify(
+                {"error": "You already booked or joined the waitlist for this unit."}
+            ),
+            409,
+        )
+
+    if unit.current_occupants >= unit.maximum_occupants:
+        return (
+            jsonify(
+                {
+                    "error": "This unit is fully occupied. Please join the waiting list instead."
+                }
+            ),
+            409,
+        )
+
+    try:
+        student_unit = StudentUnit(
+            student_id=student_id, unit_id=id, favorite=False, viewed=False
+        )
+        db.session.add(student_unit)
+        unit.current_occupants = (unit.current_occupants or 0) + 1
+        if unit.current_occupants >= unit.maximum_occupants:
+            unit.status = "Occupied"
+        db.session.commit()
+        return (
+            jsonify(
+                {
+                    "message": "Booking successful.",
+                    "student_unit": {
+                        "id": student_unit.id,
+                        "student_id": student_id,
+                        "unit_id": id,
+                    },
+                }
+            ),
+            201,
+        )
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not book this unit: {str(e)}"}), 500
+
+
+@app.route("/units/<int:id>/waitlist", methods=["POST"])
+def join_waitlist(id):
+    data = request.get_json(silent=True) or {}
+    student_id = data.get("student_id")
+
+    if not student_id:
+        return jsonify({"error": "Student ID is required."}), 400
+
+    unit = Unit.query.get(id)
+    if not unit:
+        return jsonify({"error": "Unit not found."}), 404
+
+    student = Student.query.get(student_id)
+    if not student:
+        return jsonify({"error": "Student not found."}), 404
+
+    existing_booking = StudentUnit.query.filter_by(
+        student_id=student_id, unit_id=id
+    ).first()
+    if existing_booking:
+        return (
+            jsonify({"error": "You already joined this unit's waitlist or booked it."}),
+            409,
+        )
+
+    try:
+        student_unit = StudentUnit(
+            student_id=student_id, unit_id=id, favorite=False, viewed=False
+        )
+        db.session.add(student_unit)
+        unit.status = "Waitlist"
+        db.session.commit()
+        return (
+            jsonify(
+                {
+                    "message": "You have been added to the waiting list.",
+                    "student_unit": {
+                        "id": student_unit.id,
+                        "student_id": student_id,
+                        "unit_id": id,
+                    },
+                }
+            ),
+            201,
+        )
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Could not join the waiting list: {str(e)}"}), 500
 
 
 @app.route("/payments", methods=["POST"])
@@ -682,7 +835,6 @@ def mark_unit_view(student_id, unit_id):
     ).first()
 
     if not student_unit:
-
         student_unit = StudentUnit(student_id=student_id, unit_id=unit_id, viewed=True)
 
         db.session.add(student_unit)
@@ -711,7 +863,6 @@ def mark_unit_favorite(student_id, unit_id):
         db.session.add(student_unit)
 
     else:
-
         student_unit.favorite = not student_unit.favorite
 
     db.session.commit()
@@ -719,5 +870,7 @@ def mark_unit_favorite(student_id, unit_id):
     return jsonify({"favorite": student_unit.favorite}), 200
 
 
+if __name__ == "__main__":
+    app.run(debug=True, host="localhost", port=5000)
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)

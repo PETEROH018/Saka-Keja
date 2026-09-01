@@ -93,17 +93,30 @@ export function AuthPage() {
   // }
 
   // Login 
+  async function parseJsonResponse(res) {
+    try {
+      const text = await res.text();
+      if (!text) {
+        return {};
+      }
+      return JSON.parse(text);
+    } catch (error) {
+      console.error("Failed to parse JSON response:", error);
+      return {};
+    }
+  }
+
   async function login(userName, password, userRole) {
     try {
-      const res = await fetch("/login", {
+      const res = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password, userRole }),
       });
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
-        throw new Error("Invalid credentials. Please try again.");
+        throw new Error(data.error || "Invalid credentials. Please try again.");
       }
-      const data = await res.json();
       return data;
     } catch (err) {
       console.error("Student login error:", err);
@@ -149,7 +162,7 @@ export function AuthPage() {
         if (data.user_type === "manager") {
           navigate("/admin-dash");
         } else if (data.user_type === "student") {
-          navigate("/student-dash");
+          navigate("/student-dashboard");
         }
       } catch (err) {
         console.error("Login failed:", err);
@@ -160,16 +173,24 @@ export function AuthPage() {
     const { confirmPassword, ...signUpPayload } = signUpFormData;
     const cleanPhone = signUpFormData.phoneNumber.replace(/\D/g, "");
     const formattedPhone = countryCode + (cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone);
+
+    let location = "Unknown";
+    try {
+      location = await getLocation();
+    } catch (error) {
+      console.warn("Location lookup failed during signup:", error);
+    }
+
     const finalSignUpPayload = {
       ...signUpPayload,
       fullName: signUpFormData.fullName.trim(),
       username: signUpFormData.username.trim(),
       phoneNumber: formattedPhone,
       userRole: signUpFormData.userRole,
-      location: await getLocation(),
+      location,
     };
 
-    const endpoint = signUpFormData.userRole === "manager" ? "/owners" : "/students";
+    const endpoint = signUpFormData.userRole === "manager" ? "http://localhost:5000/owners" : "http://localhost:5000/students";
 
     try {
       const res = await fetch(endpoint, {
@@ -178,7 +199,7 @@ export function AuthPage() {
         body: JSON.stringify(finalSignUpPayload),
       });
 
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
