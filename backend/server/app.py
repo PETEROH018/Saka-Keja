@@ -19,8 +19,8 @@ from models import (
 from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
-from models.StudentUnit import StudentUnit
-from models.Student import Student
+import re
+import traceback
 
 
 def create_auth_token(user_id, user_type, username, profile):
@@ -81,6 +81,7 @@ def require_authentication():
 apartment_schema = ApartmentSchema(session=db.session)
 unit_schema = UnitSchema(session=db.session)
 apartment_owner_schema = ApartmentOwnerSchema()
+student_schema = StudentSchema()
 apartment_amenities_schema = ApartmentAmenitySchema(session=db.session)
 apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema(session=db.session)
 # nearby_facilities_schema = NearbyFacilitySchema(session=db.session)
@@ -254,7 +255,6 @@ def add_apartment_owner():
         )
 
 
-# get/aparments for a particular owner
 @app.route("/owners/<int:id>/aparments")
 def get_owner_aparments(id):
     apartments = Apartment.query.filter_by(owner_id=id).all()
@@ -363,11 +363,14 @@ def get_apartment_units(id):
         )
 
 
-@app.route('/owners/<int:id>', methods=['PATCH','PUT'])
+@app.route('/owners/<int:id>', methods=['GET', 'PATCH', 'PUT'])
 def update_owner(id):
     owner = ApartmentOwner.query.get(id)
     if not owner:
         return jsonify({"error": "Apartment owner not found"}), 404
+
+    if request.method == 'GET':
+        return jsonify(apartment_owner_schema.dump(owner)), 200
 
     data = request.get_json()
     if not data:
@@ -401,6 +404,9 @@ def update_owner(id):
             500,
         )
 
+@app.route('/managers/<int:id>', methods=['GET', 'PATCH', 'PUT'])
+def update_manager_alias(id):
+    return update_owner(id)
 
 @app.route("/apartments/<int:id>", methods=["PATCH", "PUT"])
 def update_apartment(id):
@@ -453,8 +459,7 @@ def get_unit_by_id(id):
     except Exception as e:
         return jsonify({"error": f"Could not retrieve unit: {str(e)}"}), 500
 
-
-@app.route("/units/<int:id>", methods=["PATCH", "PUT", "POST"])
+@app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
 def update_unit(id):
 
     unit = Unit.query.get(id)
@@ -564,17 +569,14 @@ def get_all_units():
 # STUDENT ENDPOINTS
 # ========================
 
-
 @app.route("/students/<int:id>/favorites", methods=["GET"])
 def get_student_favorite_units(id):
-
     favorite_units = (
         db.session.query(Unit)
         .join(StudentUnit)
         .filter(StudentUnit.student_id == id, StudentUnit.favorite == True)
         .all()
     )
-
     return jsonify(UnitSchema(many=True).dump(favorite_units))
 
 
@@ -705,16 +707,58 @@ def join_waitlist(id):
         return jsonify({"error": f"Could not join the waiting list: {str(e)}"}), 500
 
 
+@app.route('/students/<int:id>', methods=['GET', 'PATCH', 'PUT'])
+def update_student(id):
+    student = Student.query.get(id)
+    if not student:
+        return jsonify({"error": "Student not found"}), 404
+
+    if request.method == 'GET':
+        return jsonify(student_schema.dump(student)), 200
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    cleaned_data = {}
+    for k, v in data.items():
+        if v == "":
+            cleaned_data[k] = None
+        elif k in ["year_of_study", "graduation_year"] and v is not None:
+            match = re.search(r'\d+', str(v))
+            cleaned_data[k] = int(match.group()) if match else v
+        else:
+            cleaned_data[k] = v
+
+    try:
+        schema = StudentSchema(partial=True)
+        validated_student_data = schema.load(cleaned_data)
+
+        for key, value in validated_student_data.items():
+            setattr(student, key, value)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Student details updated successfully",
+            "student": schema.dump(student)
+        }), 200
+
+    except ValidationError as err:
+        return jsonify({"validation_errors": err.messages}), 422
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
+
+
 @app.route("/payments", methods=["POST"])
 def add_payment():
-
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     required_fields = ["student_unit_id", "amount", "payment_method"]
-
     missing_fields = [field for field in required_fields if field not in data]
 
     if missing_fields:
@@ -739,9 +783,7 @@ def add_payment():
         )
 
         db.session.add(new_payment)
-
         student_unit.deposit_paid += data["amount"]
-
         db.session.commit()
 
         return (
@@ -763,18 +805,15 @@ def add_payment():
 
     except IntegrityError:
         db.session.rollback()
-
         return jsonify({"error": "Transaction reference already exists"}), 400
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create payment: {str(e)}"}), 500
 
 
 @app.route("/students", methods=["POST"])
 def add_student():
-
     data = request.get_json()
 
     if not data:
@@ -815,7 +854,6 @@ def add_student():
             username=username,
         )
 
-        # Automatically hashes password using Student model setter
         new_student.password_hash = data["password"]
 
         db.session.add(new_student)
@@ -846,13 +884,11 @@ def add_student():
         )
 
     except IntegrityError:
-        db.session.rollback()
-
+        db.system.rollback() if hasattr(db, 'system') else db.session.rollback()
         return jsonify({"error": "Student already exists"}), 409
 
     except Exception as e:
         db.session.rollback()
-
         return jsonify({"error": f"Could not create student: {str(e)}"}), 500
 
 
@@ -935,6 +971,20 @@ def student_login():
         return jsonify({"error": f"Login failed: {str(e)}"}), 500
 
 
+@app.errorhandler(Exception)
+def handle_global_exception(e):
+    if hasattr(e, "code") and isinstance(e.code, int):
+        return jsonify({"error": getattr(e, "description", "HTTP Error")}), e.code
+    
+    db.session.rollback()
+    traceback.print_exc()
+    
+    return jsonify({
+        "error": "An internal server error occurred",
+        "exception_type": type(e).__name__,
+        "details": str(e)
+    }), 500
+  
 @app.route("/students/<int:id>/stats", methods=["GET"])
 def student_stats(id):
     current_user, auth_error = require_authentication()
