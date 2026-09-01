@@ -121,3 +121,109 @@ export default function PaymentPopup({
   };
 
   const formattedAmount = Number(amount || 0).toLocaleString();
+
+  return (
+    <div className="payment-overlay" onMouseDown={(e) => e.target === e.currentTarget && !loading && handleClose()}>
+      <div className="payment-modal" role="dialog" aria-modal="true">
+        <button type="button" className="payment-close" onClick={handleClose} disabled={loading}>×</button>
+
+        {success ? (
+          <div className="payment-success">
+            <div className="success-icon">✓</div>
+            <h2>Booking Secured!</h2>
+            {unitName && <p className="font-semibold text-gray-700">{unitName}</p>}
+            <p>Your deposit payment was successful. Unit availability has been updated.</p>
+            <button type="button" className="payment-button" onClick={handleClose}>Done</button>
+          </div>
+        ) : (
+          <>
+            <div className="payment-header">
+              <h2>Secure Your Booking</h2>
+              {unitName && <p className="font-semibold text-gray-700">{unitName}</p>}
+              <p>Pay your deposit of KES {formattedAmount} to reserve this unit.</p>
+            </div>
+
+            {/* Payment Method Selector */}
+            <div className="method-toggle">
+              <button
+                type="button"
+                className={`toggle-btn ${method === "mpesa" ? "active" : ""}`}
+                onClick={() => { setMethod("mpesa"); setError(""); }}
+              >
+                💚 M-Pesa
+              </button>
+              <button
+                type="button"
+                className={`toggle-btn ${method === "card" ? "active" : ""}`}
+                onClick={() => { setMethod("card"); setError(""); }}
+              >
+                💳 Credit/Debit Card
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              {method === "mpesa" ? (
+                <div className="payment-field">
+                  <label htmlFor="phone">M-Pesa Phone Number</label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    placeholder="0712 345 678"
+                    value={formatPhone(phone)}
+                    onChange={(e) => {
+                      setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                      setError("");
+                    }}
+                    disabled={loading}
+                  />
+                </div>
+              ) : (
+                <div className="card-fields">
+                  <div className="payment-field">
+                    <label>Card Number</label>
+                    <input
+                      type="text"
+                      placeholder="4532 1122 3344 5566"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                  <div className="card-inline-fields">
+                    <div className="payment-field">
+                      <label>Expiry (MM/YY)</label>
+                      <input
+                        type="text"
+                        placeholder="12/28"
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                        disabled={loading}
+                      />
+                    </div>
+                    <div className="payment-field">
+                      <label>CVC</label>
+                      <input
+                        type="text"
+                        placeholder="123"
+                        maxLength="4"
+                        value={cardCvc}
+                        onChange={(e) => setCardCvc(e.target.value)}
+                        disabled={loading}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {error && <p className="payment-error">{error}</p>}
+
+              <button type="submit" className="payment-button" disabled={loading}>
+                {loading ? "Processing Payment..." : `Pay KES ${formattedAmount}`}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
