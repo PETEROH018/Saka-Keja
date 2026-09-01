@@ -152,13 +152,21 @@ export default function UnitDetails() {
     setBookingMessage('Booking successful! Your deposit payment was recorded.');
   };
 
+// Dynamic Status Calculation Helper
 const getUnitStatus = (unitObj) => {
   if (!unitObj) return 'Vacant';
+
   const occupants = Number(unitObj.current_occupants || 0);
   const maxCapacity = Number(unitObj.maximum_occupants || 1);
 
-  if (occupants >= maxCapacity) return 'Occupied';
-  if (unitObj.shared && occupants > 0 && occupants < maxCapacity) return 'Partially Occupied';
+  if (occupants >= maxCapacity) {
+    return 'Occupied';
+  }
+  
+  if (occupants > 0 && maxCapacity > 1) {
+    return 'Partially Occupied';
+  }
+
   return 'Vacant';
 };
 
@@ -168,7 +176,7 @@ const getStatusClass = (statusStr = '') => {
   const statusLower = statusStr.toLowerCase();
   if (statusLower.includes('partially')) return 'status-orange';
   if (statusLower.includes('occupied')) return 'status-red';
-  return 'status-green'; // Vacant / Available
+  return 'status-green';
 };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;

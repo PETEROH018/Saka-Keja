@@ -1135,19 +1135,20 @@ def process_booking_payment():
         )
         db.session.add(payment)
 
-        # 3. Calculate New Occupancy & Status
+        # 3. Increment Occupancy
         new_occupants = (unit.current_occupants or 0) + 1
         unit.current_occupants = new_occupants
 
-        # Status Logic
-        if new_occupants >= unit.maximum_occupants:
+        max_capacity = unit.maximum_occupants or 1
+
+        # Strict Status Assignment
+        if new_occupants >= max_capacity:
             unit.status = "Occupied"
-        elif unit.shared and 0 < new_occupants < unit.maximum_occupants:
+        elif new_occupants > 0 and max_capacity > 1:
             unit.status = "Partially Occupied"
-        elif new_occupants == 0:
-            unit.status = "Vacant"
+            unit.shared = True  # Ensure shared flag is synced
         else:
-            unit.status = "Occupied" if not unit.shared else "Partially Occupied"
+            unit.status = "Vacant"
 
         db.session.commit()
 
@@ -1160,7 +1161,6 @@ def process_booking_payment():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
-
     
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
