@@ -9,3 +9,4 @@ marshmallow
 marshmallow-sqlalchemy
 psycopg2-binary
 flask_bcrypt
+PyJWT
