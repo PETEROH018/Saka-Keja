@@ -1,3 +1,6 @@
+import jwt
+from datetime import datetime, timedelta, timezone
+
 from configs import *
 from schema import *
 from models import (
@@ -18,6 +21,62 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
 from models.StudentUnit import StudentUnit
 from models.Student import Student
+
+
+def create_auth_token(user_id, user_type, username, profile):
+    issued_at = datetime.now(timezone.utc)
+    payload = {
+        "user_id": user_id,
+        "user_type": user_type,
+        "username": username,
+        "profile": profile,
+        "iat": issued_at,
+        "exp": issued_at + timedelta(hours=24),
+    }
+    return jwt.encode(
+        payload,
+        app.config["SECRET_KEY"],
+        algorithm=app.config["JWT_ALGORITHM"],
+    )
+
+
+def get_bearer_token():
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        return None
+    return auth_header.split(" ", 1)[1].strip()
+
+
+def get_current_user():
+    token = get_bearer_token()
+    if not token:
+        return None
+
+    try:
+        payload = jwt.decode(
+            token,
+            app.config["SECRET_KEY"],
+            algorithms=[app.config["JWT_ALGORITHM"]],
+        )
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
+
+    user_id = payload.get("user_id")
+    user_type = payload.get("user_type")
+
+    if user_type == "student":
+        return Student.query.get(user_id)
+    if user_type == "manager":
+        return ApartmentOwner.query.get(user_id)
+
+    return None
+
+
+def require_authentication():
+    current_user = get_current_user()
+    if not current_user:
+        return None, (jsonify({"error": "Authentication required"}), 401)
+    return current_user, None
 
 apartment_schema = ApartmentSchema(session=db.session)
 unit_schema = UnitSchema(session=db.session)
@@ -156,12 +215,20 @@ def add_apartment_owner():
 
         db.session.add(new_apartment_owner)
         db.session.commit()
+        token = create_auth_token(
+            new_apartment_owner.id,
+            "manager",
+            new_apartment_owner.username,
+            "owner",
+        )
+
         return (
             jsonify(
                 {
                     "user_type": "manager",
                     "message": "Manager created successfully",
-                    "token": {
+                    "token": token,
+                    "user": {
                         "id": new_apartment_owner.id,
                         "name": new_apartment_owner.username,
                         "role": "owner",
@@ -296,16 +363,6 @@ def get_apartment_units(id):
         )
 
 
-@app.route("/units/<int:id>", methods=['GET'])
-def get_unit_by_id(id):
-    unit = Unit.query.get(id)
-    if not unit:
-        return jsonify({"error": "Unit not found"}), 404
-    try:
-        return jsonify(UnitSchema().dump(unit)), 200
-    except Exception as e:
-        return jsonify({"error": f"Could not retrieve unit due to this error: {str(e)}"}), 500
-
 @app.route('/owners/<int:id>', methods=['PATCH','PUT'])
 def update_owner(id):
     owner = ApartmentOwner.query.get(id)
@@ -439,36 +496,6 @@ def update_unit(id):
 
     except Exception as e:
 
-        db.session.rollback()
-
-        return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
-
-    new_image_urls = data.pop("imageURLs", None)
-
-    try:
-        unit_schema.load(data, instance=unit, partial=True)
-        if new_image_urls is not None:
-            existing_image_urls = unit.imageURLS or []
-            unit.imageURLS = existing_image_urls + new_image_urls
-            flag_modified(unit, "imageURLS")
-        db.session.commit()
-        return (
-            jsonify(
-                {
-                    "message": "Unit updated successfully",
-                    "data": apartment_schema.dump(unit),
-                }
-            ),
-            200,
-        )
-
-    except ValidationError as err:
-        return jsonify({"validation_errors": err.messages}), 422
-
-    except Exception as e:
         db.session.rollback()
 
         return jsonify({"message": "Failed to update unit", "error": str(e)}), 400
@@ -794,12 +821,20 @@ def add_student():
         db.session.add(new_student)
         db.session.commit()
 
+        token = create_auth_token(
+            new_student.id,
+            "student",
+            new_student.username,
+            "student",
+        )
+
         return (
             jsonify(
                 {
                     "user_type": "student",
                     "message": "Student created successfully",
-                    "token": {
+                    "token": token,
+                    "user": {
                         "id": new_student.id,
                         "name": new_student.username,
                         "role": "student",
@@ -843,11 +878,19 @@ def student_login():
             if not student.authenticate(password):
                 return jsonify({"error": "Invalid credentials"}), 401
 
+            token = create_auth_token(
+                student.id,
+                "student",
+                student.username,
+                "student",
+            )
+
             return (
                 jsonify(
                     {
                         "user_type": "student",
-                        "token": {
+                        "token": token,
+                        "user": {
                             "id": student.id,
                             "name": student.username,
                             "role": "student",
@@ -865,11 +908,19 @@ def student_login():
         if not owner.authenticate(password):
             return jsonify({"error": "Invalid credentials"}), 401
 
+        token = create_auth_token(
+            owner.id,
+            "manager",
+            owner.username,
+            "owner",
+        )
+
         return (
             jsonify(
                 {
                     "user_type": "manager",
-                    "token": {
+                    "token": token,
+                    "user": {
                         "id": owner.id,
                         "name": owner.username,
                         "role": "owner",
@@ -886,14 +937,18 @@ def student_login():
 
 @app.route("/students/<int:id>/stats", methods=["GET"])
 def student_stats(id):
+    current_user, auth_error = require_authentication()
+    if auth_error:
+        return auth_error
 
     student = Student.query.get(id)
-
     if not student:
         return jsonify({"error": "Student not found"}), 404
 
-    viewed = StudentUnit.query.filter_by(student_id=id, viewed=True).count()
+    if current_user.id != id:
+        return jsonify({"error": "You are not allowed to access this student's stats"}), 403
 
+    viewed = StudentUnit.query.filter_by(student_id=id, viewed=True).count()
     favorites = StudentUnit.query.filter_by(student_id=id, favorite=True).count()
 
     return jsonify({"totalViewed": viewed, "savedProperties": favorites})
