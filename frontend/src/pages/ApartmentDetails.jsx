@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
+import { useParams } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
+
 
 // This function is used to render the different icons that show an apartment's specifications
 const IconRender = ({ type }) => {
@@ -52,9 +55,11 @@ export default function ApartmentDetails(){
     const [isLoading, setIsLoading] = useState(true)
     const [apartment,setApartment] = useState({})
     const [isFavorited, setIsFavorited] = useState(false);
+    const params = useParams();
+    const apartmentId = params.id
   
     useEffect(()=>{
-        fetch("http://localhost:3000/apartments/1")
+        fetch(`${API_BASE_URL}/apartments/${apartmentId}`)
         .then(response=> response.json())
         .then(data => {
             setApartment(data)
@@ -88,7 +93,7 @@ export default function ApartmentDetails(){
 
         <main className="max-w-7xl mx-auto px-4 py-6">
         <section className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 mb-4">
-          {apartment.image_Urls.slice(0, 5).map((url, index) => (
+          {apartment.imageURLs.slice(0, 5).map((url, index) => (
             <div
               key={index}
               className={`aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 relative group cursor-pointer 
@@ -134,29 +139,29 @@ export default function ApartmentDetails(){
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"sofa"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">furnished</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment.furnished ? 'YES' : 'NO'}</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.amenity_links?.some((link) => link.amenity?.name === "Furnished") ? 'YES' : 'NO'}</span>
                 </div>
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"wifi"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">WiFi Included</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment['Wifi included'] ? 'YES' : 'NO'}</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.amenity_links?.some((link) => link.amenity?.name === "WiFi Available") ? 'YES' : 'NO'}</span>
                 </div>
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"water"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">Reliable Water</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment['Water reliable'] ? 'YES' : 'NO'}</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.amenity_links?.some((link) => link.amenity?.name === "Water Reliable") ? 'YES' : 'NO'}</span>
                 </div>
                 <div className="bg-white border border-gray-200/80 p-3.5 rounded-xl flex flex-col items-center justify-center text-center shadow-xs">
                   <IconRender type={"security"} />
                   <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider block mb-0.5">Security Guard</span>
-                  <span className="text-sm font-bold text-gray-800">{apartment['Security Guard'] ? 'YES' : 'NO'}</span>
+                  <span className="text-sm font-bold text-gray-800">{apartment.amenity_links?.some((link) => link.amenity?.name === "Security Guard") ? 'YES' : 'NO'}</span>
                 </div>
             </div>
 
             <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
               <h3 className="text-lg font-bold text-gray-900 mb-5">What's nearby?</h3>
               <div className="space-y-4">
-                {apartment['nearby amenities'].map((place, idx) => (
+                {apartment['nearby_facilities'].map((place, idx) => (
                   <div key={idx} className="flex items-start gap-3.5 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
                     <div className="bg-gray-100/70 p-2.5 rounded-xl border border-gray-100/70">
                       <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -173,8 +178,9 @@ export default function ApartmentDetails(){
               </div>
             </div>
             </div>
+
             <aside className="sticky top-24 space-y-4">
-            <div className="bg-white border-2 border-purple-600 rounded-3xl p-6 shadow-lg shadow-purple-500/5">
+            {/* <div className="bg-white border-2 border-purple-600 rounded-3xl p-6 shadow-lg shadow-purple-500/5">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Rent per month</span>
                 <span className="text-3xl font-black text-gray-950">Ksh {apartment['monthly-expense-breakdown'].rent}</span>
@@ -212,7 +218,7 @@ export default function ApartmentDetails(){
               >
                Contact Owner
               </button>
-            </div>
+            </div> */}
 
              <button 
               onClick={() => setIsFavorited(!isFavorited)}
