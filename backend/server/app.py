@@ -10,6 +10,7 @@ unit_schema = UnitSchema(session=db.session)
 apartment_owner_schema = ApartmentOwnerSchema()
 apartment_amenities_schema = ApartmentAmenitySchema(session=db.session)
 apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema(session=db.session)
+# nearby_facilities_schema = NearbyFacilitySchema(session=db.session)
 
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
@@ -32,6 +33,10 @@ def add_apartment():
         new_apartment = apartment_schema.load(new_apartment_details)
         db.session.add(new_apartment)
         db.session.flush()
+        
+        # new_nearby_facilities = nearby_facilities_schema.load(data.get('socialAmenities'), many=True)
+        # db.session.add_all(new_nearby_facilities)
+        # db.session.flush()
 
         # Adding the new amenities added by a user to the apartment amenities table
         added_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
