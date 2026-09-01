@@ -1,15 +1,24 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PaymentPopup.css";
 
-function formatPhone(value) {
-  const digits = value.replace(/\D/g, "").slice(0, 10);
+function formatNineDigits(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 9);
   if (digits.length <= 3) return digits;
   if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
   return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
 }
 
-function isValidKenyanPhone(phone) {
-  return /^(07|01)\d{8}$/.test(phone);
+function formatCardNumber(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 16);
+  return digits.replace(/(.{4})/g, "$1 ").trim();
+}
+
+function formatExpiry(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+  if (digits.length >= 3) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+  return digits;
 }
 
 export default function PaymentPopup({
@@ -19,11 +28,12 @@ export default function PaymentPopup({
   onPaymentRequest,
   unitName = "",
 }) {
-  const [method, setMethod] = useState("mpesa"); // 'mpesa' or 'card'
-  const [phone, setPhone] = useState("");
+  const [method, setMethod] = useState("mpesa");
+  const [phoneDigits, setPhoneDigits] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvc, setCardCvc] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -48,10 +58,11 @@ export default function PaymentPopup({
 
   const resetForm = () => {
     setMethod("mpesa");
-    setPhone("");
+    setPhoneDigits("");
     setCardNumber("");
     setCardExpiry("");
     setCardCvc("");
+    setCardHolder("");
     setError("");
     setLoading(false);
     setSuccess(false);
@@ -65,55 +76,67 @@ export default function PaymentPopup({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (method === "mpesa") {
-      const cleanPhone = phone.replace(/\D/g, "");
-      if (!cleanPhone) {
-        setError("Enter your M-Pesa phone number.");
+      const cleanDigits = phoneDigits.replace(/\D/g, "");
+      if (cleanDigits.length !== 9) {
+        setError("Enter a valid 9-digit number (e.g., 712345678).");
         return;
       }
-      if (!isValidKenyanPhone(cleanPhone)) {
-        setError("Enter a valid Kenyan number starting with 07 or 01.");
+      if (!/^[71]/.test(cleanDigits)) {
+        setError("Number must start with 7 or 1.");
         return;
       }
     } else {
-      if (cardNumber.replace(/\s/g, "").length < 16) {
-        setError("Enter a valid 16-digit card number.");
+      const cleanCard = cardNumber.replace(/\s/g, "");
+      if (cleanCard.length !== 16) {
+        setError("Card number must be 16 digits.");
         return;
       }
-      if (!cardExpiry.includes("/")) {
-        setError("Enter a valid MM/YY expiration date.");
+      if (!cardHolder.trim()) {
+        setError("Enter the cardholder's name.");
         return;
       }
-      if (cardCvc.length < 3) {
-        setError("Enter a valid 3-digit CVC.");
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry)) {
+        setError("Enter expiry as MM/YY.");
+        return;
+      }
+      if (cardCvc.replace(/\D/g, "").length < 3) {
+        setError("CVC must be 3 or 4 digits.");
         return;
       }
     }
 
     if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) {
-      setError("Invalid payment amount.");
+      setError("Invalid deposit amount.");
       return;
     }
 
-    setError("");
     setLoading(true);
 
     try {
-      const cleanPhone = phone.replace(/\D/g, "");
-      const formattedPhone = cleanPhone ? `254${cleanPhone.slice(1)}` : "";
+      const formattedPhone = method === "mpesa" ? `254${phoneDigits}` : "";
 
       if (onPaymentRequest) {
         await onPaymentRequest({
           amount: Number(amount),
           payment_method: method,
           phone: formattedPhone,
-          card_details: method === "card" ? { cardNumber, cardExpiry, cardCvc } : null,
+          card_details:
+            method === "card"
+              ? {
+                  number: cardNumber.replace(/\s/g, ""),
+                  expiry: cardExpiry,
+                  cvc: cardCvc,
+                  holder: cardHolder,
+                }
+              : null,
         });
       }
       setSuccess(true);
     } catch (err) {
-      console.error("Payment error:", err);
+      console.error("Payment Error:", err);
       setError(err instanceof Error ? err.message : "Payment processing failed.");
     } finally {
       setLoading(false);
@@ -123,91 +146,144 @@ export default function PaymentPopup({
   const formattedAmount = Number(amount || 0).toLocaleString();
 
   return (
-    <div className="payment-overlay" onMouseDown={(e) => e.target === e.currentTarget && !loading && handleClose()}>
-      <div className="payment-modal" role="dialog" aria-modal="true">
-        <button type="button" className="payment-close" onClick={handleClose} disabled={loading}>×</button>
+    <div
+      className="payment-overlay"
+      onMouseDown={(e) => e.target === e.currentTarget && !loading && handleClose()}
+    >
+      <div className="payment-modal">
+        <button
+          type="button"
+          className="payment-close"
+          onClick={handleClose}
+          disabled={loading}
+          aria-label="Close"
+        >
+          ✕
+        </button>
 
         {success ? (
           <div className="payment-success">
-            <div className="success-icon">✓</div>
-            <h2>Booking Secured!</h2>
-            {unitName && <p className="font-semibold text-gray-700">{unitName}</p>}
-            <p>Your deposit payment was successful. Unit availability has been updated.</p>
-            <button type="button" className="payment-button" onClick={handleClose}>Done</button>
+            <div className="success-badge">✓</div>
+            <h2>Deposit Confirmed</h2>
+            {unitName && <p className="unit-subtitle">{unitName}</p>}
+            <p className="success-desc">
+              Your deposit of <strong>KES {formattedAmount}</strong> has been received and your booking is complete.
+            </p>
+            <button type="button" className="action-btn-success" onClick={handleClose}>
+              Done
+            </button>
           </div>
         ) : (
           <>
             <div className="payment-header">
-              <h2>Secure Your Booking</h2>
-              {unitName && <p className="font-semibold text-gray-700">{unitName}</p>}
-              <p>Pay your deposit of KES {formattedAmount} to reserve this unit.</p>
+              <h2>Secure Deposit</h2>
+              <div className="amount-badge">KES {formattedAmount}</div>
+              {unitName && <p className="unit-subtitle">{unitName}</p>}
             </div>
 
-            {/* Payment Method Selector */}
-            <div className="method-toggle">
+            {/* METHOD TOGGLE */}
+            <div className="method-tabs">
               <button
                 type="button"
-                className={`toggle-btn ${method === "mpesa" ? "active" : ""}`}
-                onClick={() => { setMethod("mpesa"); setError(""); }}
+                className={`tab-btn ${method === "mpesa" ? "active-mpesa" : ""}`}
+                onClick={() => {
+                  setMethod("mpesa");
+                  setError("");
+                }}
               >
-                💚 M-Pesa
+                M-Pesa Express
               </button>
               <button
                 type="button"
-                className={`toggle-btn ${method === "card" ? "active" : ""}`}
-                onClick={() => { setMethod("card"); setError(""); }}
+                className={`tab-btn ${method === "card" ? "active-card" : ""}`}
+                onClick={() => {
+                  setMethod("card");
+                  setError("");
+                }}
               >
-                💳 Credit/Debit Card
+                Card Payment
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               {method === "mpesa" ? (
-                <div className="payment-field">
-                  <label htmlFor="phone">M-Pesa Phone Number</label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    placeholder="0712 345 678"
-                    value={formatPhone(phone)}
-                    onChange={(e) => {
-                      setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
-                      setError("");
-                    }}
-                    disabled={loading}
-                  />
+                /* M-PESA FORM */
+                <div className="form-section">
+                  <div className="payment-field">
+                    <label htmlFor="phone">M-Pesa Phone Number</label>
+                    <div className="phone-group">
+                      <span className="prefix">+254</span>
+                      <input
+                        id="phone"
+                        type="tel"
+                        placeholder="712 345 678"
+                        value={formatNineDigits(phoneDigits)}
+                        onChange={(e) => {
+                          setPhoneDigits(e.target.value.replace(/\D/g, "").slice(0, 9));
+                          setError("");
+                        }}
+                        disabled={loading}
+                        autoFocus
+                      />
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="card-fields">
+                /* CARD FORM */
+                <div className="form-section">
+                  <div className="payment-field">
+                    <label>Cardholder Name</label>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      value={cardHolder}
+                      onChange={(e) => {
+                        setCardHolder(e.target.value);
+                        setError("");
+                      }}
+                      disabled={loading}
+                    />
+                  </div>
+
                   <div className="payment-field">
                     <label>Card Number</label>
                     <input
                       type="text"
                       placeholder="4532 1122 3344 5566"
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
+                      value={formatCardNumber(cardNumber)}
+                      onChange={(e) => {
+                        setCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16));
+                        setError("");
+                      }}
                       disabled={loading}
                     />
                   </div>
-                  <div className="card-inline-fields">
+
+                  <div className="form-row">
                     <div className="payment-field">
-                      <label>Expiry (MM/YY)</label>
+                      <label>Expiry Date</label>
                       <input
                         type="text"
-                        placeholder="12/28"
-                        value={cardExpiry}
-                        onChange={(e) => setCardExpiry(e.target.value)}
+                        placeholder="MM/YY"
+                        value={formatExpiry(cardExpiry)}
+                        onChange={(e) => {
+                          setCardExpiry(e.target.value);
+                          setError("");
+                        }}
                         disabled={loading}
                       />
                     </div>
                     <div className="payment-field">
                       <label>CVC</label>
                       <input
-                        type="text"
+                        type="password"
                         placeholder="123"
                         maxLength="4"
                         value={cardCvc}
-                        onChange={(e) => setCardCvc(e.target.value)}
+                        onChange={(e) => {
+                          setCardCvc(e.target.value.replace(/\D/g, "").slice(0, 4));
+                          setError("");
+                        }}
                         disabled={loading}
                       />
                     </div>
@@ -215,10 +291,14 @@ export default function PaymentPopup({
                 </div>
               )}
 
-              {error && <p className="payment-error">{error}</p>}
+              {error && <div className="error-message">{error}</div>}
 
-              <button type="submit" className="payment-button" disabled={loading}>
-                {loading ? "Processing Payment..." : `Pay KES ${formattedAmount}`}
+              <button
+                type="submit"
+                className={`submit-btn ${method === "mpesa" ? "submit-mpesa" : "submit-card"}`}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : `Pay KES ${formattedAmount}`}
               </button>
             </form>
           </>
