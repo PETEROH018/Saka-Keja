@@ -376,9 +376,9 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                       </label>
 
                       <input
-                        value={amenity.distance}
+                        value={amenity.description}
                         onChange={(e) =>
-                          handleSocialAmenityChange(
+                          handleApartmentAmenityChange(
                             index,
                             "description",
                             e.target.value
