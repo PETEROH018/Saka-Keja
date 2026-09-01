@@ -56,3 +56,68 @@ export default function PaymentPopup({
     setLoading(false);
     setSuccess(false);
   };
+
+  const handleClose = () => {
+    if (loading) return;
+    resetForm();
+    onClose();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (method === "mpesa") {
+      const cleanPhone = phone.replace(/\D/g, "");
+      if (!cleanPhone) {
+        setError("Enter your M-Pesa phone number.");
+        return;
+      }
+      if (!isValidKenyanPhone(cleanPhone)) {
+        setError("Enter a valid Kenyan number starting with 07 or 01.");
+        return;
+      }
+    } else {
+      if (cardNumber.replace(/\s/g, "").length < 16) {
+        setError("Enter a valid 16-digit card number.");
+        return;
+      }
+      if (!cardExpiry.includes("/")) {
+        setError("Enter a valid MM/YY expiration date.");
+        return;
+      }
+      if (cardCvc.length < 3) {
+        setError("Enter a valid 3-digit CVC.");
+        return;
+      }
+    }
+
+    if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) {
+      setError("Invalid payment amount.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const cleanPhone = phone.replace(/\D/g, "");
+      const formattedPhone = cleanPhone ? `254${cleanPhone.slice(1)}` : "";
+
+      if (onPaymentRequest) {
+        await onPaymentRequest({
+          amount: Number(amount),
+          payment_method: method,
+          phone: formattedPhone,
+          card_details: method === "card" ? { cardNumber, cardExpiry, cardCvc } : null,
+        });
+      }
+      setSuccess(true);
+    } catch (err) {
+      console.error("Payment error:", err);
+      setError(err instanceof Error ? err.message : "Payment processing failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formattedAmount = Number(amount || 0).toLocaleString();
