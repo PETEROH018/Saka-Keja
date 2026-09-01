@@ -1,7 +1,43 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function ManagerProfile() {
+export default function ManagerProfile({ managerId = 1 }) {
+  const location = useLocation();
+  const [manager, setManager] = useState(location.state?.updatedManager || null);
+  const [loading, setLoading] = useState(!location.state?.updatedManager);
+
+  useEffect(() => {
+    if (!location.state?.updatedManager) {
+      fetch(`http://localhost:5000/managers/${managerId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const ownerData = data.owner || data;
+          setManager(ownerData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching manager profile:", err);
+          setLoading(false);
+        });
+    }
+  }, [managerId, location.state]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex font-sans items-center justify-center">
+        <p className="text-sm text-gray-500 font-medium">Loading profile...</p>
+      </div>
+    );
+  }
+
+  const profile = manager || {
+    full_name: 'David Kamau',
+    username: 'davidkamau',
+    email: 'david.kamau@makazi.co.ke',
+    phone_number: '+254 712 345 678',
+    location: 'Nairobi, Kenya'
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans">
       {/* Sidebar Navigation */}
@@ -14,7 +50,7 @@ export default function ManagerProfile() {
               <img src="https://via.placeholder.com/150" alt="Manager" className="w-full h-full object-cover" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-800">Property Manager</p>
+              <p className="text-xs font-semibold text-gray-800">{profile.full_name || 'Property Manager'}</p>
               <span className="text-[10px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded">Verified Owner</span>
             </div>
           </div>
@@ -25,7 +61,7 @@ export default function ManagerProfile() {
             <Link to="/add-apartment" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Add Property</Link>
             <a href="#" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Inquiries</a>
             <a href="#" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Messages</a>
-            <Link to="/manager-profile" className="flex items-center px-3 py-2.5 rounded-md bg-indigo-900 text-white shadow-sm">Profile</Link>
+            <Link to="/ManagerEditProfile" className="flex items-center px-3 py-2.5 rounded-md bg-indigo-900 text-white shadow-sm">Profile</Link>
           </nav>
         </div>
 
@@ -44,24 +80,26 @@ export default function ManagerProfile() {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex justify-between items-center">
             <div className="flex items-center space-x-6">
               <div className="w-20 h-20 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                <img src="https://via.placeholder.com/150" alt="David Kamau" className="w-full h-full object-cover" />
+                <img src="https://via.placeholder.com/150" alt={profile.full_name} className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-2xl font-bold text-gray-900">David Kamau</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{profile.full_name}</h2>
                 </div>
                 <p className="text-xs text-emerald-600 font-medium flex items-center space-x-1 mt-0.5">
                   <span>✔ Verified Property Owner</span>
                 </p>
-                <p className="text-xs text-gray-500 mt-2 max-w-xl leading-relaxed">
-                  Experienced property manager dedicated to providing safe, comfortable, and affordable student housing around major universities in Nairobi.
-                </p>
+                <div className="text-xs text-gray-500 mt-2 space-y-1">
+                  <p><span className="font-semibold text-gray-700">Email:</span> {profile.email || 'N/A'}</p>
+                  <p><span className="font-semibold text-gray-700">Phone:</span> {profile.phone_number || 'N/A'}</p>
+                  <p><span className="font-semibold text-gray-700">Location:</span> {profile.location || 'N/A'}</p>
+                </div>
               </div>
             </div>
 
             {/* Fully Functional Edit Profile Route Link */}
             <Link
-              to="/manager-edit-profile"
+              to="/ManagerEditProfile"
               className="border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition shadow-sm flex items-center space-x-1"
             >
               <span>Edit Profile</span>

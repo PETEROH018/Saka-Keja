@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { 
@@ -7,17 +7,48 @@ import {
   Building2 
 } from 'lucide-react';
 
-export default function StudentProfile() {
-  const profileData = {
-    fullName: 'Jane Smith',
+export default function StudentProfile({ studentId = 1 }) {
+  const location = useLocation();
+  const [student, setStudent] = useState(location.state?.updatedStudent || null);
+  const [loading, setLoading] = useState(!location.state?.updatedStudent);
+
+  useEffect(() => {
+    if (!location.state?.updatedStudent) {
+      fetch(`http://localhost:5000/students/${studentId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const studentData = data.student || data;
+          setStudent(studentData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching student profile:", err);
+          setLoading(false);
+        });
+    }
+  }, [studentId, location.state]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#f8f8fb] text-[#1e1b4b] font-sans">
+        <Navbar showSearch={true} />
+        <main className="max-w-5xl w-full mx-auto px-6 pt-10 pb-16 flex-grow flex items-center justify-center">
+          <p className="text-xs text-gray-500 font-medium">Loading profile...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const profile = student || {
+    full_name: 'Jane Smith',
     email: 'jane.smith@students.uonbi.ac.ke',
-    phone: '+254 712 345 678',
-    dateOfBirth: '14th March, 2002',
-    university: 'University of Nairobi',
+    phone_number: '+254 712 345 678',
+    institution: 'University of Nairobi',
     course: 'BSc. Computer Science',
-    yearOfStudy: 'Year 3',
-    studentId: 'P15/1234/2021',
-    expectedGraduation: 'July 2025'
+    year_of_study: '3',
+    student_number: 'P15/1234/2021',
+    graduation_year: '2025'
   };
 
   return (
@@ -53,19 +84,15 @@ export default function StudentProfile() {
             <div className="space-y-4 text-xs">
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Full Name</p>
-                <p className="font-medium text-gray-800">{profileData.fullName}</p>
+                <p className="font-medium text-gray-800">{profile.full_name || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Email Address</p>
-                <p className="font-medium text-gray-800">{profileData.email}</p>
+                <p className="font-medium text-gray-800">{profile.email || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Phone Number</p>
-                <p className="font-medium text-gray-800">{profileData.phone}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-400 font-medium mb-1">Date of Birth</p>
-                <p className="font-medium text-gray-800">{profileData.dateOfBirth}</p>
+                <p className="font-medium text-gray-800">{profile.phone_number || 'N/A'}</p>
               </div>
             </div>
           </div>
@@ -82,24 +109,24 @@ export default function StudentProfile() {
                   <div className="w-4 h-4 rounded bg-gray-100 flex items-center justify-center text-gray-500">
                     <Building2 className="w-2.5 h-2.5" />
                   </div>
-                  <span className="font-semibold text-gray-800">{profileData.university}</span>
+                  <span className="font-semibold text-gray-800">{profile.institution || 'N/A'}</span>
                 </div>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Course of Study</p>
-                <p className="font-medium text-gray-800">{profileData.course}</p>
+                <p className="font-medium text-gray-800">{profile.course || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Year of Study</p>
-                <p className="font-medium text-gray-800">{profileData.yearOfStudy}</p>
+                <p className="font-medium text-gray-800">{profile.year_of_study ? `Year ${profile.year_of_study}` : 'N/A'}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-medium mb-1">Student ID Number</p>
-                <p className="font-medium text-gray-800">{profileData.studentId}</p>
+                <p className="font-medium text-gray-800">{profile.student_number || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 font-medium mb-1">Expected Graduation</p>
-                <p className="font-medium text-gray-800">{profileData.expectedGraduation}</p>
+                <p className="text-[10px] text-gray-400 font-medium mb-1">Graduation Year</p>
+                <p className="font-medium text-gray-800">{profile.graduation_year || 'N/A'}</p>
               </div>
             </div>
           </div>
