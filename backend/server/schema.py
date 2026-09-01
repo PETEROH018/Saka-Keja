@@ -19,10 +19,10 @@ class ApartmentSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-
     units = Nested('UnitSchema', many=True)
     apartment_amenity_links = fields.Nested("ApartmentAmenityJoiningSchema", many=True, exclude=("apartment",))
     nearby_facilities = Nested('NearbyFacilitySchema', many=True)
+
 
 class UnitSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -30,10 +30,17 @@ class UnitSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+<<<<<<< Updated upstream
     # Expressly define nested apartment with reciprocal fields excluded
     apartment = fields.Nested('ApartmentSchema', exclude=('units', 'apartment_amenity_links', 'nearby_facilities'))
     student_units = fields.Nested('StudentUnitSchema', many=True, exclude=('unit',))
     unit_amenity_links = fields.Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
+=======
+    student_units = Nested('StudentUnitSchema', many=True, exclude=('unit',))
+    unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('unit',))
+
+
+>>>>>>> Stashed changes
 class UnitAmenitySchema(SQLAlchemyAutoSchema):
     class Meta:
         model = UnitAmenity
@@ -42,6 +49,7 @@ class UnitAmenitySchema(SQLAlchemyAutoSchema):
 
     unit_amenity_links = Nested('UnitAmenityJoiningSchema', many=True, exclude=('amenity',))
 
+
 class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = UnitAmenityJoining
@@ -49,7 +57,7 @@ class UnitAmenityJoiningSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     amenity = fields.Nested(UnitAmenitySchema, exclude=("unit_amenity_links",))
-    unit = fields.Nested('UnitSchema',exclude=('unit_amenity_links',))
+    unit = fields.Nested('UnitSchema', exclude=('unit_amenity_links',))
 
 
 class ApartmentAmenitySchema(SQLAlchemyAutoSchema):
@@ -101,13 +109,13 @@ class StudentSchema(Schema):
     full_name = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     phone_number = fields.Str(required=True, validate=validate.Length(min=1))
-    dob = fields.DateTime(required=False)
-    institution = fields.Str(required=False)
-    course = fields.Str(required=False)
-    year_of_study = fields.Int(required=False)
-    student_number = fields.Int(required=False)
-    graduation_year = fields.Int(required=False)
-    location = fields.Str(required=False)
+    dob = fields.DateTime(required=False, allow_none=True)
+    institution = fields.Str(required=False, allow_none=True)
+    course = fields.Str(required=False, allow_none=True)
+    year_of_study = fields.Str(required=False, allow_none=True)
+    student_number = fields.Str(required=False, allow_none=True)
+    graduation_year = fields.Str(required=False, allow_none=True)
+    location = fields.Str(required=False, allow_none=True)
     username = fields.Str(required=True, validate=validate.Length(min=1))
     password = fields.Str(
         required=True,
@@ -116,7 +124,7 @@ class StudentSchema(Schema):
         validate=validate.Length(min=1),
     )
 
-    student_units = Nested('StudentUnitSchema',many=True, exclude=('student',))
+    student_units = Nested('StudentUnitSchema', many=True, exclude=('student',))
 
 
 class ApartmentOwnerSchema(Schema):
@@ -124,7 +132,7 @@ class ApartmentOwnerSchema(Schema):
     full_name = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     phone_number = fields.Str(required=True, validate=validate.Length(min=1))
-    location = fields.Str(required=False)
+    location = fields.Str(required=False, allow_none=True)
     username = fields.Str(required=True, validate=validate.Length(min=1))
     password = fields.Str(
         required=True,
