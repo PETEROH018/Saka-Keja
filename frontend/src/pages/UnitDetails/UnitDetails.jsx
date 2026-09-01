@@ -93,19 +93,49 @@ export default function UnitDetails() {
     checkSavedStatus();
   }, [user?.id, unitId]);
 
-  const handleToggleSave = () => {
-    if (!unit) return;
-    const existing = JSON.parse(localStorage.getItem('favorites')) || [];
-    let updated;
+  const handleToggleSave = async () => {
 
-    if (isSaved) {
-      updated = existing.filter((item) => item.id !== unit.id);
-    } else {
-      updated = [...existing, unit];
+    if (!user?.id) {
+      alert("Please login to save properties");
+      navigate('/auth');
+      return;
     }
 
-    localStorage.setItem('favorites', JSON.stringify(updated));
-    setIsSaved(!isSaved);
+    if (!unit) return;
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/units/${unit.id}/favorite`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+
+      if (!response.ok) {
+        throw new Error("Failed to update favorite");
+      }
+
+
+      const data = await response.json();
+
+      setIsSaved(data.favorite);
+
+
+    } catch (error) {
+
+      console.error(
+        "Favorite update failed:",
+        error
+      );
+
+    }
+
   };
 
   const handleBookOrJoinWaitlist = async () => {
