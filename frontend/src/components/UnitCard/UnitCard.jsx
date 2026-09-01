@@ -54,13 +54,21 @@ export default function UnitCard({
   }, [user?.id, id]);
 
   const handleViewDetails = async () => {
+    const guestViewedUnits = JSON.parse(localStorage.getItem("guest_viewed_units") || "[]");
 
-    if (user?.id) {
+    if (!user?.id) {
+      const nextGuestViewedUnits = [...new Set([...guestViewedUnits, Number(id)])];
+      localStorage.setItem("guest_viewed_units", JSON.stringify(nextGuestViewedUnits));
+    } else {
       try {
         await fetch(
           `${API_BASE_URL}/students/${user.id}/units/${id}/view`,
           {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("saka_keja_token") || ""}`,
+            },
           }
         );
 
@@ -68,7 +76,6 @@ export default function UnitCard({
         console.error("Failed to record view:", error);
       }
     }
-
 
     navigate(`/unit/${id}`);
   };
