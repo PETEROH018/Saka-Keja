@@ -10,8 +10,10 @@ flask-migrate = "*"
 flask-bcrypt = "*"
 flask-cors = "*"
 marshmallow-sqlalchemy = "*"
+pyjwt = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.12"
