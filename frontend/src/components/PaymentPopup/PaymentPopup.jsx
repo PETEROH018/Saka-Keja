@@ -27,3 +27,32 @@ export default function PaymentPopup({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && !loading) handleClose();
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen, loading]);
+
+  if (!isOpen) return null;
+
+  const resetForm = () => {
+    setMethod("mpesa");
+    setPhone("");
+    setCardNumber("");
+    setCardExpiry("");
+    setCardCvc("");
+    setError("");
+    setLoading(false);
+    setSuccess(false);
+  };
