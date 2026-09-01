@@ -3,10 +3,11 @@ import UnitCard from "../../components/UnitCard/UnitCard";
 import { useAuth } from "../../context/useAuth";
 import { API_BASE_URL } from "../../config/api";
 import Navbar from "../../components/Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 function StudentDashboard() {
     const { user } = useAuth();
-
+    const navigate = useNavigate()
     const [promotedUnits, setPromotedUnits] = useState([]);
     const [favoriteUnits, setFavoriteUnits] = useState([]);
     const [availableUnits, setAvailableUnits] = useState([]);
@@ -29,6 +30,10 @@ function StudentDashboard() {
         viewedStartIndex,
         viewedStartIndex + viewedPerPage
     );
+
+    if(!user){
+        navigate('/')
+    }
 
     useEffect(() => {
 
