@@ -4,6 +4,7 @@ backend/**/__pycache__/
 backend/*.py[cod]
 backend/venv/
 backend/.venv/
+backend/server/.venv/
 backend/env/
 backend/ENV/
 backend/*.egg-info/
