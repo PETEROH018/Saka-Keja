@@ -3,10 +3,12 @@ import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import ApartmentDetailsForm from "../../components/ApartmentDetailsForm/ApartmentDetailsForm";
 import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
 import ApartmentReview from "../../components/ApartmentReview/ApartmentReview";
+import { API_BASE_URL } from "../../config/api";
 
 export default function AddApartment(){
   const emptyForm= {
               buildingName: "",
+              location: "",
               propertyType: "",
               address: "",
               description: "",
@@ -16,17 +18,20 @@ export default function AddApartment(){
               securityGuard: false,
               images: [],
             }
-  const emptyAmenities = [
+  const emptySocialAmenities = [
               { title: "", distance: "" },
             ]
+  
+  const emptyApartmentAmenities = [
+              {name: "", description: ""},
+          ]
   const [currentStep, setCurrentStep] = useState(1);
   const [units, setUnits] = useState([]);
   const [apartmentData,setApartmentData] = useState({});
-
   const [form, setForm] = useState(emptyForm);
-  
-  
-  const [amenities, setAmenities] = useState(emptyAmenities);
+  const [socialAmenities, setSocialAmenities] = useState(emptySocialAmenities);
+  const [apartmentAmenities, setApartmentAmenities] = useState(emptyApartmentAmenities);
+
   const handleEditProperty = () => {
     setCurrentStep(1)
   }
@@ -39,7 +44,8 @@ export default function AddApartment(){
     e.preventDefault()
     const propertyData = {
               ...form,
-              amenities,
+              socialAmenities,
+              apartmentAmenities
               };
       
       setApartmentData(propertyData);
@@ -64,13 +70,36 @@ export default function AddApartment(){
   };
 
   function handleSubmit(){
+          fetch(`${API_BASE_URL}/apartments`,{
+            method : 'POST',
+            headers : {
+               "Content-Type": "application/json"
+            },
+            body : JSON.stringify(apartmentData)
+          })
+          .then(response => {
+            if (!response.ok){
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            response.json()
+          })
+          .then( data => {
+            alert("Apartment and units added successfuly")
+            console.log(data)
+            setApartmentData({})
+            setForm(emptyForm)
+            setUnits([])
+            setSocialAmenities(emptySocialAmenities)
+            setCurrentStep(1)
+          })
+          .catch( (error) => {
+            console.error(error)
+            alert("An error occured and the apartment and units could not be listed!")
+          })
+
           console.log(apartmentData)
-          alert("Apartment added successfully")
-          setApartmentData({})
-          setForm(emptyForm)
-          setUnits([])
-          setAmenities(emptyAmenities)
-          setCurrentStep(1)
+          
+          
         }
     return(
         <div className="min-h-screen bg-[#fcf8fd] text-[#28232d]">
@@ -222,8 +251,10 @@ export default function AddApartment(){
             }
             form={form}
             setForm={setForm}
-            amenities={amenities}
-            setAmenities={setAmenities}
+            socialAmenities={socialAmenities}
+            setSocialAmenities={setSocialAmenities}
+            apartmentAmenities={apartmentAmenities}
+            setApartmentAmenities={setApartmentAmenities}
           />
         )}
 

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Icon from "../Icon/Icon";
+import ImageUploader from "../../utils/ImageUploader";
+
 
 //This is the list of the types of properties that can be listed by an owner
 const propertyTypes = [
@@ -15,8 +17,10 @@ const inputClass =
 
 const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
-export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,setAmenities}){
 
+
+export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities}){
+        const [uploadComplete,setUploadComplete] = useState(false)
         const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
     
@@ -25,14 +29,22 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
             [name]:
                 type === "checkbox"
                 ? checked
-                : type === "file"
-                    ? [...(prev[name] || []), ...Array.from(files)]
-                        : value,
+                : value
                 }));
             };
         
-        const handleAmenityChange = (index, field, value) => {
-            setAmenities((prev) =>
+        const handleSocialAmenityChange = (index, field, value) => {
+            setSocialAmenities((prev) =>
+                prev.map((amenity, i) =>
+                    i === index
+                    ? { ...amenity, [field]: value }
+                    : amenity
+                )
+                );
+            };
+        
+        const handleApartmentAmenityChange = (index, field, value) => {
+            setApartmentAmenities((prev) =>
                 prev.map((amenity, i) =>
                     i === index
                     ? { ...amenity, [field]: value }
@@ -41,15 +53,28 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                 );
             };
     
-        const addAmenity = () => {
-                setAmenities((prev) => [
+        const addSocialAmenity = () => {
+                setSocialAmenities((prev) => [
                 ...prev,
                 { title: "", distance: "" },
                 ]);
             };
+        
+        const addApartmentAmenity = () => {
+                setApartmentAmenities((prev) => [
+                ...prev,
+                { name: "", description: "" },
+                ]);
+            };
     
-        const removeAmenity = (index) => {
-                setAmenities((prev) =>
+        const removeSocialAmenity = (index) => {
+                setSocialAmenities((prev) =>
+                prev.filter((_, i) => i !== index)
+                );
+            };
+        
+        const removeApartmentAmenity = (index) => {
+                setApartmentAmenities((prev) =>
                 prev.filter((_, i) => i !== index)
                 );
             };
@@ -99,6 +124,21 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
 
                 <div>
                   <label className={labelClass}>
+                    Building Location
+                  </label>
+
+                  <input
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Juja,Nakuru,Kisumu"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
                     Property Type
                   </label>
 
@@ -140,13 +180,13 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Briefly describe the amenities and general vibe of the building..."
+                  placeholder="Briefly describe the social amenities and general vibe of the building..."
                   className="w-full resize-y rounded-md border border-[#ddd6e2] bg-[#fcf8fd] p-2.5 text-[10px] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10"
                 />
               </div>
             </section>
 
-            <section className="mb-8">
+            <section className="mb-8 mt-8">
               <h3 className="mb-4 text-[13px] font-semibold">
                 Property Features
               </h3>
@@ -280,74 +320,101 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                   </span>
                 </label>
               </div>
-            </section>
+               <section className="mb-8">
 
-            <section className="mb-8">
-              <h3 className="mb-1 text-[13px] font-semibold">
-                Property Photos
-              </h3>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-[13px] font-semibold">
+                    Add extra features in the property
+                  </h3>
 
-              <p className="mb-3 text-[9px] text-[#8b858f]">
-                Upload photos of the building, rooms, compound and
-                other useful areas.
-              </p>
-
-              <label className="relative flex min-h-[125px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#9b82bb] bg-[#fdf9ff] text-center hover:bg-[#faf3ff]">
-
-                <div className="mb-2 grid h-8 w-8 place-items-center rounded-full bg-[#ede4f6] text-[#603d96]">
-                  <Icon name="upload" size={16} />
+                  <p className="mt-1 text-[9px] text-[#8b858f]">
+                    Add other features that are not included in the list above.
+                  </p>
                 </div>
 
-                <strong className="text-[10px] font-semibold text-[#553589]">
-                  Upload Property Images
-                </strong>
+                <button
+                  type="button"
+                  onClick={addApartmentAmenity}
+                  className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2] mt-4"
+                >
+                  <Icon name="plus" size={12}  />
+                  Add Feature
+                </button>
+              </div>
 
-                <span className="mt-1 text-[8px] text-[#99929d]">
-                  PNG, JPG or WEBP · You can select multiple images
-                </span>
+              <div className="mt-4 space-y-3">
 
-                <input
-                  type="file"
-                  name="images"
-                  accept="image/png,image/jpeg,image/webp"
-                  multiple
-                  onChange={handleChange}
-                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                />
-              </label>
+                {apartmentAmenities.map((amenity, index) => (
+                  <div
+                    key={index}
+                    className="grid gap-3 sm:grid-cols-[1fr_150px_32px]"
+                  >
 
-              {/* Selected images */}
-              {form.images.length > 0 && (
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {form.images.map((file, index) => (
-                    <div
-                      key={`${file.name}-${index}`}
-                      className="relative overflow-hidden rounded-md border border-[#e2dce6] bg-[#fcf8fd]"
-                    >
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        className="h-20 w-full object-cover"
+                    <div>
+                      <label className={labelClass}>
+                        Feature Name
+                      </label>
+
+                      <input
+                        value={amenity.title}
+                        onChange={(e) =>
+                          handleApartmentAmenityChange(
+                            index,
+                            "name",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. Swimming pool"
+                        className={inputClass}
                       />
-
-                      <div className="flex items-center gap-1 truncate px-2 py-1.5 text-[8px] text-[#5b5361]">
-                        <Icon name="image" size={11} />
-                        <span className="truncate">
-                          {file.name}
-                        </span>
-                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
+
+                    <div>
+                      <label className={labelClass}>
+                        Description
+                      </label>
+
+                      <input
+                        value={amenity.description}
+                        onChange={(e) =>
+                          handleApartmentAmenityChange(
+                            index,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. Heated swimming pool"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {apartmentAmenities.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeApartmentAmenity(index)}
+                        className="mt-auto grid h-9 place-items-center rounded-md bg-[#faeeee] text-[#9b5360] hover:bg-[#f8e2e2]"
+                        title="Remove amenity"
+                      >
+                        <Icon name="trash" size={14} />
+                      </button>
+                    )}
+
+                  </div>
+                ))}
+
+              </div>
             </section>
+            </section>
+
+            <ImageUploader type={'apartment'} form={form} setForm={setForm} uploadComplete={uploadComplete} setUploadComplete={setUploadComplete}/> 
 
             <section className="mb-8">
 
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-[13px] font-semibold">
-                    Nearby Amenities
+                    Nearby Social Amenities
                   </h3>
 
                   <p className="mt-1 text-[9px] text-[#8b858f]">
@@ -357,17 +424,17 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
 
                 <button
                   type="button"
-                  onClick={addAmenity}
+                  onClick={addSocialAmenity}
                   className="flex shrink-0 items-center gap-1 rounded-md bg-[#eee5f7] px-2.5 py-1.5 text-[9px] font-semibold text-[#59388d] hover:bg-[#e6daf2]"
                 >
                   <Icon name="plus" size={12} />
-                  Add Amenity
+                  Add Social Amenity
                 </button>
               </div>
 
               <div className="mt-4 space-y-3">
 
-                {amenities.map((amenity, index) => (
+                {socialAmenities.map((amenity, index) => (
                   <div
                     key={index}
                     className="grid gap-3 sm:grid-cols-[1fr_150px_32px]"
@@ -381,7 +448,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       <input
                         value={amenity.title}
                         onChange={(e) =>
-                          handleAmenityChange(
+                          handleSocialAmenityChange(
                             index,
                             "title",
                             e.target.value
@@ -400,7 +467,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       <input
                         value={amenity.distance}
                         onChange={(e) =>
-                          handleAmenityChange(
+                          handleSocialAmenityChange(
                             index,
                             "distance",
                             e.target.value
@@ -411,10 +478,10 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
                       />
                     </div>
 
-                    {amenities.length > 1 && (
+                    {socialAmenities.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => removeAmenity(index)}
+                        onClick={() => removeSocialAmenity(index)}
                         className="mt-auto grid h-9 place-items-center rounded-md bg-[#faeeee] text-[#9b5360] hover:bg-[#f8e2e2]"
                         title="Remove amenity"
                       >
@@ -432,7 +499,8 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,amenities,
 
               <button
                 type="submit"
-                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084]"
+                disabled = {!uploadComplete}
+                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Continue to Units
                 <Icon name="arrowRight" size={12} />

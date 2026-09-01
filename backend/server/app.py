@@ -19,9 +19,12 @@ from sqlalchemy.orm.attributes import flag_modified
 from models.StudentUnit import StudentUnit
 from models.Student import Student
 
-apartment_schema = ApartmentSchema()
-unit_schema = UnitSchema()
+apartment_schema = ApartmentSchema(session=db.session)
+unit_schema = UnitSchema(session=db.session)
 apartment_owner_schema = ApartmentOwnerSchema()
+apartment_amenities_schema = ApartmentAmenitySchema(session=db.session)
+apartment_amenities_joining_schema = ApartmentAmenityJoiningSchema(session=db.session)
+# nearby_facilities_schema = NearbyFacilitySchema(session=db.session)
 
 
 @app.route("/", methods=["GET"])
@@ -35,20 +38,83 @@ def home():
 @app.route("/apartments", methods=["POST"])
 def add_apartment():
     data = request.get_json()
-
+    
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
     try:
-        new_apartment = apartment_schema.load(data)
+        new_apartment_details = {
+            'name': data.get('buildingName'),
+            'type': data.get('propertyType'),
+            'description': data.get('description'),
+            'location': data.get('location'),
+            'imageURLs': data.get('images'),
+            'owner_id': 40
+            }
+
+        # Adding an apartment's details to the apartments table
+        new_apartment = apartment_schema.load(new_apartment_details)
         db.session.add(new_apartment)
+        db.session.flush()
+        
+        # new_nearby_facilities = nearby_facilities_schema.load(data.get('socialAmenities'), many=True)
+        # db.session.add_all(new_nearby_facilities)
+        # db.session.flush()
+
+        # Adding the new amenities added by a user to the apartment amenities table
+        added_apartment_amenities = apartment_amenities_schema.load(data.get('apartmentAmenities'),many=True)
+        db.session.add_all(added_apartment_amenities)
+        db.session.flush()
+
+        amenity_mapping = {
+            "furnished": "Furnished",
+            "wifiIncluded": "WiFi Available",
+            "waterReliable": "Water Reliable",
+            "securityGuard": "Security Guard"
+        }
+
+        # Getting the names of default amenities that the client selected
+        selected_names = [ amenity_name for field, amenity_name in amenity_mapping.items() if data.get(field) is True ]
+        selected_apartment_amenities = ApartmentAmenity.query.filter(ApartmentAmenity.name.in_(selected_names)).all()
+
+        new_apartment_amenities = [*added_apartment_amenities,*selected_apartment_amenities]
+
+        # Adding all amenities of a particular apartment to the apartment amenities joining table
+        for amenity in new_apartment_amenities:
+            association = ApartmentAmenityJoining(amenity=amenity,apartment=new_apartment)
+            db.session.add(association)
+
+        db.session.add_all(new_apartment_amenities)
+        db.session.flush()
+
+        for unit in data.get('units'):
+            new_unit_details = {
+                        'category':unit.get('unitType'),
+                        'description':unit.get('description'),
+                        'rent':unit.get('monthlyRent'),
+                        'deposit':unit.get('depositAmount'),
+                        'bedrooms':unit.get('bedrooms'),
+                        'bathrooms':unit.get('bathrooms'),
+                        'size':unit.get('size'),
+                        'maximum_occupants':unit.get('maxOccupants'),
+                        'imageURLS':unit.get('images'),
+                        'apartment_id':new_apartment.id
+                }
+            new_unit = unit_schema.load(new_unit_details)
+            db.session.add(new_unit)
+            db.session.flush()
+
+            selected_unit_amenities = UnitAmenity.query.filter(UnitAmenity.name.in_(unit.get('unitAmenities'))).all()
+            for amenity in selected_unit_amenities:
+                    association = UnitAmenityJoining(amenity=amenity,unit=new_unit)
+                    db.session.add(association)
+            
+            db.session.add_all(selected_unit_amenities)
+            db.session.flush()
+
         db.session.commit()
-        return (
-            jsonify(
-                "message", f"Added apartment with id {new_apartment.id} and its units"
-            ),
-            201,
-        )
+
+        return (jsonify("message", f"Added apartment with id {new_apartment.id} and its units"),201,)
 
     except ValidationError as err:
         return jsonify({"error": "Validation failed", "messages": err.messages}), 422
@@ -56,11 +122,7 @@ def add_apartment():
     except Exception as e:
         db.session.rollback()
         return (
-            jsonify(
-                {"error", f"Could not add the apartment due to this error, {str(e)}"}
-            ),
-            500,
-        )
+            jsonify({"error", f"Could not add the apartment or units due to this error, {str(e)}"}),500,)
 
 
 @app.route("/owners", methods=["POST"])
@@ -878,6 +940,7 @@ def mark_unit_favorite(student_id, unit_id):
     db.session.commit()
 
     return jsonify({"favorite": student_unit.favorite}), 200
+
 
 
 if __name__ == "__main__":
