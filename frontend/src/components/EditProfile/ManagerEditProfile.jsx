@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function ManagerEditProfile({ managerId = 1 }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: '',
-    company_name: '',
-    email_address: '',
+    username: '',
+    email: '',
     phone_number: '',
-    bio: ''
+    location: ''
   });
   const [statusMessage, setStatusMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/managers/${managerId}`)
+    fetch(`http://localhost:5000/managers/${managerId}`)
       .then((res) => res.json())
       .then((data) => {
+        const ownerData = data.owner || data;
         setFormData({
-          full_name: data.full_name || '',
-          company_name: data.company_name || '',
-          email_address: data.email_address || '',
-          phone_number: data.phone_number || '',
-          bio: data.bio || ''
+          full_name: ownerData.full_name || '',
+          username: ownerData.username || '',
+          email: ownerData.email || '',
+          phone_number: ownerData.phone_number || '',
+          location: ownerData.location || ''
         });
       })
       .catch((err) => console.error("Error fetching manager profile:", err));
@@ -35,8 +38,11 @@ export default function ManagerEditProfile({ managerId = 1 }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
+    setStatusMessage('');
+
     try {
-      const response = await fetch(`/api/managers/${managerId}`, {
+      const response = await fetch(`http://localhost:5000/managers/${managerId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -44,14 +50,24 @@ export default function ManagerEditProfile({ managerId = 1 }) {
         body: JSON.stringify(formData),
       });
 
+      const resData = await response.json();
+
       if (response.ok) {
         setStatusMessage('Profile updated successfully!');
+        const updatedManagerData = resData.owner || resData.manager || formData;
+
+        // Redirect back to profile page after 1 second, passing the updated data via state
+        setTimeout(() => {
+          navigate('/ManagerProfile', { state: { updatedManager: updatedManagerData } });
+        }, 1000);
       } else {
-        setStatusMessage('Failed to update profile.');
+        setStatusMessage('Failed to update profile: ' + (resData.error || 'Check fields'));
       }
     } catch (error) {
       console.error("Network error:", error);
       setStatusMessage('An error occurred while saving.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -98,7 +114,11 @@ export default function ManagerEditProfile({ managerId = 1 }) {
           </header>
 
           {statusMessage && (
-            <p className="mb-6 text-sm font-medium text-emerald-600 bg-emerald-50 p-3 rounded-md border border-emerald-200">
+            <p className={`mb-6 text-sm font-medium p-3 rounded-md border ${
+              statusMessage.includes('successfully') 
+                ? 'text-emerald-600 bg-emerald-50 border-emerald-200' 
+                : 'text-rose-600 bg-rose-50 border-rose-200'
+            }`}>
               {statusMessage}
             </p>
           )}
@@ -122,11 +142,11 @@ export default function ManagerEditProfile({ managerId = 1 }) {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Company Name (Optional)</label>
+                    <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Username</label>
                     <input
                       type="text"
-                      name="company_name"
-                      value={formData.company_name}
+                      name="username"
+                      value={formData.username}
                       onChange={handleChange}
                       className="w-full border border-gray-300 rounded-md p-2.5 text-sm bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                     />
@@ -143,8 +163,8 @@ export default function ManagerEditProfile({ managerId = 1 }) {
                     <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Email Address</label>
                     <input
                       type="email"
-                      name="email_address"
-                      value={formData.email_address}
+                      name="email"
+                      value={formData.email}
                       onChange={handleChange}
                       className="w-full border border-gray-300 rounded-md p-2.5 text-sm bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                     />
@@ -162,37 +182,37 @@ export default function ManagerEditProfile({ managerId = 1 }) {
                 </div>
               </div>
 
-              {/* Professional Bio Card */}
+              {/* Location Card */}
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider pb-2 border-b border-gray-100">Professional Bio</h3>
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider pb-2 border-b border-gray-100">Location</h3>
                 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Description</label>
-                  <textarea
-                    name="bio"
-                    rows="4"
-                    value={formData.bio}
+                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Office / Base Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md p-2.5 text-sm bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
-                    placeholder="Experienced property manager dedicated to providing safe and comfortable student housing..."
+                    placeholder="e.g. Nairobi, Kenya"
                   />
-                  <div className="text-right text-[11px] text-gray-400 mt-1">0/500 characters</div>
                 </div>
               </div>
 
               {/* Actions */}
               <div className="flex justify-end space-x-3 pt-2">
-                <button
-                  type="button"
-                  className="px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition"
+                <Link
+                  to="/ManagerProfile"
+                  className="px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition text-center"
                 >
                   Cancel
-                </button>
+                </Link>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-indigo-900 text-white rounded-md text-sm font-medium hover:bg-indigo-800 transition shadow-sm"
+                  disabled={isSaving}
+                  className="px-6 py-2.5 bg-indigo-900 text-white rounded-md text-sm font-medium hover:bg-indigo-800 transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Save Changes
+                  {isSaving ? 'Saving Changes...' : 'Save Changes'}
                 </button>
               </div>
             </div>
@@ -225,7 +245,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
                   <span>Pro Tip</span>
                 </div>
                 <p className="text-xs text-amber-900 leading-relaxed">
-                  Profiles with a complete bio and verified phone number receive 40% more inquiries from students.
+                  Profiles with a complete profile and verified phone number receive 40% more inquiries from students.
                 </p>
               </div>
             </div>

@@ -1,31 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { User, Home, Settings, Camera, Save } from 'lucide-react';
 
-export default function StudentEditProfile() {
+export default function StudentEditProfile({ studentId = 1 }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('personal');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: 'David Ochieng',
-    phone: '+254 712 345 678',
-    university: 'Strathmore University',
-    yearOfStudy: '3rd Year',
-    email: 'david.ochieng@example.com',
-    studentNumber: '123456',
-    expectedGraduation: 'December 2025'
+    full_name: '',
+    phone_number: '',
+    institution: '',
+    year_of_study: '',
+    email: '',
+    student_number: '',
+    graduation_year: ''
   });
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/students/${studentId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const studentData = data.student || data;
+        setFormData({
+          full_name: studentData.full_name || '',
+          phone_number: studentData.phone_number || '',
+          institution: studentData.institution || '',
+          year_of_study: studentData.year_of_study !== null && studentData.year_of_study !== undefined ? String(studentData.year_of_study) : '',
+          email: studentData.email || '',
+          student_number: studentData.student_number || '',
+          graduation_year: studentData.graduation_year !== null && studentData.graduation_year !== undefined ? String(studentData.graduation_year) : ''
+        });
+      })
+      .catch((err) => console.error("Error fetching student profile:", err));
+  }, [studentId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/StudentProfile');
+    setIsSaving(true);
+    setStatusMessage('');
+
+    // Prepare payload by mapping select choices to what the backend expects
+    const payload = {
+      ...formData,
+      year_of_study: formData.year_of_study ? parseInt(formData.year_of_study, 10) : null,
+      graduation_year: formData.graduation_year ? parseInt(formData.graduation_year, 10) : null,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5000/students/${studentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const resData = await response.json();
+
+      if (response.ok) {
+        setStatusMessage('Profile updated successfully!');
+        
+        // Pass the updated student payload through location state to StudentProfile
+        const updatedStudentData = resData.student || payload;
+
+        setTimeout(() => {
+          navigate('/StudentProfile', { state: { updatedStudent: updatedStudentData } });
+        }, 1000);
+      } else {
+        const errorMsg = resData.validation_errors 
+          ? Object.entries(resData.validation_errors).map(([k, v]) => `${k}: ${v}`).join(', ')
+          : (resData.error || resData.details || 'Check fields');
+        setStatusMessage('Failed to update profile: ' + errorMsg);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setStatusMessage('An error occurred while saving.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -46,6 +107,16 @@ export default function StudentEditProfile() {
             View Profile
           </Link>
         </div>
+
+        {statusMessage && (
+          <div className={`mb-6 text-xs font-medium p-3 rounded-md border ${
+            statusMessage.includes('successfully') 
+              ? 'text-emerald-600 bg-emerald-50 border-emerald-200' 
+              : 'text-rose-600 bg-rose-50 border-rose-200'
+          }`}>
+            {statusMessage}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* SIDEBAR TABS */}
@@ -96,7 +167,7 @@ export default function StudentEditProfile() {
               {/* Avatar Upload Section */}
               <div className="flex items-center space-x-4">
                 <div className="w-14 h-14 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-gray-500 font-bold text-lg">
-                  DO
+                  {formData.full_name ? formData.full_name.substring(0, 2).toUpperCase() : 'ST'}
                 </div>
                 <div>
                   <button
@@ -116,8 +187,8 @@ export default function StudentEditProfile() {
                   <label className="block text-[10px] text-gray-400 font-medium mb-1">Full Name</label>
                   <input
                     type="text"
-                    name="fullName"
-                    value={formData.fullName}
+                    name="full_name"
+                    value={formData.full_name}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   />
@@ -127,8 +198,8 @@ export default function StudentEditProfile() {
                   <label className="block text-[10px] text-gray-400 font-medium mb-1">Phone Number</label>
                   <input
                     type="text"
-                    name="phone"
-                    value={formData.phone}
+                    name="phone_number"
+                    value={formData.phone_number}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   />
@@ -137,11 +208,12 @@ export default function StudentEditProfile() {
                 <div>
                   <label className="block text-[10px] text-gray-400 font-medium mb-1">University/College</label>
                   <select
-                    name="university"
-                    value={formData.university}
+                    name="institution"
+                    value={formData.institution}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   >
+                    <option value="">Select Institution</option>
                     <option value="Strathmore University">Strathmore University</option>
                     <option value="University of Nairobi">University of Nairobi</option>
                     <option value="Kenyatta University">Kenyatta University</option>
@@ -151,15 +223,16 @@ export default function StudentEditProfile() {
                 <div>
                   <label className="block text-[10px] text-gray-400 font-medium mb-1">Year of Study</label>
                   <select
-                    name="yearOfStudy"
-                    value={formData.yearOfStudy}
+                    name="year_of_study"
+                    value={formData.year_of_study}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   >
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
+                    <option value="">Select Year</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
                   </select>
                 </div>
 
@@ -178,20 +251,21 @@ export default function StudentEditProfile() {
                   <label className="block text-[10px] text-gray-400 font-medium mb-1">Student Number</label>
                   <input
                     type="text"
-                    name="studentNumber"
-                    value={formData.studentNumber}
+                    name="student_number"
+                    value={formData.student_number}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-[10px] text-gray-400 font-medium mb-1">Expected Graduation Date</label>
+                  <label className="block text-[10px] text-gray-400 font-medium mb-1">Graduation Year</label>
                   <input
-                    type="text"
-                    name="expectedGraduation"
-                    value={formData.expectedGraduation}
+                    type="number"
+                    name="graduation_year"
+                    value={formData.graduation_year}
                     onChange={handleChange}
+                    placeholder="e.g. 2027"
                     className="w-full border border-gray-200 rounded-lg p-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-900"
                   />
                 </div>
@@ -200,10 +274,11 @@ export default function StudentEditProfile() {
               <div className="flex justify-end pt-4 border-t border-gray-100">
                 <button
                   type="submit"
-                  className="flex items-center space-x-2 bg-indigo-900 text-white px-5 py-2.5 rounded-lg text-xs font-medium hover:bg-indigo-800 transition shadow-sm"
+                  disabled={isSaving}
+                  className="flex items-center space-x-2 bg-indigo-900 text-white px-5 py-2.5 rounded-lg text-xs font-medium hover:bg-indigo-800 transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-3.5 h-3.5" />
-                  <span>Save Changes</span>
+                  <span>{isSaving ? 'Saving Changes...' : 'Save Changes'}</span>
                 </button>
               </div>
             </form>
