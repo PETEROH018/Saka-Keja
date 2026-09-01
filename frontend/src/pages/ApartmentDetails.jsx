@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
+import { Link } from "react-router-dom";
 
 
 // This function is used to render the different icons that show an apartment's specifications
@@ -246,6 +247,9 @@ export default function ApartmentDetails(){
             </svg>
               {isFavorited ? 'Saved to Favorites' : 'Add to Favorites'}
             </button>
+            <Link className="w-full border font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-xs" to={`/available-units/${apartmentId}`} >
+                View Available Units
+            </Link>
             </aside>
         </div>
         </main>
@@ -254,7 +258,7 @@ export default function ApartmentDetails(){
         <div className="fixed inset-0 bg-black/95 z-50 overflow-y-auto p-4 md:p-10">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6 pb-6 border-b border-white/10 sticky top-0 bg-black/95 z-10 py-4 mt-1">
-              <h2 className="text-xl font-bold text-white">All Property Photos ({apartment.image_Urls.length})</h2>
+              <h2 className="text-xl font-bold text-white">All Property Photos ({apartment.imageURLs.length})</h2>
               <button 
                 onClick={() => setShowAllPhotos(false)}
                 className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors font-bold text-sm flex items-center gap-1"
@@ -264,7 +268,7 @@ export default function ApartmentDetails(){
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {apartment.image_Urls.map((src, i) => (
+              {apartment.imageURLs.map((src, i) => (
                 <div key={i} className="aspect-[3/2] bg-gray-900 rounded-xl overflow-hidden">
                   <img src={src} alt={`Gallery detail ${i+1}`} className="w-full h-full object-cover" />
                 </div>
