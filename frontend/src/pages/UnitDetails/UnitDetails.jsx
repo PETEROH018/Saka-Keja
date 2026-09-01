@@ -19,7 +19,7 @@ export default function UnitDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
+  const [bookingStatus, setBookingStatus] = useState(null);
   const [bookingMessage, setBookingMessage] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
@@ -32,7 +32,6 @@ export default function UnitDetails() {
 
     setLoading(true);
 
-    // Fetch Unit details
     fetch(`${API_BASE_URL}/units/${unitId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Unit not found');
@@ -41,7 +40,6 @@ export default function UnitDetails() {
       .then((unitData) => {
         setUnit(unitData);
 
-        // Fetch parent apartment details if apartmentId or unit.apartment_id exists
         const parentApartmentId = apartmentId || unitData.apartment_id;
         if (parentApartmentId) {
           return fetch(`${API_BASE_URL}/apartments/${parentApartmentId}`)
@@ -54,7 +52,6 @@ export default function UnitDetails() {
       .then(() => {
         setLoading(false);
 
-        // Sync with local storage favorites
         const saved = JSON.parse(localStorage.getItem('favorites')) || [];
         setIsSaved(saved.some((item) => item.id === Number(unitId)));
       })
@@ -98,13 +95,11 @@ export default function UnitDetails() {
 
     const isFull = unit.current_occupants >= unit.maximum_occupants;
 
-    // If unit is available, trigger Payment Popup
     if (!isFull) {
       setIsPaymentOpen(true);
       return;
     }
 
-    // If unit is full, handle Join Waitlist directly
     setBookingStatus('booking');
     setBookingMessage('');
 
@@ -134,7 +129,6 @@ export default function UnitDetails() {
     }
   };
 
-  // Called when payment is submitted inside PaymentPopup
   const handlePaymentSubmit = async (paymentDetails) => {
     const response = await fetch(`${API_BASE_URL}/bookings/pay`, {
       method: 'POST',
@@ -153,10 +147,18 @@ export default function UnitDetails() {
       throw new Error(data.error || 'Payment failed. Please try again.');
     }
 
-    // Update state with newly returned unit (occupants & status updated)
     setUnit(data.unit);
     setBookingStatus('success');
     setBookingMessage('Booking successful! Your deposit payment was recorded.');
+  };
+
+  // Status Color Logic for Green (Vacant), Orange (Partially Occupied), Red (Occupied)
+  const getStatusClass = (statusStr = '') => {
+    const statusLower = statusStr.toLowerCase();
+    if (statusLower.includes('vacant') || statusLower.includes('available')) return 'status-green';
+    if (statusLower.includes('partially')) return 'status-orange';
+    if (statusLower.includes('occupied')) return 'status-red';
+    return 'status-green';
   };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
@@ -196,11 +198,11 @@ export default function UnitDetails() {
             </p>
             <div className="badge-group">
               <span className="unit-badge category">{unit.category}</span>
-              <span className={`unit-badge status ${(unit.status || 'available').toLowerCase()}`}>
+              <span className="unit-badge shared-tag">
                 👥 {unit.shared ? 'Shared' : 'Private'}
               </span>
-              <span className="unit-badge occupancy">
-                {unit.current_occupants >= unit.maximum_occupants ? 'Occupied (Waitlist)' : unit.status || 'Available'}
+              <span className={`unit-badge ${getStatusClass(unit.status)}`}>
+                ● {unit.status || 'Vacant'}
               </span>
             </div>
           </div>
@@ -291,7 +293,9 @@ export default function UnitDetails() {
 
             <div className="availability-row">
               <span>Availability</span>
-              <strong className="occupied-tag">📅 {unit.status || 'Available'}</strong>
+              <strong className={`occupied-tag ${getStatusClass(unit.status)}`}>
+                📅 {unit.status || 'Vacant'}
+              </strong>
             </div>
 
             <button
