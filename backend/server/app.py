@@ -1099,7 +1099,7 @@ def process_booking_payment():
         return jsonify({"error": "No input data provided"}), 400
 
     unit_id = data.get("unit_id")
-    student_id = data.get("student_id", 1)  # Default fallback student ID
+    student_id = data.get("student_id", 1)
     amount = data.get("amount")
     payment_method = data.get("payment_method", "mpesa")
 
@@ -1108,14 +1108,13 @@ def process_booking_payment():
         return jsonify({"error": "Unit not found"}), 404
 
     try:
-        # 1. Update or Create StudentUnit association
+        # 1. Update or Create StudentUnit record
         student_unit = StudentUnit.query.filter_by(
             student_id=student_id, 
             unit_id=unit_id
         ).first()
 
         if not student_unit:
-            # FIX: Removed rent_paid=0 argument to match your StudentUnit model schema
             student_unit = StudentUnit(
                 student_id=student_id,
                 unit_id=unit_id,
@@ -1136,15 +1135,19 @@ def process_booking_payment():
         )
         db.session.add(payment)
 
-        # 3. Update Occupancy & Unit Status
-        unit.current_occupants = (unit.current_occupants or 0) + 1
+        # 3. Calculate New Occupancy & Status
+        new_occupants = (unit.current_occupants or 0) + 1
+        unit.current_occupants = new_occupants
 
-        if unit.current_occupants >= unit.maximum_occupants:
+        # Status Logic
+        if new_occupants >= unit.maximum_occupants:
             unit.status = "Occupied"
-        elif unit.shared and unit.current_occupants > 0:
+        elif unit.shared and 0 < new_occupants < unit.maximum_occupants:
             unit.status = "Partially Occupied"
-        else:
+        elif new_occupants == 0:
             unit.status = "Vacant"
+        else:
+            unit.status = "Occupied" if not unit.shared else "Partially Occupied"
 
         db.session.commit()
 
@@ -1158,5 +1161,6 @@ def process_booking_payment():
         db.session.rollback()
         return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
 
+    
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
