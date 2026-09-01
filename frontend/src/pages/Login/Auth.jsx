@@ -8,7 +8,7 @@ import { useAuth } from "../../context/useAuth"
 
 
 export function AuthPage() {
-  const { user,setUser } = useAuth()
+  const { user, setAuth } = useAuth()
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
   const [userRole, setUserRole] = useState("student");
@@ -158,7 +158,7 @@ export function AuthPage() {
           return;
         }
 
-        setUser(data.token);
+        setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
         if (data.user_type === "manager") {
           navigate("/admin-dash");
         } else if (data.user_type === "student") {
@@ -204,11 +204,11 @@ export function AuthPage() {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
-      setUser(data.token);
+      setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
       if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
-        navigate("/student-dash");
+        navigate("/student-dashboard");
       }
     } catch (err) {
       console.error("Signup failed:", err);
