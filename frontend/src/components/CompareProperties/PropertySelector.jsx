@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../../config/api";
 
 const MAX_SELECTION = 3;
 
@@ -9,10 +10,11 @@ export default function PropertySelector({ onCompare }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/apartments")
+    fetch(`${API_BASE_URL}/apartments`)
       .then((res) => res.json())
       .then((data) => {
         setApartments(data);
+        console.log(data)
         setLoading(false);
       })
       .catch((err) => {
@@ -88,7 +90,7 @@ export default function PropertySelector({ onCompare }) {
                 />
 
                 <img
-                  src={p.image_Urls[0]}
+                  src={p.imageURLs[0]}
                   alt={p.name}
                   className="selector-thumb"
                   loading="lazy"
@@ -101,11 +103,11 @@ export default function PropertySelector({ onCompare }) {
                     {p.location}
                   </div>
 
-                  <div className="selector-rent">
+                  {/* <div className="selector-rent">
                     KSh{" "}
                     {p["monthly-expense-breakdown"].rent.toLocaleString()}{" "}
                     / mo
-                  </div>
+                  </div> */}
                 </div>
 
                 {isSelected && (
