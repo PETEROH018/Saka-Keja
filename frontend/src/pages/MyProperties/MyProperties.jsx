@@ -3,17 +3,19 @@ import { Search } from "lucide-react";
 import useFetch from "../../hooks/useFetch";
 import OwnerPropertyCard from "../../components/OwnerPropertyCard/OwnerPropertyCard";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
+import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
 
 export default function MyProperties() {
 
-  
+  const {user} = useAuth()
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const {
     data: properties,
     loading,
     error,
-  } = useFetch("http://localhost:3000/apartments");
+  } = useFetch(`${API_BASE_URL}/owners/${user.id}/aparments`);
   const filters = [
     { label: "All Properties", value: "all" },
     { label: "Available", value: "available" },

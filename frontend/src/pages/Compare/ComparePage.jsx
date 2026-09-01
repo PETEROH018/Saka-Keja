@@ -3,13 +3,15 @@ import CompareProperties from "../../components/CompareProperties/ComparePropert
 import PropertySelector from "../../components/CompareProperties/PropertySelector";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { API_BASE_URL } from "../../config/api";
+
 
 export default function ComparePage() {
   const [allApartments, setAllApartments] = useState([]);
   const [selectedIds, setSelectedIds] = useState(null); // null = still choosing
 
   useEffect(() => {
-    fetch("http://localhost:3000/apartments")
+    fetch(`${API_BASE_URL}/apartments`)
       .then((res) => res.json())
       .then((data) => setAllApartments(data))
       .catch((err) => console.error("Failed to load apartments:", err));

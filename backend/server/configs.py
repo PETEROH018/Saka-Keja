@@ -32,6 +32,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         LOCAL_DB_URI
     )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.getenv(
+    "JWT_SECRET_KEY",
+    "saka-keja-dev-secret-key-2026-strong-32bytes"
+)
+app.config["JWT_ALGORITHM"] = "HS256"
+
 
 db.init_app(app)
 migrate = Migrate(app, db) 

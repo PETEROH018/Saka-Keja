@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Home, LayoutDashboard, Building2, PlusCircle, HelpCircle, User, ShieldCheck, Menu, X ,SquareArrowLeft} from "lucide-react"
-import { NavLink } from "react-router-dom";
+import { Home, LayoutDashboard, Building2, PlusCircle, User, ShieldCheck, Menu, X, SquareArrowLeft, LogIn } from "lucide-react"
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 
 
 export default function AdminSideBar() {
-    const { user,logout } = useAuth()
+    const { user, logout } = useAuth()
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen((prev) => !prev);
     const closeSidebar = () => setIsOpen(false);
@@ -15,8 +16,15 @@ export default function AdminSideBar() {
         {to: "/my-properties", label: "My Properties", icon: Building2},
         {to: "/add-apartment", label: "Add Property", icon: PlusCircle},
         {to: "/owner-profile", label: "Profile", icon: User},
-        {to: "/auth", label: "Logout", icon: SquareArrowLeft},
     ]
+
+    const handleAuthAction = () => {
+        if (user) {
+            logout();
+        }
+        closeSidebar();
+        navigate("/auth");
+    };
 
     const linkClass = ({ isActive }) =>
       `admin-sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
@@ -111,7 +119,16 @@ export default function AdminSideBar() {
             </div>
 
           {/* Bottom Action */}
-          <div className="pt-6">
+          <div className="pt-6 space-y-3">
+            <button
+              type="button"
+              onClick={handleAuthAction}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-primary-container active:scale-[0.98]"
+            >
+              {user ? <SquareArrowLeft className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
+              <span>{user ? "Logout" : "Login"}</span>
+            </button>
+
             <NavLink 
               to="/add-apartment"
               className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-primary-container active:scale-[0.98]"

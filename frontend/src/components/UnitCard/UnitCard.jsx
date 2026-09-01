@@ -1,6 +1,14 @@
-import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun } from 'lucide-react';
+import { Wifi, ShieldCheck, MapPin, Bed, Users, Utensils, Shirt, Sun, Heart } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+import { API_BASE_URL } from "../../config/api";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 
 export default function UnitCard({
+  id,
+  apartment_id: apartmentId,
   name,
   description,
   location,
@@ -15,6 +23,86 @@ export default function UnitCard({
 }) {
   const imageUrl = imageUrls[0];
 
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (!user?.id) return;
+
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/students/${user.id}/favorites`
+        );
+
+        const favorites = await response.json();
+
+        const exists = favorites.some(
+          (unit) => unit.id === id
+        );
+
+        setIsFavorite(exists);
+
+      } catch (error) {
+        console.error("Failed to check favorite:", error);
+      }
+    };
+
+    checkFavorite();
+
+  }, [user?.id, id]);
+
+  const handleViewDetails = async () => {
+    const guestViewedUnits = JSON.parse(localStorage.getItem("guest_viewed_units") || "[]");
+
+    if (!user?.id) {
+      const nextGuestViewedUnits = [...new Set([...guestViewedUnits, Number(id)])];
+      localStorage.setItem("guest_viewed_units", JSON.stringify(nextGuestViewedUnits));
+    } else {
+      try {
+        await fetch(
+          `${API_BASE_URL}/students/${user.id}/units/${id}/view`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("saka_keja_token") || ""}`,
+            },
+          }
+        );
+
+      } catch (error) {
+        console.error("Failed to record view:", error);
+      }
+    }
+
+    navigate(`/unit/${id}`);
+  };
+
+  const handleFavorite = async () => {
+
+    if (!user?.id) return;
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/units/${id}/favorite`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await response.json();
+
+      setIsFavorite(data.favorite);
+
+    } catch (error) {
+      console.error("Favorite failed:", error);
+    }
+  };
+
+
   const hasAmenity = (name) =>
     amenityLinks.some((link) => link.amenity?.name === name);
 
@@ -24,6 +112,7 @@ export default function UnitCard({
   const kitchenette = hasAmenity("Kitchen");
   const wardrobe = hasAmenity("Wardrobes");
   const balcony = hasAmenity("Balcony");
+
 
   return (
     <div className="unit-card group max-w-sm overflow-hidden rounded-xl border border-outline-variant bg-white shadow-sm">
@@ -50,17 +139,38 @@ export default function UnitCard({
           <h3 className="text-base font-semibold text-gray-900">
             {name}
           </h3>
-          <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-              <span>{location}</span>
-            </span>
-            {typeof shared === "boolean" && (
-              <span className="flex items-center gap-1 text-gray-400">
-                <Users className="h-3.5 w-3.5" />
-                <span>{shared ? "Shared" : "Private"}</span>
+          <div className="mt-1 flex items-center justify-between text-xs text-gray-500">
+
+            <div className="flex items-center gap-2">
+
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+                <span>{location}</span>
               </span>
-            )}
+
+              {typeof shared === "boolean" && (
+                <span className="flex items-center gap-1 text-gray-400">
+                  <Users className="h-3.5 w-3.5" />
+                  <span>{shared ? "Shared" : "Private"}</span>
+                </span>
+              )}
+
+            </div>
+
+            {user &&
+            <button
+              onClick={handleFavorite}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-purple-700 hover:bg-purple-100 transition"
+              title="Save property"
+            >
+              <Heart
+                className={`h-4 w-4 transition ${isFavorite
+                    ? "fill-purple-700 text-purple-700"
+                    : "text-purple-700"
+                  }`}
+              />
+            </button>
+          }
           </div>
         </div>
 
@@ -106,9 +216,13 @@ export default function UnitCard({
         </div>
 
         {/* Action Button */}
-        <button className="mt-2 w-full rounded-lg border border-outline-variant bg-white py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary">
+        <Link
+          to={`/unit-details/${id}`}
+          onClick={handleViewDetails}
+          className="mt-2 block w-full rounded-lg border border-outline-variant bg-white py-2 text-center text-xs font-semibold text-on-surface-variant transition-colors hover:border-primary hover:bg-surface-container-low hover:text-primary"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );

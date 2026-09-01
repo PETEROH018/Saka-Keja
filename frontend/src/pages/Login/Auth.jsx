@@ -8,7 +8,7 @@ import { useAuth } from "../../context/useAuth"
 
 
 export function AuthPage() {
-  const { user,setUser } = useAuth()
+  const { user, setAuth } = useAuth()
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(false);
   const [userRole, setUserRole] = useState("student");
@@ -125,6 +125,30 @@ export function AuthPage() {
     }
   }
 
+  async function syncGuestViewedUnits(authToken) {
+    const guestViewedUnits = JSON.parse(localStorage.getItem("guest_viewed_units") || "[]");
+    if (!authToken || !guestViewedUnits.length) {
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/students/viewed-units/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ unit_ids: guestViewedUnits }),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("guest_viewed_units");
+      }
+    } catch (error) {
+      console.error("Failed to sync guest viewed units:", error);
+    }
+  }
+
   
   async function handleSubmit(event, formType) {
     event.preventDefault();
@@ -158,7 +182,8 @@ export function AuthPage() {
           return;
         }
 
-        setUser(data.token);
+        await syncGuestViewedUnits(data.token);
+        setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
         if (data.user_type === "manager") {
           navigate("/admin-dash");
         } else if (data.user_type === "student") {
@@ -204,11 +229,12 @@ export function AuthPage() {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
-      setUser(data.token);
+      await syncGuestViewedUnits(data.token);
+      setAuth(data.user || { id: data.token?.id, name: data.token?.name, role: data.user_type === "manager" ? "owner" : "student", profile: data.user_type === "manager" ? "owner" : "student" }, data.token);
       if (data.user_type === "manager") {
         navigate("/admin-dash");
       } else if (data.user_type === "student") {
-        navigate("/student-dash");
+        navigate("/student-dashboard");
       }
     } catch (err) {
       console.error("Signup failed:", err);
