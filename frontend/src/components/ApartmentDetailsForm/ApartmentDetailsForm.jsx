@@ -502,7 +502,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
                 disabled = {!uploadComplete}
                 className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Continue to Units
+                Review
                 <Icon name="arrowRight" size={12} />
               </button>
 
