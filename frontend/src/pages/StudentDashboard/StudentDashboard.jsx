@@ -4,6 +4,7 @@ import { useAuth } from "../../context/useAuth";
 import { API_BASE_URL } from "../../config/api";
 import Navbar from "../../components/Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 function StudentDashboard() {
     const { user, token } = useAuth();
@@ -219,7 +220,7 @@ function StudentDashboard() {
                     )}
                 </main>
             </div>
-
+        <Footer/>
         </>
     );
 }
