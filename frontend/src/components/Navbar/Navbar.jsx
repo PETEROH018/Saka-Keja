@@ -77,7 +77,7 @@ export default function Navbar({ showSearch = false }) {
           </NavLink>
           }
 
-          {user && (
+          {/* {user && (
             <NavLink
               to="/saved-properties"
               className={({ isActive }) =>
@@ -89,7 +89,7 @@ export default function Navbar({ showSearch = false }) {
             >
               Favorites
             </NavLink>
-          )}
+          )} */}
 
           <NavLink
             to="/compare"
@@ -153,6 +153,14 @@ export default function Navbar({ showSearch = false }) {
                 className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
               >
                 Login
+              </button>
+
+              <button
+                type="button"
+                className="rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-800"
+                onClick={() => navigate('/search')}
+              >
+                Find a Home
               </button>
             </div>
           )}
