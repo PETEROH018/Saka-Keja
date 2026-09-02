@@ -15,6 +15,7 @@ export default function AdminSideBar() {
         {to: "/admin-dash", label: "Dashboard", icon: LayoutDashboard},
         {to: "/my-properties", label: "My Properties", icon: Building2},
         {to: "/add-apartment", label: "Add Property", icon: PlusCircle},
+        {to: "/owner/units/add", label: "List Units", icon: PlusCircle},
         {to: "/manager-profile", label: "Profile", icon: User},
     ]
 
