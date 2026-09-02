@@ -1,4 +1,5 @@
 import jwt
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from configs import *
@@ -1091,7 +1092,75 @@ def mark_unit_favorite(student_id, unit_id):
 
     return jsonify({"favorite": student_unit.favorite}), 200
 
+@app.route("/bookings/pay", methods=["POST"])
+def process_booking_payment():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No input data provided"}), 400
 
+    unit_id = data.get("unit_id")
+    student_id = data.get("student_id", 1)
+    amount = data.get("amount")
+    payment_method = data.get("payment_method", "mpesa")
 
+    unit = Unit.query.get(unit_id)
+    if not unit:
+        return jsonify({"error": "Unit not found"}), 404
+
+    try:
+        # 1. Update or Create StudentUnit record
+        student_unit = StudentUnit.query.filter_by(
+            student_id=student_id, 
+            unit_id=unit_id
+        ).first()
+
+        if not student_unit:
+            student_unit = StudentUnit(
+                student_id=student_id,
+                unit_id=unit_id,
+                deposit_paid=amount
+            )
+            db.session.add(student_unit)
+            db.session.flush()
+        else:
+            student_unit.deposit_paid = (student_unit.deposit_paid or 0) + amount
+
+        # 2. Record Payment Transaction
+        payment = Payment(
+            student_unit_id=student_unit.id,
+            amount=amount,
+            payment_method=payment_method,
+            payment_status="Completed",
+            transaction_reference=f"TXN-{uuid.uuid4().hex[:8].upper()}"
+        )
+        db.session.add(payment)
+
+        # 3. Increment Occupancy
+        new_occupants = (unit.current_occupants or 0) + 1
+        unit.current_occupants = new_occupants
+
+        max_capacity = unit.maximum_occupants or 1
+
+        # Strict Status Assignment
+        if new_occupants >= max_capacity:
+            unit.status = "Occupied"
+        elif new_occupants > 0 and max_capacity > 1:
+            unit.status = "Partially Occupied"
+            unit.shared = True  # Ensure shared flag is synced
+        else:
+            unit.status = "Vacant"
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Payment successful",
+            "unit": UnitSchema().dump(unit),
+            "payment_reference": payment.transaction_reference
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
+    
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)

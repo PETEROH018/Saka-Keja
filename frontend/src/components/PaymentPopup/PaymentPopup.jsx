@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import "./PaymentPopup.css";
 
-function formatPhone(value) {
-  const digits = value.replace(/\D/g, "").slice(0, 10);
-
+function formatNineDigits(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 9);
   if (digits.length <= 3) return digits;
-  if (digits.length <= 6) {
-    return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-  }
-
+  if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
   return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
 }
 
-function isValidKenyanPhone(phone) {
-  return /^(07|01)\d{8}$/.test(phone);
+function formatCardNumber(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 16);
+  return digits.replace(/(.{4})/g, "$1 ").trim();
+}
+
+function formatExpiry(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+  if (digits.length >= 3) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+  return digits;
 }
 
 export default function PaymentPopup({
@@ -22,42 +28,41 @@ export default function PaymentPopup({
   onPaymentRequest,
   unitName = "",
 }) {
-  const [phone, setPhone] = useState("");
+  const [method, setMethod] = useState("mpesa");
+  const [phoneDigits, setPhoneDigits] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvc, setCardCvc] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Lock page scrolling and listen for Escape while the popup is open.
   useEffect(() => {
     if (!isOpen) return;
-
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const handleEscape = (event) => {
-      if (event.key === "Escape" && !loading) {
-        setPhone("");
-        setError("");
-        setLoading(false);
-        setSuccess(false);
-        onClose();
-      }
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && !loading) handleClose();
     };
 
     document.addEventListener("keydown", handleEscape);
-
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen, loading, onClose]);
+  }, [isOpen, loading]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const resetForm = () => {
-    setPhone("");
+    setMethod("mpesa");
+    setPhoneDigits("");
+    setCardNumber("");
+    setCardExpiry("");
+    setCardCvc("");
+    setCardHolder("");
     setError("");
     setLoading(false);
     setSuccess(false);
@@ -65,76 +70,76 @@ export default function PaymentPopup({
 
   const handleClose = () => {
     if (loading) return;
-
     resetForm();
     onClose();
   };
 
-  const handlePhoneChange = (event) => {
-    const digits = event.target.value
-      .replace(/\D/g, "")
-      .slice(0, 10);
-
-    setPhone(digits);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError("");
-  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const cleanPhone = phone.replace(/\D/g, "");
-
-    if (!cleanPhone) {
-      setError("Enter your M-Pesa phone number.");
-      return;
-    }
-
-    if (!isValidKenyanPhone(cleanPhone)) {
-      setError("Enter a valid Kenyan number starting with 07 or 01.");
-      return;
+    if (method === "mpesa") {
+      const cleanDigits = phoneDigits.replace(/\D/g, "");
+      if (cleanDigits.length !== 9) {
+        setError("Enter a valid 9-digit number (e.g., 712345678).");
+        return;
+      }
+      if (!/^[71]/.test(cleanDigits)) {
+        setError("Number must start with 7 or 1.");
+        return;
+      }
+    } else {
+      const cleanCard = cardNumber.replace(/\s/g, "");
+      if (cleanCard.length !== 16) {
+        setError("Card number must be 16 digits.");
+        return;
+      }
+      if (!cardHolder.trim()) {
+        setError("Enter the cardholder's name.");
+        return;
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry)) {
+        setError("Enter expiry as MM/YY.");
+        return;
+      }
+      if (cardCvc.replace(/\D/g, "").length < 3) {
+        setError("CVC must be 3 or 4 digits.");
+        return;
+      }
     }
 
     if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) {
-      setError("Invalid payment amount.");
+      setError("Invalid deposit amount.");
       return;
     }
 
-    setError("");
     setLoading(true);
 
     try {
-      const formattedPhone = `254${cleanPhone.slice(1)}`;
+      const formattedPhone = method === "mpesa" ? `254${phoneDigits}` : "";
 
       if (onPaymentRequest) {
         await onPaymentRequest({
           amount: Number(amount),
+          payment_method: method,
           phone: formattedPhone,
+          card_details:
+            method === "card"
+              ? {
+                  number: cardNumber.replace(/\s/g, ""),
+                  expiry: cardExpiry,
+                  cvc: cardCvc,
+                  holder: cardHolder,
+                }
+              : null,
         });
-      } else {
-        // Temporary demo behavior.
-        await new Promise((resolve) => setTimeout(resolve, 1200));
       }
-
       setSuccess(true);
     } catch (err) {
-      console.error("Payment request error:", err);
-
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to send payment request. Please try again."
-      );
+      console.error("Payment Error:", err);
+      setError(err instanceof Error ? err.message : "Payment processing failed.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleBackdropClick = (event) => {
-    if (
-      event.target === event.currentTarget &&
-      !loading
-    ) {
-      handleClose();
     }
   };
 
@@ -143,147 +148,157 @@ export default function PaymentPopup({
   return (
     <div
       className="payment-overlay"
-      onMouseDown={handleBackdropClick}
+      onMouseDown={(e) => e.target === e.currentTarget && !loading && handleClose()}
     >
-      <div
-        className="payment-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="payment-title"
-      >
+      <div className="payment-modal">
         <button
           type="button"
           className="payment-close"
           onClick={handleClose}
           disabled={loading}
-          aria-label="Close payment popup"
+          aria-label="Close"
         >
-          ×
+          ✕
         </button>
 
         {success ? (
           <div className="payment-success">
-            <div className="success-icon" aria-hidden="true">
-              ✓
-            </div>
-
-            <h2>Payment Request Sent</h2>
-
-            {unitName && (
-              <p className="mb-2 font-semibold text-gray-700">
-                {unitName}
-              </p>
-            )}
-
-            <p>
-              Check your phone for the M-Pesa STK Push and enter
-              your M-Pesa PIN to complete the payment.
+            <div className="success-badge">✓</div>
+            <h2>Deposit Confirmed</h2>
+            {unitName && <p className="unit-subtitle">{unitName}</p>}
+            <p className="success-desc">
+              Your deposit of <strong>KES {formattedAmount}</strong> has been received and your booking is complete.
             </p>
-
-            <button
-              type="button"
-              className="payment-button"
-              onClick={handleClose}
-            >
+            <button type="button" className="action-btn-success" onClick={handleClose}>
               Done
             </button>
           </div>
         ) : (
           <>
             <div className="payment-header">
-              <h2 id="payment-title">Secure Your Booking</h2>
-
-              {unitName && (
-                <p className="font-semibold text-gray-700">
-                  {unitName}
-                </p>
-              )}
-
-              <p>
-                Pay your required deposit of KES {formattedAmount}
-                {" "}via M-Pesa to reserve this unit.
-              </p>
+              <h2>Secure Deposit</h2>
+              <div className="amount-badge">KES {formattedAmount}</div>
+              {unitName && <p className="unit-subtitle">{unitName}</p>}
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="payment-field">
-                <label htmlFor="amount">Amount to Pay (KES)</label>
+            {/* METHOD TOGGLE */}
+            <div className="method-tabs">
+              <button
+                type="button"
+                className={`tab-btn ${method === "mpesa" ? "active-mpesa" : ""}`}
+                onClick={() => {
+                  setMethod("mpesa");
+                  setError("");
+                }}
+              >
+                M-Pesa Express
+              </button>
+              <button
+                type="button"
+                className={`tab-btn ${method === "card" ? "active-card" : ""}`}
+                onClick={() => {
+                  setMethod("card");
+                  setError("");
+                }}
+              >
+                Card Payment
+              </button>
+            </div>
 
-                <input
-                  id="amount"
-                  type="text"
-                  value={formattedAmount}
-                  readOnly
-                />
-              </div>
-
-              <div className="payment-field">
-                <label htmlFor="phone">M-Pesa Phone Number</label>
-
-                <div
-                  className={`phone-wrapper ${
-                    error ? "phone-error" : ""
-                  }`}
-                >
-                  <span className="mpesa-icon" aria-hidden="true">
-                    M
-                  </span>
-
-                  <input
-                    id="phone"
-                    type="tel"
-                    inputMode="numeric"
-                    autoComplete="tel"
-                    placeholder="0712 345 678"
-                    value={formatPhone(phone)}
-                    onChange={handlePhoneChange}
-                    disabled={loading}
-                    aria-invalid={Boolean(error)}
-                    aria-describedby={error ? "payment-error" : undefined}
-                  />
+            <form onSubmit={handleSubmit} noValidate>
+              {method === "mpesa" ? (
+                /* M-PESA FORM */
+                <div className="form-section">
+                  <div className="payment-field">
+                    <label htmlFor="phone">M-Pesa Phone Number</label>
+                    <div className="phone-group">
+                      <span className="prefix">+254</span>
+                      <input
+                        id="phone"
+                        type="tel"
+                        placeholder="712 345 678"
+                        value={formatNineDigits(phoneDigits)}
+                        onChange={(e) => {
+                          setPhoneDigits(e.target.value.replace(/\D/g, "").slice(0, 9));
+                          setError("");
+                        }}
+                        disabled={loading}
+                        autoFocus
+                      />
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                /* CARD FORM */
+                <div className="form-section">
+                  <div className="payment-field">
+                    <label>Cardholder Name</label>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      value={cardHolder}
+                      onChange={(e) => {
+                        setCardHolder(e.target.value);
+                        setError("");
+                      }}
+                      disabled={loading}
+                    />
+                  </div>
 
-                {error && (
-                  <p id="payment-error" className="payment-error">
-                    {error}
-                  </p>
-                )}
-              </div>
+                  <div className="payment-field">
+                    <label>Card Number</label>
+                    <input
+                      type="text"
+                      placeholder="4532 1122 3344 5566"
+                      value={formatCardNumber(cardNumber)}
+                      onChange={(e) => {
+                        setCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16));
+                        setError("");
+                      }}
+                      disabled={loading}
+                    />
+                  </div>
 
-              <div className="stk-notice">
-                <span className="info-icon" aria-hidden="true">
-                  i
-                </span>
+                  <div className="form-row">
+                    <div className="payment-field">
+                      <label>Expiry Date</label>
+                      <input
+                        type="text"
+                        placeholder="MM/YY"
+                        value={formatExpiry(cardExpiry)}
+                        onChange={(e) => {
+                          setCardExpiry(e.target.value);
+                          setError("");
+                        }}
+                        disabled={loading}
+                      />
+                    </div>
+                    <div className="payment-field">
+                      <label>CVC</label>
+                      <input
+                        type="password"
+                        placeholder="123"
+                        maxLength="4"
+                        value={cardCvc}
+                        onChange={(e) => {
+                          setCardCvc(e.target.value.replace(/\D/g, "").slice(0, 4));
+                          setError("");
+                        }}
+                        disabled={loading}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                <p>
-                  An M-Pesa STK Push will be sent to this number.
-                  Enter your M-Pesa PIN on your phone to complete
-                  the payment.
-                </p>
-              </div>
+              {error && <div className="error-message">{error}</div>}
 
               <button
                 type="submit"
-                className="payment-button"
+                className={`submit-btn ${method === "mpesa" ? "submit-mpesa" : "submit-card"}`}
                 disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <span className="spinner" aria-hidden="true" />
-                    Sending Request...
-                  </>
-                ) : (
-                  "Send Payment Request"
-                )}
-              </button>
-
-              <button
-                type="button"
-                className="payment-cancel"
-                onClick={handleClose}
-                disabled={loading}
-              >
-                Cancel
+                {loading ? "Processing..." : `Pay KES ${formattedAmount}`}
               </button>
             </form>
           </>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
+import PaymentPopup from '../../components/PaymentPopup/PaymentPopup';
 import './UnitDetails.css';
 import { API_BASE_URL } from '../../config/api';
 import { useAuth } from '../../context/useAuth';
@@ -48,6 +49,7 @@ export default function UnitDetails() {
   };
   const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
   const [bookingMessage, setBookingMessage] = useState('');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
   useEffect(() => {
     if (!unitId) {
@@ -58,7 +60,6 @@ export default function UnitDetails() {
 
     setLoading(true);
 
-    // Fetch Unit details
     fetch(`${API_BASE_URL}/units/${unitId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Unit not found');
@@ -79,6 +80,9 @@ export default function UnitDetails() {
       })
       .then(() => {
         setLoading(false);
+
+        const saved = JSON.parse(localStorage.getItem('favorites')) || [];
+        setIsSaved(saved.some((item) => item.id === Number(unitId)));
       })
       .catch((err) => {
         console.error('Fetch error:', err);
@@ -152,12 +156,18 @@ export default function UnitDetails() {
 
     if (!unit) return;
 
-    const action = unit.current_occupants >= unit.maximum_occupants ? 'waitlist' : 'book';
+    const isFull = unit.current_occupants >= unit.maximum_occupants;
+
+    if (!isFull) {
+      setIsPaymentOpen(true);
+      return;
+    }
+
     setBookingStatus('booking');
     setBookingMessage('');
 
     try {
-      const endpoint = `${API_BASE_URL}/units/${unit.id}/${action}`;
+      const endpoint = `${API_BASE_URL}/units/${unit.id}/waitlist`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -167,32 +177,70 @@ export default function UnitDetails() {
         }),
       });
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || `Unable to ${action} this unit.`);
+        throw new Error(data.error || 'Unable to join waitlist.');
       }
 
       setBookingStatus('success');
-      setBookingMessage(
-        action === 'book'
-          ? 'Booking successful! Your unit has been reserved.'
-          : 'You have been added to the waiting list.'
-      );
-
-      if (action === 'book') {
-        setUnit((currentUnit) => ({
-          ...currentUnit,
-          current_occupants: Number(currentUnit.current_occupants || 0) + 1,
-        }));
-      }
+      setBookingMessage('You have been added to the waiting list.');
     } catch (error) {
-      console.error(`Failed to ${action}:`, error);
+      console.error('Failed to join waitlist:', error);
       setBookingStatus('error');
       setBookingMessage(error.message || 'Something went wrong. Please try again.');
     }
   };
+
+  const handlePaymentSubmit = async (paymentDetails) => {
+    const response = await fetch(`${API_BASE_URL}/bookings/pay`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        unit_id: unit.id,
+        student_id: user.id,
+        amount: paymentDetails.amount,
+        payment_method: paymentDetails.payment_method,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Payment failed. Please try again.');
+    }
+
+    setUnit(data.unit);
+    setBookingStatus('success');
+    setBookingMessage('Booking successful! Your deposit payment was recorded.');
+  };
+
+// Dynamic Status Calculation Helper
+const getUnitStatus = (unitObj) => {
+  if (!unitObj) return 'Vacant';
+
+  const occupants = Number(unitObj.current_occupants || 0);
+  const maxCapacity = Number(unitObj.maximum_occupants || 1);
+
+  if (occupants >= maxCapacity) {
+    return 'Occupied';
+  }
+  
+  if (occupants > 0 && maxCapacity > 1) {
+    return 'Partially Occupied';
+  }
+
+  return 'Vacant';
+};
+
+const statusText = getUnitStatus(unit);
+
+const getStatusClass = (statusStr = '') => {
+  const statusLower = statusStr.toLowerCase();
+  if (statusLower.includes('partially')) return 'status-orange';
+  if (statusLower.includes('occupied')) return 'status-red';
+  return 'status-green';
+};
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
   if (error || !unit) return <div className="unit-error">Error: {error || 'Unit not found'}</div>;
@@ -231,20 +279,21 @@ export default function UnitDetails() {
             </p>
             <div className="badge-group">
               <span className="unit-badge category">{unit.category}</span>
-              <span className={`unit-badge status ${(unit.status || 'available').toLowerCase()}`}>
+              <span className="unit-badge shared-tag">
                 👥 {unit.shared ? 'Shared' : 'Private'}
               </span>
-              <span className="unit-badge occupancy">
-                {unit.current_occupants >= unit.maximum_occupants ? 'Occupied (Waitlist)' : 'Available'}
+              <span className={`unit-badge ${getStatusClass(unit.status)}`}>
+                ● {unit.status || 'Vacant'}
               </span>
             </div>
           </div>
 
           <div className="header-actions">
-            <button className="action-btn share-btn">🔗 Share</button>
-            <button
-              className={`action-btn save-btn ${isSaved ? 'saved' : ''}`}
+            <button className="action-btn share-btn" type="button">🔗 Share</button>
+            <button 
+              className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
               onClick={handleToggleSave}
+              type="button"
             >
               {isSaved ? '💜 Saved' : '🤍 Save'}
             </button>
@@ -325,7 +374,9 @@ export default function UnitDetails() {
 
             <div className="availability-row">
               <span>Availability</span>
-              <strong className="occupied-tag">📅 {unit.status || 'Available'}</strong>
+              <strong className={`occupied-tag ${getStatusClass(unit.status)}`}>
+                📅 {unit.status || 'Vacant'}
+              </strong>
             </div>
 
             <button
@@ -352,6 +403,15 @@ export default function UnitDetails() {
           </aside>
         </div>
       </main>
+
+      {/* PAYMENT POPUP MODAL */}
+      <PaymentPopup
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        amount={unit.deposit || unit.rent}
+        unitName={`${unit.category} - Unit ${unit.id}`}
+        onPaymentRequest={handlePaymentSubmit}
+      />
 
       <Footer />
     </>
