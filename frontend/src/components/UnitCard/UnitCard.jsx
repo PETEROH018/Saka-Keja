@@ -76,8 +76,6 @@ export default function UnitCard({
         console.error("Failed to record view:", error);
       }
     }
-
-    navigate(`/unit/${id}`);
   };
 
   const handleFavorite = async () => {

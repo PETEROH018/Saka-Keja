@@ -11,13 +11,41 @@ export default function UnitDetails() {
   const params = useParams();
   const unitId = params.unitId ?? params.id;
   const apartmentId = params.apartmentId ?? params.apartment_id;
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const checkSavedStatus = async () => {
+    if (!user?.id || !unitId) return;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/favorites`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const favorites = await response.json();
+
+      const exists = favorites.some(
+        (favorite) => favorite.id === Number(unitId)
+      );
+
+      setIsSaved(exists);
+
+    } catch (error) {
+      console.error(
+        "Failed checking favorite status:",
+        error
+      );
+    }
+  };
   const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
   const [bookingMessage, setBookingMessage] = useState('');
 
@@ -39,7 +67,7 @@ export default function UnitDetails() {
       .then((unitData) => {
         setUnit(unitData);
 
-// Fetch parent apartment details if apartmentId or unit.apartment_id exists
+        // Fetch parent apartment details if apartmentId or unit.apartment_id exists
         const parentApartmentId = apartmentId || unitData.apartment_id;
         if (parentApartmentId) {
           return fetch(`${API_BASE_URL}/apartments/${parentApartmentId}`)
@@ -51,10 +79,6 @@ export default function UnitDetails() {
       })
       .then(() => {
         setLoading(false);
-
-// Sync with local storage favorites
-        const saved = JSON.parse(localStorage.getItem('favorites')) || [];
-        setIsSaved(saved.some((item) => item.id === Number(unitId)));
       })
       .catch((err) => {
         console.error('Fetch error:', err);
@@ -65,19 +89,53 @@ export default function UnitDetails() {
       });
   }, [apartmentId, unitId]);
 
-const handleToggleSave = () => {
-    if (!unit) return;
-    const existing = JSON.parse(localStorage.getItem('favorites')) || [];
-    let updated;
+  useEffect(() => {
+    checkSavedStatus();
+  }, [user?.id, unitId]);
 
-    if (isSaved) {
-      updated = existing.filter((item) => item.id !== unit.id);
-    } else {
-      updated = [...existing, unit];
+  const handleToggleSave = async () => {
+
+    if (!user?.id) {
+      alert("Please login to save properties");
+      navigate('/auth');
+      return;
     }
 
-    localStorage.setItem('favorites', JSON.stringify(updated));
-    setIsSaved(!isSaved);
+    if (!unit) return;
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/units/${unit.id}/favorite`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+
+      if (!response.ok) {
+        throw new Error("Failed to update favorite");
+      }
+
+
+      const data = await response.json();
+
+      setIsSaved(data.favorite);
+
+
+    } catch (error) {
+
+      console.error(
+        "Favorite update failed:",
+        error
+      );
+
+    }
+
   };
 
   const handleBookOrJoinWaitlist = async () => {
@@ -144,7 +202,7 @@ const handleToggleSave = () => {
       ? unit.imageURLS
       : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
 
-return (
+  return (
     <>
       <Navbar showSearch={true} />
 
@@ -184,8 +242,8 @@ return (
 
           <div className="header-actions">
             <button className="action-btn share-btn">🔗 Share</button>
-            <button 
-              className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
+            <button
+              className={`action-btn save-btn ${isSaved ? 'saved' : ''}`}
               onClick={handleToggleSave}
             >
               {isSaved ? '💜 Saved' : '🤍 Save'}
