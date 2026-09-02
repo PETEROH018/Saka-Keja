@@ -3,12 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { User, Home, Settings, Camera, Save } from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
 
-export default function StudentEditProfile({ studentId = 1 }) {
+export default function StudentEditProfile() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('personal');
+  // const [activeTab, setActiveTab] = useState('personal');
   const [statusMessage, setStatusMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const {user} = useAuth()
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -21,7 +23,7 @@ export default function StudentEditProfile({ studentId = 1 }) {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:5000/students/${studentId}`)
+    fetch(`http://localhost:5000/students/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         const studentData = data.student || data;
@@ -36,7 +38,7 @@ export default function StudentEditProfile({ studentId = 1 }) {
         });
       })
       .catch((err) => console.error("Error fetching student profile:", err));
-  }, [studentId]);
+  }, [user.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +58,7 @@ export default function StudentEditProfile({ studentId = 1 }) {
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/students/${studentId}`, {
+      const response = await fetch(`http://localhost:5000/students/${user.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +122,7 @@ export default function StudentEditProfile({ studentId = 1 }) {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* SIDEBAR TABS */}
-          <div className="space-y-1 md:col-span-1">
+          {/* <div className="space-y-1 md:col-span-1">
             <button
               onClick={() => setActiveTab('personal')}
               className={`w-full flex items-center space-x-2 px-4 py-2.5 rounded-lg text-xs font-medium transition ${
@@ -154,7 +156,7 @@ export default function StudentEditProfile({ studentId = 1 }) {
               <Settings className="w-4 h-4" />
               <span>Account Settings</span>
             </button>
-          </div>
+          </div> */}
 
           {/* FORM CONTENT */}
           <div className="md:col-span-3">
