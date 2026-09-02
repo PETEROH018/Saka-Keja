@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
+import AdminSideBar from '../AdminSideBar/AdminSideBar';
 
 export default function ManagerEditProfile({ managerId = 1 }) {
   const {user} = useAuth()
@@ -60,7 +61,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
 
         // Redirect back to profile page after 1 second, passing the updated data via state
         setTimeout(() => {
-          navigate('/ManagerProfile', { state: { updatedManager: updatedManagerData } });
+          navigate('/manager-profile', { state: { updatedManager: updatedManagerData } });
         }, 1000);
       } else {
         setStatusMessage('Failed to update profile: ' + (resData.error || 'Check fields'));
@@ -75,37 +76,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans">
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between p-6">
-        <div>
-          <h1 className="text-xl font-bold text-indigo-900 mb-8">Makazi</h1>
-          
-          <div className="flex items-center space-x-3 mb-8 p-2 bg-gray-50 rounded-lg border border-gray-100">
-            <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <img src="https://via.placeholder.com/150" alt="Manager" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-gray-800">Property Manager</p>
-              <span className="text-[10px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded">Verified Owner</span>
-            </div>
-          </div>
-
-          <nav className="space-y-1 text-sm font-medium text-gray-600">
-            <Link to="/admin-dash" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Dashboard</Link>
-            <Link to="/my-properties" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">My Properties</Link>
-            <Link to="/add-apartment" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Add Property</Link>
-            <a href="#" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Inquiries</a>
-            <a href="#" className="flex items-center px-3 py-2.5 rounded-md hover:bg-gray-50 hover:text-indigo-900">Messages</a>
-            <Link to="/ManagerEditProfile" className="flex items-center px-3 py-2.5 rounded-md bg-indigo-900 text-white shadow-sm">Profile</Link>
-          </nav>
-        </div>
-
-        <div className="pt-6 border-t border-gray-100">
-          <Link to="/add-apartment" className="block text-center w-full bg-indigo-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-indigo-800 transition shadow-sm">
-            List New Property
-          </Link>
-        </div>
-      </aside>
+      <AdminSideBar/>
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-y-auto">
@@ -204,7 +175,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
               {/* Actions */}
               <div className="flex justify-end space-x-3 pt-2">
                 <Link
-                  to="/ManagerProfile"
+                  to="/manager-profile"
                   className="px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition text-center"
                 >
                   Cancel
@@ -224,7 +195,11 @@ export default function ManagerEditProfile({ managerId = 1 }) {
               {/* Profile Picture Card */}
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center space-y-4">
                 <div className="w-20 h-20 bg-gray-200 rounded-full overflow-hidden mx-auto shadow-inner">
-                  <img src="https://via.placeholder.com/150" alt="Profile" className="w-full h-full object-cover" />
+                  <div className="w-20 h-20 bg-slate-200 dark:bg-zinc-200 rounded-full flex items-center justify-center overflow-hidden">
+                    <span className="text-slate-500 text-sm font-large uppercase">
+                      {formData?.full_name ? formData?.full_name.slice(0, 2) : '??'}
+                    </span>
+                  </div>
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-gray-900">Profile Picture</h4>
@@ -253,17 +228,6 @@ export default function ManagerEditProfile({ managerId = 1 }) {
             </div>
           </form>
 
-          {/* Footer */}
-          <footer className="mt-16 pt-6 border-t border-gray-200 flex justify-between items-center text-xs text-gray-400">
-            <p>© 2026 Makazi Student Housing. All rights reserved.</p>
-            <div className="flex space-x-6">
-              <a href="#" className="hover:text-gray-600">About Us</a>
-              <a href="#" className="hover:text-gray-600">Help Center</a>
-              <a href="#" className="hover:text-gray-600">Privacy Policy</a>
-              <a href="#" className="hover:text-gray-600">Terms of Service</a>
-              <a href="#" className="hover:text-gray-600">Contact Support</a>
-            </div>
-          </footer>
         </div>
       </main>
     </div>
