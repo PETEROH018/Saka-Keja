@@ -19,6 +19,7 @@ import EditProperty from './pages/EditProperty/EditProperty.jsx'
 import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 import UnitDetails from './pages/UnitDetails/UnitDetails';
 import StudentDashboard from './pages/StudentDashboard/StudentDashboard'
+import UnitListingForm from './pages/UnitListingForm/UnitListingForm.jsx'
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/edit-profile" element={<StudentEditProfile />} />
 
         <Route path="/owner-profile" element={<OwnerProfile />} />
+        <Route path="/owner/units/add" element={<UnitListingForm/>}/>
         <Route path="/saved-properties" element={<SavedProperties />} />
         <Route path="/auth" element={<AuthPage />} />
 
