@@ -28,7 +28,6 @@ export default function AddApartment(){
           ]
   const {user} = useAuth()
   const [currentStep, setCurrentStep] = useState(1);
-  const [units, setUnits] = useState([]);
   const [apartmentData,setApartmentData] = useState({});
   const [form, setForm] = useState(emptyForm);
   const [socialAmenities, setSocialAmenities] = useState(emptySocialAmenities);
@@ -38,9 +37,6 @@ export default function AddApartment(){
     setCurrentStep(1)
   }
 
-  const handleEditUnit =()=>{
-    setCurrentStep(2)
-  }
 
   const handleApartmentContinue = (e) => {
     e.preventDefault()
@@ -56,14 +52,6 @@ export default function AddApartment(){
   };
 
 
-  const handleUnitsContinue = () => {
-    setApartmentData((prev) => ({
-      ...prev,
-      units: units,
-    }));
-
-    setCurrentStep(3);
-  };
 
 
   const handleBack = () => {
@@ -87,17 +75,16 @@ export default function AddApartment(){
             response.json()
           })
           .then( data => {
-            alert("Apartment and units added successfuly")
+            alert("Apartment and added successfuly")
             console.log(data)
             setApartmentData({})
             setForm(emptyForm)
-            setUnits([])
             setSocialAmenities(emptySocialAmenities)
             setCurrentStep(1)
           })
           .catch( (error) => {
             console.error(error)
-            alert("An error occured and the apartment and units could not be listed!")
+            alert("An error occured and the apartment could not be listed!")
           })
 
           console.log(apartmentData)
@@ -124,9 +111,6 @@ export default function AddApartment(){
               "Add a New Property"}
 
             {currentStep === 2 &&
-              "Add Units"}
-
-            {currentStep === 3 &&
               "Review Property"}
           </h1>
 
@@ -137,9 +121,6 @@ export default function AddApartment(){
               "List a new apartment building or add units to an existing one."}
 
             {currentStep === 2 &&
-              "Define the individual units available in this building."}
-
-            {currentStep === 3 &&
               "Review your property details before publishing."}
 
           </p>
@@ -155,8 +136,7 @@ export default function AddApartment(){
 
             {[
               ["1", "Property"],
-              ["2", "Units"],
-              ["3", "Review"],
+              ["2", "Review"],
             ].map(([number, label], index) => {
 
               const stepNumber = Number(number);
@@ -261,20 +241,7 @@ export default function AddApartment(){
           />
         )}
 
-
         {currentStep === 2 && (
-          <ApartmentUnitForm
-            onBack={handleBack}
-            onContinue={
-              handleUnitsContinue
-            }
-            units={units}
-            setUnits={setUnits}
-          />
-        )}
-
-
-        {currentStep === 3 && (
           <ApartmentReview 
            apartmentData={apartmentData}
            onBack={handleBack}
