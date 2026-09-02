@@ -110,7 +110,7 @@ def add_apartment():
             'description': data.get('description'),
             'location': data.get('location'),
             'imageURLs': data.get('images'),
-            'owner_id': 40
+            'owner_id': data.get('owner_id')
             }
 
         # Adding an apartment's details to the apartments table
