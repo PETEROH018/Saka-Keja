@@ -6,15 +6,17 @@ import {
   Pencil, 
   Building2 
 } from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
 
 export default function StudentProfile({ studentId = 1 }) {
   const location = useLocation();
   const [student, setStudent] = useState(location.state?.updatedStudent || null);
   const [loading, setLoading] = useState(!location.state?.updatedStudent);
+  const {user} = useAuth()
 
   useEffect(() => {
     if (!location.state?.updatedStudent) {
-      fetch(`http://localhost:5000/students/${studentId}`)
+      fetch(`http://localhost:5000/students/${user.id}`)
         .then((res) => res.json())
         .then((data) => {
           const studentData = data.student || data;
