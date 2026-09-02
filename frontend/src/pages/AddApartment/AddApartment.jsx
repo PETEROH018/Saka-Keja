@@ -201,7 +201,7 @@ export default function AddApartment(){
 
                   {/* CONNECTING LINE */}
 
-                  {index < 2 && (
+                  {index < 1 && (
                     <div
                       className={`mt-2 h-px flex-1 ${
                         currentStep >
