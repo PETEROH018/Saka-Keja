@@ -5,8 +5,8 @@ import useFetch from "../../hooks/useFetch"
 
 export default function AdminDashboard() {
   const managerId = 1
-  const metrics = useFetch(`/manager/${managerId}/metrics`)
-  const performance = useFetch(`/manager/${managerId}/performance`)
+  const metrics = useFetch(`http://localhost:5000/manager/${managerId}/metrics`)
+  const performance = useFetch(`http://localhost:5000/manager/${managerId}/performance`)
 
   const stats = [
     {
