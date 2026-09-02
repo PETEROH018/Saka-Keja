@@ -289,7 +289,7 @@ const getStatusClass = (statusStr = '') => {
           </div>
 
           <div className="header-actions">
-            <button className="action-btn share-btn" type="button">🔗 Share</button>
+            {/* <button className="action-btn share-btn" type="button">🔗 Share</button> */}
             <button 
               className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
               onClick={handleToggleSave}
