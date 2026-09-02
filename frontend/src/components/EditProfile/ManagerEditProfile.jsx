@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth';
 
 export default function ManagerEditProfile({ managerId = 1 }) {
+  const {user} = useAuth()
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: '',
@@ -14,7 +16,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/managers/${managerId}`)
+    fetch(`http://localhost:5000/managers/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         const ownerData = data.owner || data;
@@ -27,7 +29,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
         });
       })
       .catch((err) => console.error("Error fetching manager profile:", err));
-  }, [managerId]);
+  }, [user.id]);
 
   const handleChange = (e) => {
     setFormData({
@@ -42,7 +44,7 @@ export default function ManagerEditProfile({ managerId = 1 }) {
     setStatusMessage('');
 
     try {
-      const response = await fetch(`http://localhost:5000/managers/${managerId}`, {
+      const response = await fetch(`http://localhost:5000/managers/${user.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
