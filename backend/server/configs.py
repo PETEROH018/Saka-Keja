@@ -42,4 +42,4 @@ app.config["JWT_ALGORITHM"] = "HS256"
 db.init_app(app)
 migrate = Migrate(app, db) 
 bcrypt.init_app(app)
-CORS(app)
+CORS(app,methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
