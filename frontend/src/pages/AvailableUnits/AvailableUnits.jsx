@@ -84,7 +84,7 @@ export default function AvailableUnits() {
       Example:
 
       const response = await fetch(
-        "http://localhost:5000/api/payments/stk-push",
+        `${API_BASE_URL}/api/payments/stk-push`,
         {
           method: "POST",
           headers: {
