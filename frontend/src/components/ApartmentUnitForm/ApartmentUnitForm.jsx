@@ -61,10 +61,10 @@ function FormField({
 const inputClass =
   "h-9 w-full rounded-md border border-[#dcd3e1] bg-[#fdf9ff] px-2.5 text-[10px] text-[#3f3943] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10";
 
-export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
-  const [unit, setUnit] = useState(emptyUnit);
+export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,initialUnit,editOnly=false,onSave}){
+  const [unit, setUnit] = useState(initialUnit ?? emptyUnit);
   const [editingId, setEditingId] = useState(null);
-  const [uploadCompleted, setUploadCompleted] = useState(false)
+  const [uploadCompleted, setUploadCompleted] = useState(editOnly)
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -139,6 +139,11 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
         unit.bedrooms
       ),
     };
+
+    if (editOnly) {
+      onSave(unitData);
+      return;
+    }
 
 
     /* UPDATE EXISTING UNIT */
@@ -516,7 +521,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 
             {/* ADD / UPDATE UNIT  */}
 
-            <div className="mt-7 flex justify-end">
+            {!editOnly && <div className="mt-7 flex justify-end">
 
               <button
                 type="button"
@@ -536,14 +541,14 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 
               </button>
 
-            </div>
+            </div>}
 
           </div>
 
 
           {/* ADD ANOTHER UNIT */}
 
-          <button
+          {!editOnly && <button
             type="button"
             onClick={resetForm}
             className="mt-4 flex h-[98px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#cfc3d7] bg-white text-center transition hover:bg-[#fdf9ff]"
@@ -566,14 +571,14 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
               Add another individual unit
             </span>
 
-          </button>
+          </button>}
 
         </div>
 
 
         {/* RIGHT COLUMN — ADDED UNITS */}
 
-        <aside className="min-w-0 w-full lg:sticky lg:top-6">
+        {!editOnly && <aside className="min-w-0 w-full lg:sticky lg:top-6">
 
           <AddedUnitSummary
             units={units}
@@ -583,7 +588,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
             editingId={editingId}
           />
 
-        </aside>
+        </aside>}
 
       </div>
 
@@ -603,12 +608,12 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue}){
 
         <button
           type="button"
-          disabled={units.length === 0}
-          onClick={onContinue}
+          disabled={editOnly ? !uploadCompleted : units.length === 0}
+          onClick={editOnly ? handleAddUnit : onContinue}
           className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084] disabled:cursor-not-allowed disabled:opacity-40"
         >
 
-          Continue to Review
+          {editOnly ? "Save Unit" : "Continue to Review"}
 
           <Icon
             name="arrowRight"
