@@ -45,9 +45,7 @@ function App() {
 
         {/* Manager Profile & Edit Routes */}
         <Route path="/manager-profile" element={<ManagerProfile />} />
-        <Route path="/ManagerProfile" element={<ManagerProfile />} />
         <Route path="/ManagerEditProfile" element={<ManagerEditProfile />} />
-        <Route path="/manager-edit-profile" element={<ManagerEditProfile />} />
 
         <Route path='/add-apartment' element={<AddApartment />} />
         <Route path="/about" element={<About />} />
