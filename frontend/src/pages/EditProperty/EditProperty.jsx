@@ -51,11 +51,22 @@ function EditPropertyForm({ property }) {
                 }
             );
 
-            if (response.ok) {
-                setSaveMessage("Property updated successfully");
-            } else {
-                setSaveError("Failed to update property");
+            if (!response.ok) {
+                const errorData = await response.json();
+
+                throw new Error(
+                    errorData.message ||
+                    errorData.error ||
+                    "Failed to update property"
+                );
             }
+
+            setSaveMessage("Property updated successfully");
+
+        } catch (error) {
+            console.error("Update property failed:", error);
+            setSaveError(error.message);
+
         } finally {
             setIsSaving(false);
         }
