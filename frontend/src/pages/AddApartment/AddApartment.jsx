@@ -4,6 +4,7 @@ import ApartmentDetailsForm from "../../components/ApartmentDetailsForm/Apartmen
 import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
 import ApartmentReview from "../../components/ApartmentReview/ApartmentReview";
 import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
 
 export default function AddApartment(){
   const emptyForm= {
@@ -25,6 +26,7 @@ export default function AddApartment(){
   const emptyApartmentAmenities = [
               {name: "", description: ""},
           ]
+  const {user} = useAuth()
   const [currentStep, setCurrentStep] = useState(1);
   const [units, setUnits] = useState([]);
   const [apartmentData,setApartmentData] = useState({});
@@ -44,6 +46,7 @@ export default function AddApartment(){
     e.preventDefault()
     const propertyData = {
               ...form,
+              "owner_id": user.id,
               socialAmenities,
               apartmentAmenities
               };
