@@ -3,8 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
 
 function EditPropertyForm({ property }) {
+    const { token } = useAuth();
     const [name, setName] = useState(property.name ?? "");
     const [location, setLocation] = useState(property.location ?? "");
     const [propertyType, setPropertyType] = useState(property.property_type ?? "");
@@ -32,6 +34,7 @@ function EditPropertyForm({ property }) {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                         name,
