@@ -520,7 +520,7 @@ def update_unit(id):
 
         return (
             jsonify(
-                {"message": "Unit updated successfully", "data": unit_schema.dump(unit)}
+                {"message": "Unit updated successfully"}
             ),
             200,
         )
