@@ -21,8 +21,7 @@ import { API_BASE_URL } from "../../config/api";
 
 function OwnerProfile() {
   const { user } = useAuth();
-  const managerId = 1
-  const metrics = useFetch(`${API_BASE_URL}/manager/${managerId}/metrics`)
+  const metrics = useFetch(`${API_BASE_URL}/manager/${user.id}/metrics`)
   const EXAMPLE_LISTINGS = useFetch(`${API_BASE_URL}/apartments`);
   const stats = [
     {
