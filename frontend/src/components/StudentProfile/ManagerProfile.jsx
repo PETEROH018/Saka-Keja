@@ -3,12 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import AdminSideBar from '../AdminSideBar/AdminSideBar';
 import { API_BASE_URL } from '../../config/api';
+import useFetch from '../../hooks/useFetch';
 
 export default function ManagerProfile() {
   const location = useLocation();
   const [manager, setManager] = useState(location.state?.updatedManager || null);
   const [loading, setLoading] = useState(!location.state?.updatedManager);
   const {user} = useAuth()
+
+  const metrics = useFetch(`${API_BASE_URL}/owners/${user.id}/metrics`)
 
   useEffect(() => {
     if (!location.state?.updatedManager) {
@@ -85,7 +88,7 @@ export default function ManagerProfile() {
           {/* Stats Section */}
           <div className="grid grid-cols-4 gap-4">
             <div className="bg-indigo-900 text-white p-5 rounded-xl shadow-sm">
-              <p className="text-2xl font-bold">4</p>
+              <p className="text-2xl font-bold">{metrics.data?.listings ?? 0}</p>
               <p className="text-xs uppercase tracking-wider text-indigo-200 mt-1">Total Listings</p>
             </div>
             <div className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
