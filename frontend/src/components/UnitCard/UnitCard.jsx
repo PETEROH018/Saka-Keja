@@ -193,7 +193,7 @@ export default function UnitCard({
 
         {/* Amenities Icons */}
         <div className="flex items-center gap-2 pt-1">
-          <div title="WiFi included" className={`flex h-7 w-7 items-center justify-center rounded-full ${wifiIncluded ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
+          {/* <div title="WiFi included" className={`flex h-7 w-7 items-center justify-center rounded-full ${wifiIncluded ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
             <Wifi className="h-3.5 w-3.5" />
           </div>
           <div title="Water reliable" className={`flex h-7 w-7 items-center justify-center rounded-full font-semibold text-xs ${waterReliable ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
@@ -201,7 +201,7 @@ export default function UnitCard({
           </div>
           <div title="Security guard" className={`flex h-7 w-7 items-center justify-center rounded-full ${securityGuard ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
             <ShieldCheck className="h-3.5 w-3.5" />
-          </div>
+          </div> */}
           <div title="Kitchenette" className={`flex h-7 w-7 items-center justify-center rounded-full ${kitchenette ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-400"}`}>
             <Utensils className="h-3.5 w-3.5" />
           </div>
