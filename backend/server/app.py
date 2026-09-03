@@ -1198,6 +1198,25 @@ def process_booking_payment():
         db.session.rollback()
         return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
 
+@app.route('/students/<int:student_id>/booked-units', methods=['GET'])
+def get_booked_units(student_id):
+    
+    try:
+        booked_units = (
+        db.session.query(Unit)
+        .join(StudentUnit, StudentUnit.unit_id == Unit.id)
+        .filter(
+            StudentUnit.student_id == student_id,
+            StudentUnit.deposit_paid > 0,
+            Unit.status.in_(['Occupied', 'Partially Occupied'])
+        )
+        .all()
+    )
+
+        return jsonify(UnitSchema(many=True).dump(booked_units)), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
             
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
