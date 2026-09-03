@@ -1,11 +1,9 @@
 import Icon from "../Icon/Icon";
-import UnitCard from "../UnitsReview/UnitReviewCard";
 
 export default function ApartmentReview({  
   apartmentData = {},
   onBack,
   onEditProperty,
-  onEditUnits,
   onSubmit,
   }){
   const {
@@ -21,13 +19,6 @@ export default function ApartmentReview({
     amenities = [],
   } = apartmentData;
 
-const formatCurrency = (value) => {
-    return Number(value || 0).toLocaleString();
-  };
-
-function handleSubmit(){
-    console.log(apartmentData)
-}
 
 function SummaryItem({ label, value }) {
   return (
@@ -74,7 +65,7 @@ function Feature({ label, active }) {
 }
 
     return(
-    <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
+  <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
     <div className="mx-auto w-full max-w-[900px]">
 
          {/* HEADER */}
