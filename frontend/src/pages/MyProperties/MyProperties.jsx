@@ -7,7 +7,6 @@ import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/useAuth";
 
 export default function MyProperties() {
-
   const {user} = useAuth()
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
@@ -15,7 +14,7 @@ export default function MyProperties() {
     data: properties,
     loading,
     error,
-  } = useFetch(`${API_BASE_URL}/owners/${user.id}/apartments`);
+  } = useFetch(`${API_BASE_URL}/owners/${user?.id}/apartments`);
 
   
   const filteredProperties = (properties ?? []).filter((property) => {
