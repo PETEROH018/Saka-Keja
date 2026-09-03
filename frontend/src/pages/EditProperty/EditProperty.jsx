@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
+import { API_BASE_URL } from "../../config/api";
 
 
 function EditPropertyForm({ property }) {
@@ -27,7 +28,7 @@ function EditPropertyForm({ property }) {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/apartments/${property.id}`,
+                `${API_BASE_URL}/apartments/${property.id}`,
                 {
                     method: "PATCH",
                     headers: {
