@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { data, useParams } from "react-router-dom";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
-import ApartmentUnitForm from "../../components/ApartmentUnitForm/ApartmentUnitForm";
+import UnitEditingForm from "../../components/UnitEditingForm/UnitEditingForm";
 import { API_BASE_URL } from "../../config/api";
 
 function toFormUnit(unit) {
@@ -13,10 +13,10 @@ function toFormUnit(unit) {
     depositAmount: unit.deposit ?? "",
     size: unit.size ?? "",
     shared: unit.shared ?? false,
-    bathrooms: String(unit.bathrooms ?? 0),
-    bedrooms: String(unit.bedrooms ?? 0),
-    maxOccupants: String(unit.maximum_occupants ?? 1),
-    images: unit.imageURLS ?? [],
+    bathrooms: unit.bathrooms ?? 0,
+    bedrooms: unit.bedrooms ?? 0,
+    maxOccupants: unit.maximum_occupants ?? 1,
+    imageURLS: unit.imageURLS ?? [],
     unitAmenities: (unit.unit_amenity_links ?? [])
       .map((link) => link.amenity?.name)
       .filter(Boolean),
@@ -25,7 +25,7 @@ function toFormUnit(unit) {
 
 export default function EditUnit() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const childRef = useRef(null);
   const [unit, setUnit] = useState(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -40,35 +40,47 @@ export default function EditUnit() {
       .catch((requestError) => setError(requestError.message));
   }, [id]);
 
-  const handleSave = async (formUnit) => {
-    setSaving(true);
+  const handleSave = async () => {
     setError("");
 
     try {
+      if(!unit.unitType || !unit.description || !unit.monthlyRent || !unit.depositAmount)
+                {
+                    alert("Please fill the required fields")
+                    return
+                }
+                
+              let uploadedUrls = []
+              setSaving(true)
+              if (childRef.current) {
+                uploadedUrls = await childRef.current.triggerChildSubmit();
+                }
+              const unitData = {
+              id: unit.id,
+              category: unit.unitType,
+              description: unit.description,
+              rent: unit.monthlyRent,
+              deposit: unit.depositAmount,
+              size: unit.size,
+              shared: unit.shared,
+              bathrooms: unit.bathrooms,
+              bedrooms: unit.bedrooms,
+              maximum_occupants: unit.maxOccupants,
+              unitAmenities: unit.unitAmenities,
+              imageURLS: [...(unit.imageURLS || []), ...uploadedUrls].filter(Boolean),
+              }
+              console.log(unitData)
       const response = await fetch(`${API_BASE_URL}/units/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category: formUnit.unitType,
-          description: formUnit.description,
-          rent: formUnit.monthlyRent,
-          deposit: formUnit.depositAmount,
-          size: formUnit.size,
-          shared: formUnit.shared,
-          bathrooms: formUnit.bathrooms,
-          bedrooms: formUnit.bedrooms,
-          maximum_occupants: formUnit.maxOccupants,
-          imageURLS: formUnit.images,
-          unitAmenities: formUnit.unitAmenities,
-        }),
+        body: JSON.stringify(unitData),
       });
-
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || data.message || "Unit could not be updated");
       }
+      alert(`${data.message}`)
 
-      navigate(-1);
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -96,13 +108,12 @@ export default function EditUnit() {
           {saving && <p className="px-5 pt-4 text-sm text-[#77717c] lg:px-7">Saving unit...</p>}
 
           {unit && (
-            <ApartmentUnitForm
-              units={[unit]}
-              setUnits={() => {}}
-              initialUnit={unit}
-              editOnly
+            <UnitEditingForm
+              unit={unit}
+              setUnit={setUnit}
               onSave={handleSave}
-              onBack={() => navigate(-1)}
+              saving={saving}
+               ref={childRef}
             />
           )}
         </main>
