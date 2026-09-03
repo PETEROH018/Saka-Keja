@@ -1,34 +1,67 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
+import ApartmentEditingForm from "../../components/ApartmentEditingForm/ApartmentEditingForm";
 
+const toForm = (data) => {
+    return {
+        buildingName: data.name,
+        propertyType: data.type,
+        location: data.location,
+        description: data.description,
+        imageURLs: data.imageURLs ?? [],
 
-function EditPropertyForm({ property }) {
+    }
+}
+
+export default function EditProperty() {
+
+    const { id } = useParams();
+    const {
+        data: property,
+        loading,
+        error,
+    } = useFetch(`${API_BASE_URL}/apartments/${id}`);
     const { token } = useAuth();
-    const [name, setName] = useState(property.name ?? "");
-    const [location, setLocation] = useState(property.location ?? "");
-    const [propertyType, setPropertyType] = useState(property.property_type ?? "");
-    const [saveMessage, setSaveMessage] = useState("");
-    const [saveError, setSaveError] = useState("");
+    const childRef = useRef(null)
     const [isSaving, setIsSaving] = useState(false);
+    const [form,setForm] = useState({})
+
+    useEffect(()=>{
+        if(!loading && property){
+            setForm(toForm(property))
+        }
+    },[property,id,loading])
+
+    console.log(property)
+
+    if (error){
+        alert(error)
+    }
 
     async function handleSubmit(e) {
-        e.preventDefault();
 
-        setSaveMessage("");
-        setSaveError("");
         setIsSaving(true);
 
-        if (!name || !location || !propertyType) {
-            setSaveError("Name, location and property type are required");
-            setIsSaving(false);
-            return;
-        }
-
         try {
-            const response = await fetch(
+              let uploadedUrls = []
+              setIsSaving(true)
+              if (childRef.current) {
+              uploadedUrls = await childRef.current.triggerChildSubmit();
+                }
+              const propertyData = {
+                    name : form.buildingName,
+                    type : form.propertyType,
+                    location : form.location,
+                    description : form.description,
+                    imageURLs: [...(form.imageURLs || []), ...uploadedUrls].filter(Boolean),
+
+                    
+              }
+              const response = await fetch(
                 `${API_BASE_URL}/apartments/${property.id}`,
                 {
                     method: "PATCH",
@@ -36,13 +69,7 @@ function EditPropertyForm({ property }) {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({
-                        name,
-                        location,
-                        type: propertyType,
-                        description: property.description,
-                        imageURLs: property.imageURLs || [],
-                    })
+                    body: JSON.stringify(propertyData)
                 }
             );
 
@@ -56,121 +83,23 @@ function EditPropertyForm({ property }) {
                 );
             }
 
-            setSaveMessage("Property updated successfully");
+            alert("Property updated successfully");
 
         } catch (error) {
             console.error("Update property failed:", error);
-            setSaveError(error.message);
+            alert("Update property failed!")
 
         } finally {
             setIsSaving(false);
         }
     }
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-        >
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">
-                    Property Details
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                    Edit the information displayed on your property listing.
-                </p>
-            </div>
-
-            <div className="mb-5">
-                <label
-                    htmlFor="property-name"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                >
-                    Property Name
-                </label>
-
-                <input
-                    id="property-name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                />
-            </div>
-
-            <div className="mb-5">
-                <label
-                    htmlFor="property-location"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                >
-                    Location
-                </label>
-
-                <input
-                    id="property-location"
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                />
-            </div>
-
-            <div className="mb-5">
-                <div>
-                    <label
-                        htmlFor="property-type"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                        Property Type
-                    </label>
-
-                    <input
-                        id="property-type"
-                        type="text"
-                        value={propertyType}
-                        onChange={(e) => setPropertyType(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                    />
-                </div>
-
-            </div>
-
-            <button
-                type="submit"
-                disabled={isSaving}
-                className="min-w-32 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-                {isSaving ? "Saving..." : "Save Changes"}
-            </button>
-
-            {saveMessage && (
-                <p className="mt-4 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
-                    {saveMessage}
-                </p>
-            )}
-            {saveError && (
-                <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                    {saveError}
-                </p>
-            )}
-
-        </form >
-    );
-}
-
-export default function EditProperty() {
-    const { id } = useParams();
-
-    const {
-        data: property,
-        loading,
-        error,
-    } = useFetch(`${API_BASE_URL}/apartments/${id}`);
 
     return (
         <div className="flex min-h-screen bg-[#faf8fc]">
             <AdminSideBar />
-            <main className="flex-1 px-8 py-7">
+            {loading ? <p>Loading apartment details ...</p>
+
+            : <main className="flex-1 px-8 py-7">
                 <Link
                     to="/my-properties"
                     className="mb-3 inline-block text-sm font-medium text-violet-600 hover:text-violet-800"
@@ -199,10 +128,16 @@ export default function EditProperty() {
 
                 {property && (
                     <div className="mt-6 max-w-3xl">
-                        <EditPropertyForm property={property} />
+                        <ApartmentEditingForm
+                            form={form}
+                            setForm={setForm}
+                            onSubmit={handleSubmit}
+                            ref={childRef}
+                            isSaving={isSaving}
+                        />
                     </div>
                 )}
-            </main>
+            </main>}
         </div>
     );
 }
