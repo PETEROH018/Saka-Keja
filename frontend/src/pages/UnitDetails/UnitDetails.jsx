@@ -12,44 +12,17 @@ export default function UnitDetails() {
   const params = useParams();
   const unitId = params.unitId ?? params.id;
   const apartmentId = params.apartmentId ?? params.apartment_id;
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
-  const checkSavedStatus = async () => {
-    if (!user?.id || !unitId) return;
-
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/students/${user.id}/favorites`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const favorites = await response.json();
-
-      const exists = favorites.some(
-        (favorite) => favorite.id === Number(unitId)
-      );
-
-      setIsSaved(exists);
-
-    } catch (error) {
-      console.error(
-        "Failed checking favorite status:",
-        error
-      );
-    }
-  };
   const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
   const [bookingMessage, setBookingMessage] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (!unitId) {
@@ -68,7 +41,6 @@ export default function UnitDetails() {
       .then((unitData) => {
         setUnit(unitData);
 
-        // Fetch parent apartment details if apartmentId or unit.apartment_id exists
         const parentApartmentId = apartmentId || unitData.apartment_id;
         if (parentApartmentId) {
           return fetch(`${API_BASE_URL}/apartments/${parentApartmentId}`)
@@ -93,53 +65,19 @@ export default function UnitDetails() {
       });
   }, [apartmentId, unitId]);
 
-  useEffect(() => {
-    checkSavedStatus();
-  }, [user?.id, unitId]);
-
-  const handleToggleSave = async () => {
-
-    if (!user?.id) {
-      alert("Please login to save properties");
-      navigate('/auth');
-      return;
-    }
-
+  const handleToggleSave = () => {
     if (!unit) return;
+    const existing = JSON.parse(localStorage.getItem('favorites')) || [];
+    let updated;
 
-    try {
-
-      const response = await fetch(
-        `${API_BASE_URL}/students/${user.id}/units/${unit.id}/favorite`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-
-      if (!response.ok) {
-        throw new Error("Failed to update favorite");
-      }
-
-
-      const data = await response.json();
-
-      setIsSaved(data.favorite);
-
-
-    } catch (error) {
-
-      console.error(
-        "Favorite update failed:",
-        error
-      );
-
+    if (isSaved) {
+      updated = existing.filter((item) => item.id !== unit.id);
+    } else {
+      updated = [...existing, unit];
     }
 
+    localStorage.setItem('favorites', JSON.stringify(updated));
+    setIsSaved(!isSaved);
   };
 
   const handleBookOrJoinWaitlist = async () => {
@@ -212,35 +150,41 @@ export default function UnitDetails() {
 
     setUnit(data.unit);
     setBookingStatus('success');
-    setBookingMessage('Booking successful! Your deposit payment was recorded.');
+    setIsPaymentOpen(false);
+    setShowSuccessModal(true); // Open success popup
   };
 
-// Dynamic Status Calculation Helper
-const getUnitStatus = (unitObj) => {
-  if (!unitObj) return 'Vacant';
+  const handleReturnToMainMenu = () => {
+    setShowSuccessModal(false);
+    navigate('/'); // Redirect to Main Menu / Home Page
+  };
 
-  const occupants = Number(unitObj.current_occupants || 0);
-  const maxCapacity = Number(unitObj.maximum_occupants || 1);
+  // Dynamic Occupancy Status Calculation
+  const getUnitStatus = (unitObj) => {
+    if (!unitObj) return 'Vacant';
 
-  if (occupants >= maxCapacity) {
-    return 'Occupied';
-  }
-  
-  if (occupants > 0 && maxCapacity > 1) {
-    return 'Partially Occupied';
-  }
+    const occupants = Number(unitObj.current_occupants || 0);
+    const maxCapacity = Number(unitObj.maximum_occupants || 1);
 
-  return 'Vacant';
-};
+    if (occupants >= maxCapacity) {
+      return 'Occupied';
+    }
 
-const statusText = getUnitStatus(unit);
+    if (occupants > 0 && maxCapacity > 1) {
+      return 'Partially Occupied';
+    }
 
-const getStatusClass = (statusStr = '') => {
-  const statusLower = statusStr.toLowerCase();
-  if (statusLower.includes('partially')) return 'status-orange';
-  if (statusLower.includes('occupied')) return 'status-red';
-  return 'status-green';
-};
+    return 'Vacant';
+  };
+
+  const statusText = getUnitStatus(unit);
+
+  const getStatusClass = (statusStr = '') => {
+    const statusLower = statusStr.toLowerCase();
+    if (statusLower.includes('partially')) return 'status-orange';
+    if (statusLower.includes('occupied')) return 'status-red';
+    return 'status-green';
+  };
 
   if (loading) return <div className="unit-loading">Loading unit details...</div>;
   if (error || !unit) return <div className="unit-error">Error: {error || 'Unit not found'}</div>;
@@ -280,16 +224,16 @@ const getStatusClass = (statusStr = '') => {
             <div className="badge-group">
               <span className="unit-badge category">{unit.category}</span>
               <span className="unit-badge shared-tag">
-                👥 {unit.shared ? 'Shared' : 'Private'}
+                👥 {unit.shared || unit.maximum_occupants > 1 ? 'Shared' : 'Private'}
               </span>
-              <span className={`unit-badge ${getStatusClass(unit.status)}`}>
-                ● {unit.status || 'Vacant'}
+              <span className={`unit-badge ${getStatusClass(statusText)}`}>
+                ● {statusText}
               </span>
             </div>
           </div>
 
           <div className="header-actions">
-            {/* <button className="action-btn share-btn" type="button">🔗 Share</button> */}
+            <button className="action-btn share-btn" type="button">🔗 Share</button>
             <button 
               className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
               onClick={handleToggleSave}
@@ -374,22 +318,24 @@ const getStatusClass = (statusStr = '') => {
 
             <div className="availability-row">
               <span>Availability</span>
-              <strong className={`occupied-tag ${getStatusClass(unit.status)}`}>
-                📅 {unit.status || 'Vacant'}
+              <strong className={`occupied-tag ${getStatusClass(statusText)}`}>
+                📅 {statusText}
               </strong>
             </div>
 
             <button
               className="primary-booking-btn"
               onClick={handleBookOrJoinWaitlist}
-              disabled={bookingStatus === 'booking'}
+              disabled={bookingStatus === 'booking' || bookingStatus === 'success'}
               type="button"
             >
               {bookingStatus === 'booking'
                 ? 'Processing...'
-                : unit.current_occupants >= unit.maximum_occupants
-                  ? 'Join Waitlist'
-                  : 'Book Now'}
+                : bookingStatus === 'success'
+                  ? 'Booked ✓'
+                  : unit.current_occupants >= unit.maximum_occupants
+                    ? 'Join Waitlist'
+                    : 'Book Now'}
             </button>
 
             {bookingMessage && (
@@ -404,7 +350,7 @@ const getStatusClass = (statusStr = '') => {
         </div>
       </main>
 
-      {/* PAYMENT POPUP MODAL */}
+      {/* PAYMENT INPUT POPUP */}
       <PaymentPopup
         isOpen={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}
@@ -412,6 +358,30 @@ const getStatusClass = (statusStr = '') => {
         unitName={`${unit.category} - Unit ${unit.id}`}
         onPaymentRequest={handlePaymentSubmit}
       />
+
+      {/* SUCCESS CONFIRMATION MODAL */}
+      {showSuccessModal && (
+        <div className="booking-success-overlay">
+          <div className="booking-success-card">
+            <div className="success-icon-circle">🎉</div>
+            <h2>Unit Successfully Booked!</h2>
+            <p className="unit-summary">
+              <strong>{unit.category} (Unit {unit.id})</strong> at {apartment?.name || 'Saka-Keja Property'}
+            </p>
+            <p className="success-subtext">
+              Your deposit payment has been confirmed. Your spot is reserved and your booking record has been updated.
+            </p>
+
+            <button
+              type="button"
+              className="return-main-menu-btn"
+              onClick={handleReturnToMainMenu}
+            >
+              Return to Main Menu
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>

@@ -486,7 +486,6 @@ def get_unit_by_id(id):
 
 @app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
 def update_unit(id):
-
     unit = Unit.query.get(id)
 
     if not unit:
@@ -498,18 +497,24 @@ def update_unit(id):
         return jsonify({"error": "No data provided"}), 400
 
     new_image_urls = data.pop("imageURLs", None)
+    unit_amenity_names = data.pop("unitAmenities", None)
 
     try:
 
         unit_schema.load(data, instance=unit, partial=True)
 
         if new_image_urls is not None:
-
-            existing_image_urls = unit.imageURLS or []
-
-            unit.imageURLS = existing_image_urls + new_image_urls
-
+            unit.imageURLS = new_image_urls
             flag_modified(unit, "imageURLS")
+
+        if unit_amenity_names is not None:
+            selected_amenities = UnitAmenity.query.filter(
+                UnitAmenity.name.in_(unit_amenity_names)
+            ).all()
+            unit.unit_amenity_links.clear()
+            unit.unit_amenity_links.extend(
+                UnitAmenityJoining(amenity=amenity) for amenity in selected_amenities
+            )
 
         db.session.commit()
 
@@ -1116,6 +1121,8 @@ def mark_unit_favorite(student_id, unit_id):
 
     return jsonify({"favorite": student_unit.favorite}), 200
 
+import uuid
+
 @app.route("/bookings/pay", methods=["POST"])
 def process_booking_payment():
     data = request.get_json()
@@ -1132,13 +1139,19 @@ def process_booking_payment():
         return jsonify({"error": "Unit not found"}), 404
 
     try:
-        # 1. Update or Create StudentUnit record
-        student_unit = StudentUnit.query.filter_by(
+        # 1. Prevent duplicate booking for the same unit by the same student
+        existing_booking = StudentUnit.query.filter_by(
             student_id=student_id, 
             unit_id=unit_id
         ).first()
 
-        if not student_unit:
+        if existing_booking and (existing_booking.deposit_paid or 0) > 0:
+            return jsonify({
+                "error": "You have already booked and paid the deposit for this unit."
+            }), 400
+
+        # 2. Update or Create StudentUnit record
+        if not existing_booking:
             student_unit = StudentUnit(
                 student_id=student_id,
                 unit_id=unit_id,
@@ -1147,9 +1160,10 @@ def process_booking_payment():
             db.session.add(student_unit)
             db.session.flush()
         else:
+            student_unit = existing_booking
             student_unit.deposit_paid = (student_unit.deposit_paid or 0) + amount
 
-        # 2. Record Payment Transaction
+        # 3. Record Payment Transaction
         payment = Payment(
             student_unit_id=student_unit.id,
             amount=amount,
@@ -1159,18 +1173,16 @@ def process_booking_payment():
         )
         db.session.add(payment)
 
-        # 3. Increment Occupancy
+        # 4. Increment Occupancy & Calculate Unit Status
         new_occupants = (unit.current_occupants or 0) + 1
         unit.current_occupants = new_occupants
-
         max_capacity = unit.maximum_occupants or 1
 
-        # Strict Status Assignment
         if new_occupants >= max_capacity:
             unit.status = "Occupied"
         elif new_occupants > 0 and max_capacity > 1:
             unit.status = "Partially Occupied"
-            unit.shared = True  # Ensure shared flag is synced
+            unit.shared = True
         else:
             unit.status = "Vacant"
 
@@ -1185,6 +1197,7 @@ def process_booking_payment():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Payment processing failed: {str(e)}"}), 500
-    
+
+            
 if __name__ == "__main__":
     app.run(debug=True, host="localhost", port=5000)
