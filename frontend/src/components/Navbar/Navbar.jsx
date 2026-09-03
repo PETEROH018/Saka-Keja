@@ -138,7 +138,7 @@ export default function Navbar({ showSearch = false }) {
                 to={
                   user.role === "student"
                     ? "/student-profile"
-                    : "/owner-profile"
+                    : "/manager-profile"
                 }
                 aria-label="User profile"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700"
