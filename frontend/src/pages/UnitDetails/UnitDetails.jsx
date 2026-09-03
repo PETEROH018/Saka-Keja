@@ -12,7 +12,7 @@ export default function UnitDetails() {
   const params = useParams();
   const unitId = params.unitId ?? params.id;
   const apartmentId = params.apartmentId ?? params.apartment_id;
-  const { user } = useAuth();
+  const { token,user } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [apartment, setApartment] = useState(null);
@@ -23,6 +23,35 @@ export default function UnitDetails() {
   const [bookingMessage, setBookingMessage] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
+  const checkSavedStatus = async () => {
+    if (!user?.id || !unitId) return;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/favorites`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const favorites = await response.json();
+
+      const exists = favorites.some(
+        (favorite) => favorite.id === Number(unitId)
+      );
+
+      setIsSaved(exists);
+
+    } catch (error) {
+      console.error(
+        "Failed checking favorite status:",
+        error
+      );
+    }
+  };
 
   useEffect(() => {
     if (!unitId) {
@@ -53,8 +82,6 @@ export default function UnitDetails() {
       .then(() => {
         setLoading(false);
 
-        const saved = JSON.parse(localStorage.getItem('favorites')) || [];
-        setIsSaved(saved.some((item) => item.id === Number(unitId)));
       })
       .catch((err) => {
         console.error('Fetch error:', err);
@@ -65,19 +92,58 @@ export default function UnitDetails() {
       });
   }, [apartmentId, unitId]);
 
-  const handleToggleSave = () => {
-    if (!unit) return;
-    const existing = JSON.parse(localStorage.getItem('favorites')) || [];
-    let updated;
+   useEffect(() => {
+      checkSavedStatus();
+    }, [user?.id, unitId]);
 
-    if (isSaved) {
-      updated = existing.filter((item) => item.id !== unit.id);
-    } else {
-      updated = [...existing, unit];
+  const handleToggleSave = async () => {
+
+    if (!user?.id) {
+      alert("Please login to save properties");
+      navigate('/auth');
+      return;
     }
 
-    localStorage.setItem('favorites', JSON.stringify(updated));
-    setIsSaved(!isSaved);
+     if (user.role !== 'student') {
+      alert('Only students can set a unit as favorite');
+      return;
+    }
+
+    if (!unit) return;
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/students/${user.id}/units/${unit.id}/favorite`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+
+      if (!response.ok) {
+        throw new Error("Failed to update favorite");
+      }
+
+
+      const data = await response.json();
+
+      setIsSaved(data.favorite);
+
+
+    } catch (error) {
+
+      console.error(
+        "Favorite update failed:",
+        error
+      );
+
+    }
+
   };
 
   const handleBookOrJoinWaitlist = async () => {
@@ -233,7 +299,7 @@ export default function UnitDetails() {
           </div>
 
           <div className="header-actions">
-            <button className="action-btn share-btn" type="button">🔗 Share</button>
+            {/* <button className="action-btn share-btn" type="button">🔗 Share</button> */}
             <button 
               className={`action-btn save-btn ${isSaved ? 'saved' : ''}`} 
               onClick={handleToggleSave}
