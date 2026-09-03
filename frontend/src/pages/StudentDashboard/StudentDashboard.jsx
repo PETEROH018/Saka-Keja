@@ -10,6 +10,7 @@ function StudentDashboard() {
     const [promotedUnits, setPromotedUnits] = useState([]);
     const [favoriteUnits, setFavoriteUnits] = useState([]);
     const [availableUnits, setAvailableUnits] = useState([]);
+    const [bookedUnits, setBookedUnits] = useState([])
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -67,6 +68,7 @@ function StudentDashboard() {
                     promotedResponse,
                     favoritesResponse,
                     viewedResponse,
+                    bookedResponse
                 ] = await Promise.all([
                     fetch(`${API_BASE_URL}/units/promoted`),
                     fetch(`${API_BASE_URL}/students/${user.id}/favorites`, {
@@ -79,12 +81,14 @@ function StudentDashboard() {
                             Authorization: `Bearer ${token}`,
                         },
                     }),
+                    fetch(`${API_BASE_URL}/students/${user.id}/booked-units`),
                 ]);
 
                 if (
                     !promotedResponse.ok ||
                     !favoritesResponse.ok ||
-                    !viewedResponse.ok
+                    !viewedResponse.ok ||
+                    !bookedResponse
                 ) {
                     throw new Error("Failed to load dashboard data.");
                 }
@@ -92,11 +96,14 @@ function StudentDashboard() {
                 const promotedData = await promotedResponse.json();
                 const favoritesData = await favoritesResponse.json();
                 const viewedData = await viewedResponse.json();
+                const bookedData = await bookedResponse.json()
 
 
                 setPromotedUnits(promotedData.items || []);
                 setFavoriteUnits(favoritesData || []);
                 setAvailableUnits(viewedData || []);
+                setBookedUnits(bookedData || [])
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -120,8 +127,12 @@ function StudentDashboard() {
             title: "Viewed Units",
             items: paginatedViewedUnits,
         },
+        {
+            title: "Booked Units",
+            items: bookedUnits,
+        },
     ];
-
+    console.log(bookedUnits)
     return (
         <>
             <Navbar showSearch={false} />
