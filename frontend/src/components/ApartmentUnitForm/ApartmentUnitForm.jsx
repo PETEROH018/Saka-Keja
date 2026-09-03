@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddedUnitSummary from "./AddedUnitSummary";
 import Icon from "../Icon/Icon";
 import ImageUploader from "../../utils/ImageUploader";
+import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
+import React, { forwardRef } from 'react';
 
 
 const unitTypeOptions = [
@@ -18,19 +21,6 @@ const amenityOptions = [
   "Wardrobes",
 ];
 
-const emptyUnit = {
-  unitType:"",
-  description:"",
-  monthlyRent: "",
-  depositAmount: "",
-  size: "",
-  shared: false,
-  bathrooms: "0",
-  bedrooms: "0",
-  maxOccupants: "1",
-  images: [],
-  unitAmenities: [],
-};
 
 function FormField({
   label,
@@ -61,19 +51,40 @@ function FormField({
 const inputClass =
   "h-9 w-full rounded-md border border-[#dcd3e1] bg-[#fdf9ff] px-2.5 text-[10px] text-[#3f3943] outline-none placeholder:text-[#aaa2ad] focus:border-[#7652aa] focus:ring-2 focus:ring-[#7652aa]/10";
 
-export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,initialUnit,editOnly=false,onSave}){
-  const [unit, setUnit] = useState(initialUnit ?? emptyUnit);
-  const [editingId, setEditingId] = useState(null);
-  const [uploadCompleted, setUploadCompleted] = useState(editOnly)
+const ApartmentUnitForm = forwardRef(({unit,setUnit,onSubmit,isSubmitting},ref) => {
+  
+  const {user} = useAuth()
+  const [apartments,setApartments] = useState(null)
+  const [isLoading,setIsLoading] = useState(true)
+  
+  useEffect(()=>{
+    fetch(`${API_BASE_URL}/owners/${user.id}/apartments`)
+    .then(response => {
+      if(!response.ok){
+        throw new Error(`A HTTP error occured with status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then(data=> 
+      {
+        setApartments(data)
+        console.log(data)
+        setIsLoading(false)
+      })
+    .catch(error => alert(`Error ${error}, Owner's apartments could not be fetched`))
+  },[user.id])
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type, files} = e.target;
+    const integerFields = ["apartment_id","bedrooms", "bathrooms", "monthlyRent", "depositAmount", "maxOccupants","size"];
 
     setUnit((prev) => ({
       ...prev,
-      [name]:type === "file"
-            ? [...(prev[name] || []), ...Array.from(files)]
-                : value,
+      [name]: type === "file"
+        ? [...(prev[name] || []), ...Array.from(files)]  
+          : integerFields.includes(name)
+            ? Number(value)
+            : value,
     }));
   };
 
@@ -99,96 +110,6 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
     }));
   };
 
-   const resetForm = () => {
-    setUnit({
-      ...emptyUnit,
-      unitAmenities: [],
-    });
-
-    setEditingId(null);
-  };
-
- const handleAddUnit = () => {
-    if (
-      !unit.unitType ||
-      !unit.monthlyRent
-    ) {
-      return alert("Please fill in the required fields");
-    }
-
-    const unitData = {
-      ...unit,
-
-      monthlyRent: Number(
-        unit.monthlyRent
-      ),
-
-      depositAmount: Number(
-        unit.depositAmount || 0
-      ),
-
-      size: Number(
-        unit.size || 0
-      ),
-
-      bathrooms: String(
-        unit.bathrooms
-      ),
-
-      bedrooms: String(
-        unit.bedrooms
-      ),
-    };
-
-    if (editOnly) {
-      onSave(unitData);
-      return;
-    }
-
-
-    /* UPDATE EXISTING UNIT */
-
-    if (editingId) {
-      setUnits((prev) =>
-        prev.map((item) =>
-          item.id === editingId
-            ? {
-                ...unitData,
-                id: editingId,
-                unitNumber:item.unitNumber,
-              }
-            : item
-        )
-      );
-
-      resetForm();
-      return;
-    }
-
-    /* ADD NEW INDIVIDUAL UNIT */
-
-    const nextNumber =
-      units.length + 1;
-
-    const newUnit = {
-      ...unitData,
-
-      id: Date.now(),
-
-      unitNumber:
-        `Unit ${String(
-          nextNumber
-        ).padStart(3, "0")}`,
-    };
-
-    setUnits((prev) => [
-      ...prev,
-      newUnit,
-    ]);
-
-    resetForm();
-  };
-  
   return(
   <div className="border-b border-[#e4dce8] bg-[#fcf8fd] px-5 pb-6 pt-7 lg:px-7">
 
@@ -207,8 +128,47 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
           <div className="rounded-lg border border-[#dcd3e2] bg-[#fdf9ff] p-4">
 
             <h2 className="mb-5 text-[12px] font-semibold text-[#28232d]">
-              {editingId ? "Edit Unit" : "Add Unit"}
+              Add Unit
             </h2>
+            {/*SELECT APARTMENT */}
+
+            <FormField
+              label="Apartment"
+              required
+            >
+              <div className="relative">
+
+                <select
+                  name="apartment_id"
+                  value={unit.apartment_id}
+                  required
+                  onChange={handleChange}
+                  className={`${inputClass} appearance-none pr-9`}
+                >
+                  <option value="">
+                    Select an apartment
+                  </option>
+                  {isLoading && <option>Loading apartments ...</option>}
+
+                  {!isLoading && apartments.map((apartment) => (
+                    <option
+                      key={apartment.id}
+                      value={apartment.id}
+                    >
+                      {apartment.name}
+                    </option>
+                  ))
+                }
+                </select>
+
+                <Icon
+                  name="chevronDown"
+                  size={12}
+                  className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#756d7a]"
+                />
+
+              </div>
+            </FormField>
 
             {/* UNIT TYPE */}
 
@@ -282,6 +242,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
 
               <FormField
                 label="Deposit Amount"
+                required
               >
                 <input
                   type="number"
@@ -454,7 +415,7 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
 
         </div>
 
-          </FormField>
+           </FormField>
 
 
               {/* unitAmenities */}
@@ -514,82 +475,14 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
 
             </div>
           
-          {/*Unit images*/}
+           {/*Unit images*/}
 
-           <ImageUploader type={'unit'} form={unit} setForm={setUnit} uploadComplete={uploadCompleted} setUploadComplete={setUploadCompleted} />
-
-
-            {/* ADD / UPDATE UNIT  */}
-
-            {!editOnly && <div className="mt-7 flex justify-end">
-
-              <button
-                type="button"
-                onClick={handleAddUnit}
-                disabled = {!uploadCompleted}
-                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] mt-2 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-
-                <Icon
-                  name="plus"
-                  size={11}
-                />
-
-                {editingId
-                  ? "Update Unit"
-                  : "Add Unit"}
-
-              </button>
-
-            </div>}
+           <ImageUploader ref={ref} type={'unit'} />
 
           </div>
 
 
-          {/* ADD ANOTHER UNIT */}
-
-          {!editOnly && <button
-            type="button"
-            onClick={resetForm}
-            className="mt-4 flex h-[98px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#cfc3d7] bg-white text-center transition hover:bg-[#fdf9ff]"
-          >
-
-            <span className="mb-2 grid h-7 w-7 place-items-center rounded-full bg-[#eee8f1] text-[#625a66]">
-
-              <Icon
-                name="plus"
-                size={15}
-              />
-
-            </span>
-
-            <span className="text-[9px] font-medium text-[#3f3943]">
-              Add Another Unit
-            </span>
-
-            <span className="mt-1 text-[8px] text-[#8b838e]">
-              Add another individual unit
-            </span>
-
-          </button>}
-
-        </div>
-
-
-        {/* RIGHT COLUMN — ADDED UNITS */}
-
-        {!editOnly && <aside className="min-w-0 w-full lg:sticky lg:top-6">
-
-          <AddedUnitSummary
-            units={units}
-            setUnit={setUnit}
-            setUnits={setUnits}
-            setEditingId={setEditingId}
-            editingId={editingId}
-          />
-
-        </aside>}
-
+      </div>
       </div>
 
 
@@ -599,26 +492,19 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
 
         <button
           type="button"
-          onClick={onBack}
-          className="h-8 rounded-md border border-[#ddd4df] bg-white px-4 text-[9px] text-[#49434d] hover:bg-gray-50"
-        >
-          Back
-        </button>
-
-
-        <button
-          type="button"
-          disabled={editOnly ? !uploadCompleted : units.length === 0}
-          onClick={editOnly ? handleAddUnit : onContinue}
+          disabled={isSubmitting}
+          onClick={() => onSubmit?.()}
           className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084] disabled:cursor-not-allowed disabled:opacity-40"
         >
-
-          {editOnly ? "Save Unit" : "Continue to Review"}
-
-          <Icon
-            name="arrowRight"
-            size={11}
-          />
+          {isSubmitting ? (
+            <>
+              {/* Tailwind's built-in animate-spin handles the continuous rotating loop */}
+              <div className="w-4 height-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span>Uploading & Saving...</span>
+            </>
+          ) : (
+            'Submit Listing'
+          )}
 
         </button>
 
@@ -629,4 +515,5 @@ export default function ApartmentUnitForm({units,setUnits,onBack,onContinue,init
 
 
   )
-}
+})
+export default ApartmentUnitForm

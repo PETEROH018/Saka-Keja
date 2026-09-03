@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import Icon from "../Icon/Icon";
 import ImageUploader from "../../utils/ImageUploader";
+import React, { forwardRef } from 'react';
 
 
 //This is the list of the types of properties that can be listed by an owner
@@ -19,9 +19,8 @@ const labelClass =
   "mb-1.5 block text-[9px] font-medium text-[#4c4650]";
 
 
-export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities}){
-        const [uploadComplete,setUploadComplete] = useState(false)
-        const handleChange = (e) => {
+const ApartmentDetailsForm = forwardRef (({form,setForm,socialAmenities,setSocialAmenities,apartmentAmenities,setApartmentAmenities,onSubmit,isSubmitting},ref) => {
+     const handleChange = (e) => {
             const { name, value, type, checked, files } = e.target;
     
             setForm((prev) => ({
@@ -84,7 +83,6 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
 
              {/* INPUT FORM */}
             <form
-                onSubmit={onContinue}
                 className="rounded-lg border border-[#ded7e2] bg-white px-5 py-7 shadow-sm sm:px-8"
             >
             
@@ -407,7 +405,7 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
             </section>
             </section>
 
-            <ImageUploader type={'apartment'} form={form} setForm={setForm} uploadComplete={uploadComplete} setUploadComplete={setUploadComplete}/> 
+            <ImageUploader ref={ref} type={'apartment'}  /> 
 
             <section className="mb-8">
 
@@ -497,17 +495,28 @@ export default function ApartmentDetailsForm({onContinue,form,setForm,socialAmen
             
             <div className="flex justify-end gap-2 border-t border-[#e6e0e8] pt-5">
 
-              <button
-                type="submit"
-                disabled = {!uploadComplete}
-                className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Continue to Units
-                <Icon name="arrowRight" size={12} />
-              </button>
+            <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => onSubmit?.()}
+                  className="flex h-8 items-center gap-1.5 rounded-md bg-[#5b3894] px-5 text-[9px] font-medium text-white hover:bg-[#4e3084] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+          {isSubmitting ? (
+            <>
+              {/* Tailwind's built-in animate-spin handles the continuous rotating loop */}
+              <div className="w-4 height-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span>Uploading & Saving...</span>
+            </>
+          ) : (
+            'Submit Property'
+          )}
+
+        </button>    
 
             </div>
             </form>        
             </main>
     )
-}
+})
+
+export default ApartmentDetailsForm

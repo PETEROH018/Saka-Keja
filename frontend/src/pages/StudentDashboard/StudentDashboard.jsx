@@ -32,7 +32,7 @@ function StudentDashboard() {
         viewedStartIndex + viewedPerPage
     );
 
-    if(!user){
+    if(user.role !== 'student'){
         navigate('/')
     }
 

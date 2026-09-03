@@ -1,11 +1,9 @@
 import Icon from "../Icon/Icon";
-import UnitCard from "./UnitCard";
 
 export default function ApartmentReview({  
   apartmentData = {},
   onBack,
   onEditProperty,
-  onEditUnits,
   onSubmit,
   }){
   const {
@@ -19,16 +17,8 @@ export default function ApartmentReview({
     wifiIncluded = false,
     images = [],
     amenities = [],
-    units = [],
   } = apartmentData;
 
-const formatCurrency = (value) => {
-    return Number(value || 0).toLocaleString();
-  };
-
-function handleSubmit(){
-    console.log(apartmentData)
-}
 
 function SummaryItem({ label, value }) {
   return (
@@ -75,7 +65,7 @@ function Feature({ label, active }) {
 }
 
     return(
-    <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
+  <div className="min-h-screen bg-white px-5 py-7 lg:px-7">
     <div className="mx-auto w-full max-w-[900px]">
 
          {/* HEADER */}
@@ -231,55 +221,7 @@ function Feature({ label, active }) {
         </div>
           </section>
         
-        {/* UNITS */}
-
-        <section className="mt-6">
-
-          <div className="mb-3 flex items-center justify-between">
-
-            <div>
-              <h2 className="text-[12px] font-semibold text-[#39333d]">
-                Units
-              </h2>
-
-              <p className="mt-1 text-[8px] text-[#8b838e]">
-                {units.length}{" "}
-                {units.length === 1 ? "unit" : "units"} added
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={onEditUnits}
-              className="flex items-center gap-1 text-[9px] font-medium text-[#59388f] hover:text-[#452770]"
-            >
-              <Icon name="edit" size={11} />
-              Edit Units
-            </button>
-
-          </div>
-
-          {units.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-[#cfc3d7] bg-white px-4 py-8 text-center">
-              <p className="text-[9px] text-[#8b838e]">
-                No units have been added.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-
-              {units.map((unit, index) => (
-                <UnitCard
-                  key={unit.id || index}
-                  unit={unit}
-                  formatCurrency={formatCurrency}
-                />
-              ))}
-
-            </div>
-          )}
-
-        </section>
+        
 
         {/* LISTING SUMMARY */}
 

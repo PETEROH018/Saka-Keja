@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import { API_BASE_URL } from "../../config/api";
-import { useAuth } from "../../context/useAuth";
 
 
 function EditPropertyForm({ property }) {
