@@ -8,8 +8,8 @@ import { useAuth } from "../../context/useAuth"
 export default function AdminDashboard() {
   const {user} = useAuth()
   const managerId = user?.id
-  const metrics = useFetch(`${API_BASE_URL}/manager/${managerId}/metrics`)
-  const performance = useFetch(`${API_BASE_URL}/manager/${managerId}/performance`)
+  const metrics = useFetch(`${API_BASE_URL}/owners/${managerId}/metrics`)
+  const performance = useFetch(`${API_BASE_URL}/owners/${managerId}/performance`)
 
   const stats = [
     {
