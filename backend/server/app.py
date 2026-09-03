@@ -462,7 +462,6 @@ def get_unit_by_id(id):
 
 @app.route("/units/<int:id>", methods=['PATCH', 'PUT', 'POST'])
 def update_unit(id):
-
     unit = Unit.query.get(id)
 
     if not unit:
@@ -474,18 +473,24 @@ def update_unit(id):
         return jsonify({"error": "No data provided"}), 400
 
     new_image_urls = data.pop("imageURLs", None)
+    unit_amenity_names = data.pop("unitAmenities", None)
 
     try:
 
         unit_schema.load(data, instance=unit, partial=True)
 
         if new_image_urls is not None:
-
-            existing_image_urls = unit.imageURLS or []
-
-            unit.imageURLS = existing_image_urls + new_image_urls
-
+            unit.imageURLS = new_image_urls
             flag_modified(unit, "imageURLS")
+
+        if unit_amenity_names is not None:
+            selected_amenities = UnitAmenity.query.filter(
+                UnitAmenity.name.in_(unit_amenity_names)
+            ).all()
+            unit.unit_amenity_links.clear()
+            unit.unit_amenity_links.extend(
+                UnitAmenityJoining(amenity=amenity) for amenity in selected_amenities
+            )
 
         db.session.commit()
 

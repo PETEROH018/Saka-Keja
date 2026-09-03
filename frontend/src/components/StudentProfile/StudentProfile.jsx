@@ -7,6 +7,7 @@ import {
   Building2 
 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import { API_BASE_URL } from '../../config/api';
 
 export default function StudentProfile({ studentId = 1 }) {
   const location = useLocation();
@@ -16,7 +17,7 @@ export default function StudentProfile({ studentId = 1 }) {
 
   useEffect(() => {
     if (!location.state?.updatedStudent) {
-      fetch(`http://localhost:5000/students/${user.id}`)
+      fetch(`${API_BASE_URL}/students/${user.id}`)
         .then((res) => res.json())
         .then((data) => {
           const studentData = data.student || data;

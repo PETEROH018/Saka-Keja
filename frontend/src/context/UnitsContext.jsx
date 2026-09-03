@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { API_BASE_URL } from "../config/api";
 
 const UnitsContext = createContext()
 
@@ -7,7 +8,7 @@ export function UnitsProvider({children}){
     const [allUnits,setAllUnits] = useState()
 
     useEffect(()=>{
-        fetch('http://127.0.0.1:5000/units')
+        fetch(`${API_BASE_URL}/units`)
         .then(response => response.json())
         .then(data => setAllUnits(data))
     },[])

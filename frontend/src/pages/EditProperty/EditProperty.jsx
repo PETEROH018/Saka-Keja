@@ -5,6 +5,7 @@ import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/useAuth";
 
+
 function EditPropertyForm({ property }) {
     const { token } = useAuth();
     const [name, setName] = useState(property.name ?? "");

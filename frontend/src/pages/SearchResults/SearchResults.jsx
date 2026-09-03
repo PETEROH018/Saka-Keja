@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import './SearchResults.css';
+import { API_BASE_URL } from '../../config/api';
 
 export default function SearchResults() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function SearchResults() {
 
   // Fetch Units Data from Backend API
   useEffect(() => {
-    fetch('http://localhost:5000/units')
+    fetch(`${API_BASE_URL}/units`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch units');
         return res.json();

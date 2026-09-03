@@ -4,6 +4,7 @@ import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import { User, Home, Settings, Camera, Save } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import { API_BASE_URL } from '../../config/api';
 
 export default function StudentEditProfile() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function StudentEditProfile() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:5000/students/${user.id}`)
+    fetch(`${API_BASE_URL}/students/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         const studentData = data.student || data;
@@ -58,7 +59,7 @@ export default function StudentEditProfile() {
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/students/${user.id}`, {
+      const response = await fetch(`${API_BASE_URL}/students/${user.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
