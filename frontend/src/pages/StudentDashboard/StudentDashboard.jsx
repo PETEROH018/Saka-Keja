@@ -3,12 +3,10 @@ import UnitCard from "../../components/UnitCard/UnitCard";
 import { useAuth } from "../../context/useAuth";
 import { API_BASE_URL } from "../../config/api";
 import Navbar from "../../components/Navbar/Navbar";
-import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 
 function StudentDashboard() {
     const { user, token } = useAuth();
-    const navigate = useNavigate()
     const [promotedUnits, setPromotedUnits] = useState([]);
     const [favoriteUnits, setFavoriteUnits] = useState([]);
     const [availableUnits, setAvailableUnits] = useState([]);
@@ -31,10 +29,6 @@ function StudentDashboard() {
         viewedStartIndex,
         viewedStartIndex + viewedPerPage
     );
-
-    if(user.role !== 'student'){
-        navigate('/')
-    }
 
     useEffect(() => {
 
@@ -130,7 +124,7 @@ function StudentDashboard() {
 
     return (
         <>
-            <Navbar showSearch={true} />
+            <Navbar showSearch={false} />
             <div className="flex min-h-screen bg-gray-50">
 
                 <main className="min-w-0 flex-1 p-6 lg:p-8">
