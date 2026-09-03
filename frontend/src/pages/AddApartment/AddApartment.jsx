@@ -6,7 +6,8 @@ import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/useAuth";
 
 export default function AddApartment(){
-  const emptyForm= {
+      const {user} = useAuth()
+      const emptyForm= {
               buildingName: "",
               location: "",
               propertyType: "",
@@ -25,7 +26,6 @@ export default function AddApartment(){
               {name: "", description: ""},
           ]
   const childRef = useRef(null);
-  const {user} = useAuth()
   const [isSubmitting,setIsSubmitting] = useState(false)
   const [form, setForm] = useState(emptyForm);
   const [socialAmenities, setSocialAmenities] = useState(emptySocialAmenities);
