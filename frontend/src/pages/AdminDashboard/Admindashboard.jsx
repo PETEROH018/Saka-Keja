@@ -2,10 +2,12 @@ import AdminSideBar from "../../components/AdminSideBar/AdminSideBar"
 import { Building2, Eye, MessageSquare, Heart, TrendingUp, Plus, Search, Bell, Clock, MapPin, ChevronRight, ArrowUpRight } from "lucide-react"
 import useFetch from "../../hooks/useFetch"
 import { API_BASE_URL } from "../../config/api"
+import { useAuth } from "../../context/useAuth"
 
 
 export default function AdminDashboard() {
-  const managerId = 1
+  const {user} = useAuth()
+  const managerId = user?.id
   const metrics = useFetch(`${API_BASE_URL}/manager/${managerId}/metrics`)
   const performance = useFetch(`${API_BASE_URL}/manager/${managerId}/performance`)
 
