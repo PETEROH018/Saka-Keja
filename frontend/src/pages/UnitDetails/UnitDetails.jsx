@@ -22,6 +22,7 @@ export default function UnitDetails() {
   const [bookingStatus, setBookingStatus] = useState(null); // 'idle' | 'booking' | 'success' | 'error'
   const [bookingMessage, setBookingMessage] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (!unitId) {
@@ -149,14 +150,13 @@ export default function UnitDetails() {
 
     setUnit(data.unit);
     setBookingStatus('success');
-    setBookingMessage('Booking successful! Redirecting to your overview...');
+    setIsPaymentOpen(false);
+    setShowSuccessModal(true); // Open success popup
   };
 
-  const handlePaymentClose = () => {
-    setIsPaymentOpen(false);
-    if (bookingStatus === 'success') {
-      navigate('/overview');
-    }
+  const handleReturnToMainMenu = () => {
+    setShowSuccessModal(false);
+    navigate('/'); // Redirect to Main Menu / Home Page
   };
 
   // Dynamic Occupancy Status Calculation
@@ -350,14 +350,38 @@ export default function UnitDetails() {
         </div>
       </main>
 
-      {/* PAYMENT POPUP MODAL */}
+      {/* PAYMENT INPUT POPUP */}
       <PaymentPopup
         isOpen={isPaymentOpen}
-        onClose={handlePaymentClose}
+        onClose={() => setIsPaymentOpen(false)}
         amount={unit.deposit || unit.rent}
         unitName={`${unit.category} - Unit ${unit.id}`}
         onPaymentRequest={handlePaymentSubmit}
       />
+
+      {/* SUCCESS CONFIRMATION MODAL */}
+      {showSuccessModal && (
+        <div className="booking-success-overlay">
+          <div className="booking-success-card">
+            <div className="success-icon-circle">🎉</div>
+            <h2>Unit Successfully Booked!</h2>
+            <p className="unit-summary">
+              <strong>{unit.category} (Unit {unit.id})</strong> at {apartment?.name || 'Saka-Keja Property'}
+            </p>
+            <p className="success-subtext">
+              Your deposit payment has been confirmed. Your spot is reserved and your booking record has been updated.
+            </p>
+
+            <button
+              type="button"
+              className="return-main-menu-btn"
+              onClick={handleReturnToMainMenu}
+            >
+              Return to Main Menu
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
