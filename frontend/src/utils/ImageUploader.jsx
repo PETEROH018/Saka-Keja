@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import Icon from "../components/Icon/Icon";
+import React, { forwardRef, useImperativeHandle } from 'react';
 
-export default function ImageUploader({type,form,setForm,uploadComplete,setUploadComplete}) {
-    const [loading, setLoading] = useState(false);
+
+const ImageUploader = forwardRef(({type},ref) => {
     const [imageFiles, setImageFiles] = useState([])
 
     const CLOUD_NAME = "pdxdbkuz"; 
     const UPLOAD_PRESET = "fofv56oc";
     
     const handleFileChange = (e) => {
-        setUploadComplete(false)
         setImageFiles([...imageFiles,...Array(e.target.files[0])])
     }
 
@@ -18,13 +18,10 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
             prevFiles.filter((_, index) => index !== indexToRemove)
         );
         if (imageFiles.length == 0) {
-            setUploadComplete(true)
         }
     };
 
   const uploadImage = async () => {
-    setLoading(true);
-
     try {
         // 1. Mapping image files into an array of upload promises
         const uploadPromises = imageFiles.map(async (image) => {
@@ -51,32 +48,23 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
         // 2. Waiting for ALL uploads to finish successfully
         const newUploadedUrls = await Promise.all(uploadPromises);
 
-
-        // 3. Updating the form state once with all new URLs 
-        setForm((prev) => ({
-        ...prev,
-        images: [...(prev.images || []), ...newUploadedUrls].filter(Boolean),
-        }));
-
-        // 4. Marking completion and clearing files
-        setUploadComplete(true);
+        // 3. Marking completion and clearing files
         alert("Your images have been uploaded successfully")
         setImageFiles([]); 
-
+        return newUploadedUrls;
         } catch (error) {
             console.error("Error uploading images:", error);
             alert("Error uploading images");
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
+
+    useImperativeHandle(ref, () => ({
+        triggerChildSubmit: uploadImage
+    }));
 
   return(
     <section className="mb-8">
-        {
-           imageFiles.length == 0 && setUploadComplete(true)
-           
-        }
+       
         {type === 'apartment' 
                    ?<>
                    <h3 className="mb-1 text-[13px] font-semibold"> Property Photos </h3>
@@ -92,8 +80,6 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
                   </p>
                    </>
         }
-    
-                  
     
                   <label className="relative flex min-h-[125px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#9b82bb] bg-[#fdf9ff] text-center hover:bg-[#faf3ff]">
     
@@ -118,15 +104,9 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
                       className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                     />
                   </label>
-
-                  <button onClick={uploadImage} disabled={loading || imageFiles.length == 0 }  className="flex h-9 items-center gap-1.5 rounded-md border border-[#5b3894] bg-[#5b3894] px-4 text-[9px] font-semibold text-white hover:bg-[#4f3084] mt-2 disabled:cursor-not-allowed disabled:opacity-40">
-                        {loading ? "Uploading..." : "Upload"}
-                  </button>
-                  {imageFiles.length == 0 && (
-                    <p className="text-[12px] font-semibold text-[#553589]">Select at least one image to upload!</p>
-                  )}
+                
                   {/* Selected images */}
-                  {!uploadComplete && imageFiles.length > 0 && (
+                  {imageFiles.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {imageFiles.map((file, index) => (
                         <div
@@ -159,49 +139,10 @@ export default function ImageUploader({type,form,setForm,uploadComplete,setUploa
                         ))}
                     </div>
                     )}
-    
-                  {/* Uploaded images */}
-                  {form.images.length > 0 && (
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        
-                        {form.images.map((image, index) => (
-                        <div
-                            key={index}
-                            className="relative overflow-hidden rounded-md border border-[#e2dce6] bg-[#fcf8fd]"
-                        >
-                            <p className="text-[12px] font-semibold text-[#553589]">Uploaded</p>
-                            {/* ❌ The Remove Button */}
-                            {/* <button
-                            type="button"
-                            onClick={() => removeImageFile(index)} // Passes the current index
-                            className="absolute right-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500/80 text-white font-bold text-[10px] hover:bg-red-600 transition-colors shadow-sm cursor-pointer"
-                            title="Remove image"
-                            >
-                            ✕
-                            </button> */}
-
-                            <img
-                            src={image}
-                            alt={`${type} image`}
-                            className="h-20 w-full object-cover"
-                            />
-
-                            <div className="flex items-center gap-1 truncate px-2 py-1.5 text-[8px] text-[#5b5361]">
-                            <Icon name="image" size={11} />
-                            <span className="truncate">
-                                {`${type} - ${index}`}
-                            </span>
-                            </div>
-                        </div>
-                        ))}
-                    </div>
-                    )}
-                    
-                    
-                
-
                 </section>
     
                 
   )
-}
+})
+
+export default ImageUploader
