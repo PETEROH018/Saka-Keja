@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import PaymentPopup from "../../components/PaymentPopup/PaymentPopup";
 import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
 
 import {
   ArrowLeft,
@@ -33,6 +34,7 @@ const CATEGORIES = [
 
 export default function AvailableUnits() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [activeTab, setActiveTab] = useState("All Units");
   const [paymentOpen, setPaymentOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function AvailableUnits() {
       Example:
 
       const response = await fetch(
-        "http://localhost:5000/api/payments/stk-push",
+        `${API_BASE_URL}/api/payments/stk-push`,
         {
           method: "POST",
           headers: {
@@ -321,6 +323,15 @@ export default function AvailableUnits() {
 
                   {/* ACTIONS */}
                   <div className="mt-6 grid grid-cols-1 gap-2">
+                    {user?.role === "owner" && (
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/edit-unit/${unit.id}`)}
+                        className="w-full rounded-xl border border-purple-200 bg-purple-50 py-3 text-xs sm:text-sm font-semibold text-[#59388f] transition hover:bg-purple-100 active:scale-[0.98]"
+                      >
+                        Edit Unit
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => handleViewDetails(unit)}

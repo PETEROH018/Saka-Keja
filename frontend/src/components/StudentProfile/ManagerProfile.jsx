@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import AdminSideBar from '../AdminSideBar/AdminSideBar';
+import { API_BASE_URL } from '../../config/api';
 
 export default function ManagerProfile() {
   const location = useLocation();
@@ -11,7 +12,7 @@ export default function ManagerProfile() {
 
   useEffect(() => {
     if (!location.state?.updatedManager) {
-      fetch(`http://localhost:5000/managers/${user.id}`)
+      fetch(`${API_BASE_URL}/managers/${user.id}`)
         .then((res) => res.json())
         .then((data) => {
           const ownerData = data.owner || data;

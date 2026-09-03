@@ -18,6 +18,7 @@ import About from "./pages/About/About.jsx"
 import EditProperty from './pages/EditProperty/EditProperty.jsx'
 import AvailableUnits from './pages/AvailableUnits/AvailableUnits.jsx'
 import UnitDetails from './pages/UnitDetails/UnitDetails';
+import EditUnit from './pages/EditUnit/EditUnit.jsx'  
 import StudentDashboard from './pages/StudentDashboard/StudentDashboard'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/my-properties" element={<MyProperties />} />
         <Route path="/edit-property/:id" element={<EditProperty />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/edit-unit/:id" element={<EditUnit />} />
 
         {/* Student Profile & Edit Routes */}
         <Route path="/student-profile" element={<StudentProfile />} />

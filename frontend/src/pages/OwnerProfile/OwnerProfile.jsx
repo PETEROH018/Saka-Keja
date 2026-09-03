@@ -16,13 +16,14 @@ import {
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useAuth } from "../../context/useAuth";
+import { API_BASE_URL } from "../../config/api";
 
 
 function OwnerProfile() {
   const { user } = useAuth();
   const managerId = 1
-  const metrics = useFetch(`/manager/${managerId}/metrics`)
-  const EXAMPLE_LISTINGS = useFetch('http://localhost:3000/apartments');
+  const metrics = useFetch(`${API_BASE_URL}/manager/${managerId}/metrics`)
+  const EXAMPLE_LISTINGS = useFetch(`${API_BASE_URL}/apartments`);
   const stats = [
     {
       id: "active-listings",

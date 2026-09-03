@@ -5,6 +5,7 @@ import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import CheckPassword, { isPasswordStrong } from "../../utils/CheckPassword";
 import validatePhoneNumber from "../../utils/ValidateNumber";
 import { useAuth } from "../../context/useAuth"
+import { API_BASE_URL } from "../../config/api";
 
 
 export function AuthPage() {
@@ -108,7 +109,7 @@ export function AuthPage() {
 
   async function login(userName, password, userRole) {
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password, userRole }),
@@ -132,7 +133,7 @@ export function AuthPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/students/viewed-units/sync", {
+      const res = await fetch(`${API_BASE_URL}/students/viewed-units/sync`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +216,7 @@ export function AuthPage() {
       location,
     };
 
-    const endpoint = signUpFormData.userRole === "manager" ? "http://localhost:5000/owners" : "http://localhost:5000/students";
+    const endpoint = signUpFormData.userRole === "manager" ? `${API_BASE_URL}/owners` : `${API_BASE_URL}/students`;
 
     try {
       const res = await fetch(endpoint, {
