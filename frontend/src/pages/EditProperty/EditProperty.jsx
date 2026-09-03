@@ -3,18 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import AdminSideBar from "../../components/AdminSideBar/AdminSideBar";
 import { API_BASE_URL } from "../../config/api";
+import { useAuth } from "../../context/useAuth";
 
 
 function EditPropertyForm({ property }) {
+    const { token } = useAuth();
     const [name, setName] = useState(property.name ?? "");
     const [location, setLocation] = useState(property.location ?? "");
     const [propertyType, setPropertyType] = useState(property.property_type ?? "");
-    const [rent, setRent] = useState(
-        property["monthly-expense-breakdown"]?.rent ?? ""
-    );
-    const [bedrooms, setBedrooms] = useState(property.bedrooms ?? "");
-    const [bathrooms, setBathrooms] = useState(property.bathrooms ?? "");
-    const [status, setStatus] = useState(property.status ?? "available");
     const [saveMessage, setSaveMessage] = useState("");
     const [saveError, setSaveError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
@@ -26,6 +22,12 @@ function EditPropertyForm({ property }) {
         setSaveError("");
         setIsSaving(true);
 
+        if (!name || !location || !propertyType) {
+            setSaveError("Name, location and property type are required");
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const response = await fetch(
                 `${API_BASE_URL}/apartments/${property.id}`,
@@ -33,27 +35,34 @@ function EditPropertyForm({ property }) {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                         name,
                         location,
-                        property_type: propertyType,
-                        bedrooms: Number(bedrooms),
-                        bathrooms: Number(bathrooms),
-                        status,
-                        "monthly-expense-breakdown": {
-                            ...property["monthly-expense-breakdown"],
-                            rent: Number(rent),
-                        },
-                    }),
+                        type: propertyType,
+                        description: property.description,
+                        imageURLs: property.imageURLs || [],
+                    })
                 }
             );
 
-            if (response.ok) {
-                setSaveMessage("Property updated successfully");
-            } else {
-                setSaveError("Failed to update property");
+            if (!response.ok) {
+                const errorData = await response.json();
+
+                throw new Error(
+                    errorData.message ||
+                    errorData.error ||
+                    "Failed to update property"
+                );
             }
+
+            setSaveMessage("Property updated successfully");
+
+        } catch (error) {
+            console.error("Update property failed:", error);
+            setSaveError(error.message);
+
         } finally {
             setIsSaving(false);
         }
@@ -107,7 +116,7 @@ function EditPropertyForm({ property }) {
                 />
             </div>
 
-            <div className="mb-5 grid gap-4 sm:grid-cols-2">
+            <div className="mb-5">
                 <div>
                     <label
                         htmlFor="property-type"
@@ -125,78 +134,6 @@ function EditPropertyForm({ property }) {
                     />
                 </div>
 
-                <div>
-                    <label
-                        htmlFor="property-rent"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                        Monthly Rent
-                    </label>
-
-                    <input
-                        id="property-rent"
-                        type="number"
-                        value={rent}
-                        onChange={(e) => setRent(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                    />
-                </div>
-            </div>
-
-            <div className="mb-5 grid gap-4 sm:grid-cols-2">
-                <div>
-                    <label
-                        htmlFor="property-bedrooms"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                        Bedrooms
-                    </label>
-
-                    <input
-                        id="property-bedrooms"
-                        type="number"
-                        value={bedrooms}
-                        onChange={(e) => setBedrooms(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                    />
-                </div>
-
-                <div>
-                    <label
-                        htmlFor="property-bathrooms"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                        Bathrooms
-                    </label>
-
-                    <input
-                        id="property-bathrooms"
-                        type="number"
-                        value={bathrooms}
-                        onChange={(e) => setBathrooms(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                    />
-                </div>
-            </div>
-
-            <div className="mb-6">
-                <label
-                    htmlFor="property-status"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                >
-                    Status
-                </label>
-
-                <select
-                    id="property-status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
-                >
-                    <option value="available">Available</option>
-                    <option value="pending">Pending</option>
-                    <option value="occupied">Occupied</option>
-                </select>
             </div>
 
             <button
@@ -233,7 +170,7 @@ export default function EditProperty() {
 
     return (
         <div className="flex min-h-screen bg-[#faf8fc]">
-            <AdminSideBar/>
+            <AdminSideBar />
             <main className="flex-1 px-8 py-7">
                 <Link
                     to="/my-properties"
@@ -246,7 +183,7 @@ export default function EditProperty() {
                     Edit Property
                 </h1>
                 <p className="mt-1 text-sm text-gray-500">
-                    Update your property details and availability.
+                    Update your property details.
                 </p>
 
                 {loading && (
