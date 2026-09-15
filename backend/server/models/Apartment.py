@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from configs import *
+from ..configs import *
 
 
 class Apartment(db.Model):

@@ -1,4 +1,4 @@
-from configs import *
+from ..configs import *
 
 from sqlalchemy.orm import relationship
 class UnitAmenity(db.Model):

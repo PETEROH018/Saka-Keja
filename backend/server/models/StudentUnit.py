@@ -1,4 +1,4 @@
-from configs import db
+from ..configs import db
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
 from sqlalchemy.orm import relationship
 

@@ -1,4 +1,4 @@
-from configs import *
+from ..configs import *
 
 
 class ApartmentAmenityJoining(db.Model):

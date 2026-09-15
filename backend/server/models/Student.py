@@ -1,4 +1,4 @@
-from configs import *
+from ..configs import *
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
