@@ -2,15 +2,15 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, fields, validate, validates_schema, Schema
 from marshmallow_sqlalchemy.fields import Nested
 
-from models.Apartment import Apartment
-from models.Unit import Unit
-from models.UnitAmenity import UnitAmenity
-from models.UnitAmenityJoining import UnitAmenityJoining
-from models.ApartmentAmenity import ApartmentAmenity
-from models.ApartmentAmenityJoining import ApartmentAmenityJoining
-from models.NearbyFacility import NearbyFacility
-from models.Payment import Payment
-from models.StudentUnit import StudentUnit
+from .models.Apartment import Apartment
+from .models.Unit import Unit
+from .models.UnitAmenity import UnitAmenity
+from .models.UnitAmenityJoining import UnitAmenityJoining
+from .models.ApartmentAmenity import ApartmentAmenity
+from .models.ApartmentAmenityJoining import ApartmentAmenityJoining
+from .models.NearbyFacility import NearbyFacility
+from .models.Payment import Payment
+from .models.StudentUnit import StudentUnit
 
 
 class ApartmentSchema(SQLAlchemyAutoSchema):

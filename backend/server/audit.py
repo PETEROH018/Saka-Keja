@@ -1,10 +1,10 @@
-from app import app
-from configs import db
-from models.Apartment import Apartment
-from models.Unit import Unit
-from models.ApartmentOwner import ApartmentOwner
-from models.Student import Student
-from models.StudentUnit import StudentUnit
+from .app import app
+from .configs import db
+from .models.Apartment import Apartment
+from .models.Unit import Unit
+from .models.ApartmentOwner import ApartmentOwner
+from .models.Student import Student
+from .models.StudentUnit import StudentUnit
 
 def audit_workload():
     with app.app_context():

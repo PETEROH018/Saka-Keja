@@ -1,8 +1,8 @@
 import json
 import os
 from datetime import datetime,timezone
-from app import app
-from models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, ApartmentAmenity, ApartmentAmenityJoining, NearbyFacility, Payment, Student, StudentUnit, ApartmentOwner
+from .app import app
+from .models import db, UnitAmenity, UnitAmenityJoining, Unit, Apartment, ApartmentAmenity, ApartmentAmenityJoining, NearbyFacility, Payment, Student, StudentUnit, ApartmentOwner
 from werkzeug.security import generate_password_hash
 
 

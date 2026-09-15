@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from marshmallow import ValidationError
-from configs import db
-from models.Student import Student
-from schema import StudentSchema
+from .configs import db
+from .models.Student import Student
+from .schema import StudentSchema
 
 student_bp = Blueprint("student_bp", __name__)
 student_schema = StudentSchema()
