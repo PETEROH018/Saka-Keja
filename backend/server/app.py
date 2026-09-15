@@ -2,9 +2,9 @@ import jwt
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from configs import *
-from schema import *
-from models import (
+from .configs import *
+from .schema import *
+from .models import (
     Unit,
     Apartment,
     ApartmentAmenity,
