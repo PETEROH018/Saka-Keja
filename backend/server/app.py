@@ -1219,4 +1219,4 @@ def get_booked_units(student_id):
         return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
             
 if __name__ == "__main__":
-    app.run(debug=True, host="localhost", port=5000)
+    app.run(debug=False, host="localhost", port=5000)
