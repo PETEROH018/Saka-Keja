@@ -1,4 +1,4 @@
-from configs import db
+from ..configs import db
 
 from .Apartment import Apartment
 from .ApartmentOwner import ApartmentOwner
